@@ -13,6 +13,7 @@ import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 
 import es.udc.ws.util.exceptions.InputValidationException;
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 public class MockTelcoService implements TelcoService {
 
@@ -39,6 +40,15 @@ public class MockTelcoService implements TelcoService {
 		c.setCustomerId(id);
 		c.setCreationDate(LocalDateTime.now());
 		clientsMap.put(c.getCustomerId(), c);
+		return c;
+	}
+
+	//Isma
+	public static Customer findCustomerById(long id) throws InstanceNotFoundException {
+		Customer c = clientsMap.get(id);
+		if (c == null) {
+			throw new InstanceNotFoundException(id, "No se encontró el cliente");
+		}
 		return c;
 	}
 
