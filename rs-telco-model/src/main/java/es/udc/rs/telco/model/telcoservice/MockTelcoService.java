@@ -12,6 +12,8 @@ import es.udc.rs.telco.model.customer.Customer;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 
+import es.udc.ws.util.exceptions.InputValidationException;
+
 public class MockTelcoService implements TelcoService {
 
 	private static Map<Long, Customer> clientsMap = new LinkedHashMap<Long, Customer>();
@@ -30,6 +32,17 @@ public class MockTelcoService implements TelcoService {
 		return ++lastPhoneCallId;
 	}
 
+	//Isma
+	public static Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		Customer c = new Customer(name, DNI, address, phone);
+		Long id = getNextClientId();
+		c.setCustomerId(id);
+		c.setCreationDate(LocalDateTime.now());
+		clientsMap.put(c.getCustomerId(), c);
+		return c;
+	}
+
+	//Carlos
 	public static void getCallsbyMonth(Long customerId, int month, int year){
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
