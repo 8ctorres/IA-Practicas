@@ -35,19 +35,36 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public static Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
+		//Le asignamos el siguiente ID disponible
 		Long id = getNextClientId();
 		c.setCustomerId(id);
+		//Le asignamos la fecha actual como fecha de creación
 		c.setCreationDate(LocalDateTime.now());
+		//Lo metemos en clientsMap con su ID
 		clientsMap.put(c.getCustomerId(), c);
 		return c;
 	}
 
 	//Isma
-	public static Customer findCustomerById(long id) throws InstanceNotFoundException {
-		Customer c = clientsMap.get(id);
+	public static void removeCustomer(long id) throws InstanceNotFoundException {
+		// TODO: Comprobar que el cliente no tiene llamadas asociadas
+		//Quitamos al cliente de la lista de clientes
+		Customer c = clientsMap.remove(id);
+		//Si es nulo devolvemos la excepción InstanceNotFoundException
 		if (c == null) {
-			throw new InstanceNotFoundException(id, "No se encontró el cliente");
+			throw new InstanceNotFoundException(id, "Cliente no encontrado");
+		}
+	}
+
+	//Isma
+	public static Customer findCustomerById(long id) throws InstanceNotFoundException {
+		//Buscamos al cliente en la lista por su id
+		Customer c = clientsMap.get(id);
+		//Si es nulo devolvemos la excepción InstanceNotFoundException
+		if (c == null) {
+			throw new InstanceNotFoundException(id, "Cliente no encontrado");
 		}
 		return c;
 	}
