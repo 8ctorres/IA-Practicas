@@ -47,7 +47,8 @@ public class MockTelcoService implements TelcoService {
 		return c;
 	}
 
-	public static void updateCustomer(long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
+	//Isma
+	public static void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
 		//Si el cliente no existe devuelve la excepción InstanceNotFoundException
 		Customer c = clientsMap.get(id);
 		if (c == null) {
@@ -60,7 +61,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void removeCustomer(long id) throws InstanceNotFoundException {
+	public static void removeCustomer(Long id) throws InstanceNotFoundException {
 		// TODO: Comprobar que el cliente no tiene llamadas asociadas
 		//Quitamos al cliente de la lista de clientes
 		Customer c = clientsMap.remove(id);
@@ -71,7 +72,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static Customer findCustomerById(long id) throws InstanceNotFoundException {
+	public static Customer findCustomerById(Long id) throws InstanceNotFoundException {
 		//Buscamos al cliente en la lista por su id
 		Customer c = clientsMap.get(id);
 		//Si es nulo devolvemos la excepción InstanceNotFoundException
