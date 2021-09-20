@@ -9,6 +9,7 @@ import es.udc.rs.telco.model.customer.Customer;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 
+import es.udc.rs.telco.model.phonecall.PhoneCallType;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
@@ -59,7 +60,10 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public static void removeCustomer(Long id) throws InstanceNotFoundException {
-		// TODO: Comprobar que el cliente no tiene llamadas asociadas
+		// TODO: Poner una excepción específica para aquí
+		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
+			throw new RuntimeException("El cliente tiene llamadas registradas");
+		}
 		//Quitamos al cliente de la lista de clientes
 		Customer c = clientsMap.remove(id);
 		//Si es nulo devuelve la excepción InstanceNotFoundException
@@ -80,6 +84,27 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
+	public static List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
+											   PhoneCallType tipo, Integer start_position, Integer amount){
+		List<PhoneCall> mycalls = new ArrayList<>();
+
+		for (PhoneCall call: phoneCallsMap.values()) {
+			// Recorremos toda a colección de chamadas
+			if ((call.getCustomerId() == customerId)
+					&& ((start_time == null) || (call.getStartDate().isAfter(start_time)))
+					&& ((end == null) || (call.getStartDate().isBefore(end)))
+					&& ((tipo == null) || (call.getPhoneCallType().equals(tipo)))) {
+				mycalls.add(call);
+			}
+		}
+
+		start_position = (start_position == null ? 0 : start_position);
+		amount = (amount == null ? mycalls.size() : amount);
+
+		return mycalls.subList(start_position, amount);
+	}
+
+	//Carlos
 	public static Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year){
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
@@ -87,7 +112,9 @@ public class MockTelcoService implements TelcoService {
 			throw new RuntimeException("O mes aínda non rematou");
 		}
 
-		List<PhoneCall> calls = new ArrayList<>();
+		// Esta operación sería máis sinxela se tivéramos o mapa "phoneCallsByUser", a costa de complicar a operación
+		// de engadir chamadas ó sistema, como explicamos no LEEME.md
+		Collection<PhoneCall> calls = new ArrayList<>();
 		for (PhoneCall call: phoneCallsMap.values()) {
 			// Recorremos toda a colección de chamadas
 			if (call.getCustomerId() == customerId){
@@ -99,6 +126,7 @@ public class MockTelcoService implements TelcoService {
 				}
 			}
 		}
+
 		// Agora percorremos toda a lista de chamadas e comprobamos que todas están en estado "PENDING"
 		for (PhoneCall call: calls) {
 			if (!(call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING))){
