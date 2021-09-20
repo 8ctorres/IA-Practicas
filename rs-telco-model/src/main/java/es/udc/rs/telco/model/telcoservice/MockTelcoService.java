@@ -2,10 +2,7 @@ package es.udc.rs.telco.model.telcoservice;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import es.udc.rs.telco.model.customer.Customer;
@@ -83,7 +80,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static void getCallsbyMonth(Long customerId, int month, int year){
+	public static Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year){
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
 			// TODO: Poñer unha excepción axeitada para este erro
@@ -110,9 +107,23 @@ public class MockTelcoService implements TelcoService {
 				throw new RuntimeException("Hai unha chamada que non está en estado PENDING");
 			}
 		}
+
+		return calls;
+	}
+
+	//Carlos
+	public static void setCallstoBilled(Collection<PhoneCall> calls){
 		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas a estado "BILLED"
 		for (PhoneCall call: calls) {
 			call.setPhoneCallStatus(PhoneCallStatus.BILLED);
+		}
+	}
+
+	//Carlos
+	public static void setCallstoPaid(Collection<PhoneCall> calls){
+		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas a estado "BILLED"
+		for (PhoneCall call: calls) {
+			call.setPhoneCallStatus(PhoneCallStatus.PAID);
 		}
 	}
 	
