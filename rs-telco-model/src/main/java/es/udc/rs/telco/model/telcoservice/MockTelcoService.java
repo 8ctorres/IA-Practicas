@@ -18,24 +18,24 @@ import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 public class MockTelcoService implements TelcoService {
 
-	private static Map<Long, Customer> clientsMap = new LinkedHashMap<Long, Customer>();
-	private static Map<Long, PhoneCall> phoneCallsMap = new LinkedHashMap<Long,PhoneCall>();
+	private Map<Long, Customer> clientsMap = new LinkedHashMap<Long, Customer>();
+	private Map<Long, PhoneCall> phoneCallsMap = new LinkedHashMap<Long,PhoneCall>();
 	//private static Map<Long, List<PhoneCall>> phoneCallsByUserMap = new LinkedHashMap<Long,List<PhoneCall>>();
 
-	private static long lastClientId = 0;
-	private static long lastPhoneCallId = 0;
+	private long lastClientId = 0;
+	private long lastPhoneCallId = 0;
 	
 
-	private static synchronized long getNextClientId() {
+	private synchronized long getNextClientId() {
 		return ++lastClientId;
 	}
 	
-	private static synchronized long getNextPhoneCallId() {
+	private synchronized long getNextPhoneCallId() {
 		return ++lastPhoneCallId;
 	}
 
 	//Isma
-	public static Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
 		//Le asignamos el siguiente ID disponible
@@ -49,7 +49,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
+	public void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
 		//Si el cliente no existe devuelve la excepción InstanceNotFoundException
 		Customer c = clientsMap.get(id);
 		if (c == null) {
@@ -62,7 +62,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
+	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
 		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
 			throw new CustomerHasCallsException("El cliente tiene llamadas registradas");
 		}
@@ -75,7 +75,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static Customer findCustomerById(Long id) throws InstanceNotFoundException {
+	public Customer findCustomerById(Long id) throws InstanceNotFoundException {
 		//Buscamos al cliente en la lista por su id
 		Customer c = clientsMap.get(id);
 		//Si es nulo devolvemos la excepción InstanceNotFoundException
@@ -86,7 +86,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
+	public Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
 		//Buscamos al cliente en la lista por su DNI
 		Customer c = null;
 		for (Customer customer: clientsMap.values()){
@@ -104,7 +104,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
+	public List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
 		List<Customer> mycustomer = new ArrayList<>();
 
 		for (Customer customer: clientsMap.values()){
@@ -120,7 +120,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
+	public PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
 									PhoneCallType tipo, String destinationNumber) {
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
 		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
@@ -136,7 +136,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
+	public List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
 											   PhoneCallType tipo, Integer start_position, Integer amount){
 		List<PhoneCall> mycalls = new ArrayList<>();
 
@@ -157,7 +157,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, CallNotPendingException {
+	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, CallNotPendingException {
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
 			throw new MonthNotClosedException("O mes aínda non rematou");
@@ -190,7 +190,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws CallNotPendingException, MonthNotClosedException {
+	public void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws CallNotPendingException, MonthNotClosedException {
 		// Recuperamos as chamadas do mes indicado
 		Collection<PhoneCall> calls = getCallsbyMonth(customerId, month, year);
 		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas ó estado correspondiente
