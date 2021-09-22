@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import es.udc.rs.telco.model.customer.Customer;
+import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 
@@ -59,10 +60,9 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void removeCustomer(Long id) throws InstanceNotFoundException {
-		// TODO: Poner una excepción específica para aquí
+	public static void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
 		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
-			throw new RuntimeException("El cliente tiene llamadas registradas");
+			throw new CustomerHasCallsException("El cliente tiene llamadas registradas");
 		}
 		//Quitamos al cliente de la lista de clientes
 		Customer c = clientsMap.remove(id);
