@@ -82,6 +82,17 @@ public class MockTelcoService implements TelcoService {
 		}
 		return c;
 	}
+	//pablo
+	public static Customer findCustomerByIDNI(Long dni) throws InstanceNotFoundException {
+		//Buscamos al cliente en la lista por su id
+		Customer c = null;
+		for (Customer customer: clientsMap.values()){
+			if ((customer.getName().equals(dni))) {
+				c = customer;
+			}else throw new InstanceNotFoundException(dni, "Cliente no encontrado");
+		}
+		return c;
+	}
 	//Pablo
 	public static List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
 		List<Customer> mycustomer = new ArrayList<>();
