@@ -170,19 +170,13 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static void setCallstoBilled(Collection<PhoneCall> calls){
-		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas a estado "BILLED"
+	public static void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus){
+		// Recuperamos as chamadas do mes indicado
+		Collection<PhoneCall> calls = getCallsbyMonth(customerId, month, year);
+		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas ó estado correspondiente
 		for (PhoneCall call: calls) {
-			call.setPhoneCallStatus(PhoneCallStatus.BILLED);
+			call.setPhoneCallStatus(newstatus);
 		}
 	}
 
-	//Carlos
-	public static void setCallstoPaid(Collection<PhoneCall> calls){
-		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas a estado "BILLED"
-		for (PhoneCall call: calls) {
-			call.setPhoneCallStatus(PhoneCallStatus.PAID);
-		}
-	}
-	
 }
