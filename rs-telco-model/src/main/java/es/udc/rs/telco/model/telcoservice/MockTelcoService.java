@@ -82,6 +82,36 @@ public class MockTelcoService implements TelcoService {
 		}
 		return c;
 	}
+	//Pablo
+	public static List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
+		List<Customer> mycustomer = new ArrayList<>();
+
+		for (Customer customer: clientsMap.values()){
+			if ((customer.getName().equals(name))) {
+				mycustomer.add(customer);
+			}
+		}
+
+		start_position = (start_position == null ? 0 : start_position);
+		amount = (amount == null ? mycustomer.size() : amount);
+
+		return mycustomer.subList(start_position, amount);
+	}
+	//Pablo
+	public static PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
+									PhoneCallType tipo, String destinationNumber) {
+		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
+		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
+		//creamos el id
+		Long id = getNextPhoneCallId();
+		p.setPhoneCallId(id);
+		//asignamos el estado como pendiente
+		p.setPhoneCallStatus(PhoneCallStatus.PENDING);
+
+		//añadimos la llamada del cliente
+		phoneCallsMap.put(p.getPhoneCallId(), p);
+		return p;
+	}
 
 	//Carlos
 	public static List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
