@@ -35,7 +35,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
 		//Le asignamos el siguiente ID disponible
@@ -49,7 +49,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
+	public void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
 		//Si el cliente no existe devuelve la excepción InstanceNotFoundException
 		Customer c = clientsMap.get(id);
 		if (c == null) {
@@ -62,7 +62,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
+	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
 		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
 			throw new CustomerHasCallsException("El cliente tiene llamadas registradas");
 		}
@@ -75,7 +75,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Isma
-	public static Customer findCustomerById(Long id) throws InstanceNotFoundException {
+	public Customer findCustomerById(Long id) throws InstanceNotFoundException {
 		//Buscamos al cliente en la lista por su id
 		Customer c = clientsMap.get(id);
 		//Si es nulo devolvemos la excepción InstanceNotFoundException
