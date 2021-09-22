@@ -22,4 +22,13 @@ public class TelcoServiceTest {
         assertTrue(telcoService != null);
     }
 
+
+    @Test
+    public void testFindCustomerByDNI (){ assertTrue(telcoService != null); }
+
+    @Test
+    public void testGetCustomerByName (){ assertTrue(telcoService != null); }
+
+    @Test
+    public void testAddCall (){ assertTrue(telcoService != null); }
 }

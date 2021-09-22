@@ -86,7 +86,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
+	public Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
 		//Buscamos al cliente en la lista por su DNI
 		Customer c = null;
 		for (Customer customer: clientsMap.values()){
@@ -104,7 +104,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
+	public List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
 		List<Customer> mycustomer = new ArrayList<>();
 
 		for (Customer customer: clientsMap.values()){
@@ -120,7 +120,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public static PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
+	public PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
 									PhoneCallType tipo, String destinationNumber) {
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
 		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
