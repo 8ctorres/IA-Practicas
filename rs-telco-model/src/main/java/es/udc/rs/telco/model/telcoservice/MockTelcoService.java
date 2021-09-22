@@ -82,23 +82,31 @@ public class MockTelcoService implements TelcoService {
 		}
 		return c;
 	}
-	//pablo
-	public static Customer findCustomerByIDNI(Long dni) throws InstanceNotFoundException {
-		//Buscamos al cliente en la lista por su id
+
+	//Pablo
+	public static Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
+		//Buscamos al cliente en la lista por su DNI
 		Customer c = null;
 		for (Customer customer: clientsMap.values()){
 			if ((customer.getName().equals(dni))) {
 				c = customer;
-			}else throw new InstanceNotFoundException(dni, "Cliente no encontrado");
+				// Break porque suponemos que los DNIs no se repiten, entonces al encontrar
+				// un cliente que tiene el DNI que buscamos, ya paramos de buscar
+				break;
+			}
+		}
+		if (c == null){
+			throw new InstanceNotFoundException(dni, "Cliente no encontrado");
 		}
 		return c;
 	}
+
 	//Pablo
 	public static List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
 		List<Customer> mycustomer = new ArrayList<>();
 
 		for (Customer customer: clientsMap.values()){
-			if ((customer.getName().equals(name))) {
+			if ((customer.getName().toLowerCase().contains(name.toLowerCase()))) {
 				mycustomer.add(customer);
 			}
 		}
@@ -108,6 +116,7 @@ public class MockTelcoService implements TelcoService {
 
 		return mycustomer.subList(start_position, amount);
 	}
+
 	//Pablo
 	public static PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
 									PhoneCallType tipo, String destinationNumber) {
