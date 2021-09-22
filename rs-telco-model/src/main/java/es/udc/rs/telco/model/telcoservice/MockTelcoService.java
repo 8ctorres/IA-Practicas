@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.function.Function;
 
 import es.udc.rs.telco.model.customer.Customer;
+import es.udc.rs.telco.model.exceptions.CallNotPendingException;
+import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 
@@ -155,11 +157,10 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year){
+	public static Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, CallNotPendingException {
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
-			// TODO: Poñer unha excepción axeitada para este erro
-			throw new RuntimeException("O mes aínda non rematou");
+			throw new MonthNotClosedException("O mes aínda non rematou");
 		}
 
 		// Esta operación sería máis sinxela se tivéramos o mapa "phoneCallsByUser", a costa de complicar a operación
@@ -181,8 +182,7 @@ public class MockTelcoService implements TelcoService {
 		for (PhoneCall call: calls) {
 			if (!(call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING))){
 				// Si atopamos algunha que non estea PENDING, sacamos un erro
-				// TODO: Poñer unha excepción axeitada para este erro
-				throw new RuntimeException("Hai unha chamada que non está en estado PENDING");
+				throw new CallNotPendingException("Hai unha chamada que non está en estado PENDING");
 			}
 		}
 
@@ -190,7 +190,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public static void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus){
+	public static void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws CallNotPendingException, MonthNotClosedException {
 		// Recuperamos as chamadas do mes indicado
 		Collection<PhoneCall> calls = getCallsbyMonth(customerId, month, year);
 		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas ó estado correspondiente
