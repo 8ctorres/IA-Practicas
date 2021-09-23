@@ -2,12 +2,16 @@ package es.udc.rs.telco.test.model.telcoservice;
 
 import es.udc.rs.telco.model.customer.Customer;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
+import es.udc.rs.telco.model.phonecall.PhoneCallType;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,13 +50,32 @@ public class TelcoServiceTest {
     }
 
     @Test
-    public void testRemoveCustomer()  {
-        assertTrue(telcoService != null);
+    public void testRemoveCustomer() throws InputValidationException, CustomerHasCallsException, InstanceNotFoundException {
+        Customer customer1 = telcoService.addCustomer("Carlos", "11111111C","Su piso","333333333");
+        Customer customer2 = telcoService.addCustomer("Pablo", "11111111D","Su casa","123456789");
+        //El cliente 1 tiene el ID 1 y el 2, el ID 2
+        assertEquals(customer1.getCustomerId(), 1);
+        assertEquals(customer2.getCustomerId(), 2);
+        //Se elimina el cliente 1
+        telcoService.removeCustomer(customer1.getCustomerId());
+        //Se buscan los ID de los clientes 1 y 2 y se compara que se encuentra solo al cliente 2
+        Customer c2 = telcoService.findCustomerById(Long.valueOf("2"));
+        assertThrows(InstanceNotFoundException.class, () -> telcoService.findCustomerById(Long.valueOf("1")));
+        assertEquals(customer2, c2);
+        //Se borra lo creado en la prueba
+        telcoService.removeCustomer(customer2.getCustomerId());
+
     }
 
     @Test
-    public void testRemoveCustomerWithCalls()  {
-        assertTrue(telcoService != null);
+    public void testRemoveCustomerWithCalls() throws InputValidationException {
+        Customer customer1 = telcoService.addCustomer("Jose", "11111111E","Calle se por favor","444555666");
+        //El cliente 1 tiene el ID 1
+        assertEquals(customer1.getCustomerId(), 1);
+        //Se le añade una llamada al cliente
+        telcoService.AddCall(Long.valueOf("1"), LocalDateTime.of(2021, Month.OCTOBER, 25, 18, 30),Long.valueOf("30"), PhoneCallType.LOCAL,"123456789");
+        //Se intenta eliminar el cliente 1
+        assertThrows(CustomerHasCallsException.class, () -> telcoService.removeCustomer(Long.valueOf("1")));
     }
 
     @Test
