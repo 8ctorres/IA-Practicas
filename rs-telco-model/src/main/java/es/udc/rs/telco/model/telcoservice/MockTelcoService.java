@@ -39,8 +39,7 @@ public class MockTelcoService implements TelcoService {
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
 		//Le asignamos el siguiente ID disponible
-		Long id = getNextClientId();
-		c.setCustomerId(id);
+		c.setCustomerId(getNextClientId());
 		//Le asignamos la fecha actual como fecha de creación
 		c.setCreationDate(LocalDateTime.now());
 		//Lo metemos en clientsMap con su ID
