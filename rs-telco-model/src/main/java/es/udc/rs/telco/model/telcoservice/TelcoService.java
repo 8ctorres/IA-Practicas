@@ -29,7 +29,7 @@ public interface TelcoService {
 
     public List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount);
 
-    public PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
+    public PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
                              PhoneCallType tipo, String destinationNumber);
     public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException;
 

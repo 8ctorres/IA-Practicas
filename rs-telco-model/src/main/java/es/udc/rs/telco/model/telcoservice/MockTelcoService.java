@@ -119,7 +119,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public PhoneCall AddCall(Long customerId, LocalDateTime startDate, Long duration,
+	public PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
 									PhoneCallType tipo, String destinationNumber) {
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
 		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
@@ -196,6 +196,21 @@ public class MockTelcoService implements TelcoService {
 		for (PhoneCall call: calls) {
 			call.setPhoneCallStatus(newstatus);
 		}
+	}
+
+	private void clearCalls(){
+		// This method deletes all the calls in the system. Used for unit tests only. Not exposed in the interface
+		phoneCallsMap.clear();
+	}
+
+	private void clearCustomers(){
+		// This method deletes all the customers in the system. Used for unit tests only. Not exposed in the interface.
+		clientsMap.clear();
+	}
+
+	private void removeCall(Long callId){
+		// This method deletes a call from the system. Used for unit tests only. Not exposed in the interface.
+		phoneCallsMap.remove(callId);
 	}
 
 }
