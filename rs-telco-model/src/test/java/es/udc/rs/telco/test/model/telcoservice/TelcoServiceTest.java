@@ -1,7 +1,11 @@
 package es.udc.rs.telco.test.model.telcoservice;
 
 import es.udc.rs.telco.model.customer.Customer;
+import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
+import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
+import es.udc.rs.telco.model.phonecall.PhoneCall;
+import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
@@ -12,6 +16,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,7 +77,7 @@ public class TelcoServiceTest {
         //Se crea 1 cliente para la prueba
         Customer customer1 = telcoService.addCustomer("Jose", "11111111E","Calle se por favor","444555666");
         //Se le añade una llamada al cliente
-        telcoService.AddCall(customer1.getCustomerId(), LocalDateTime.of(2021, Month.OCTOBER, 25, 18, 30),Long.valueOf("30"), PhoneCallType.LOCAL,"123456789");
+        telcoService.addCall(customer1.getCustomerId(), LocalDateTime.of(2021, Month.OCTOBER, 25, 18, 30),Long.valueOf("30"), PhoneCallType.LOCAL,"123456789");
         //Se intenta eliminar el cliente 1
         assertThrows(CustomerHasCallsException.class, () -> telcoService.removeCustomer(customer1.getCustomerId()));
     }
@@ -100,4 +106,80 @@ public class TelcoServiceTest {
 
     @Test
     public void testAddCall (){ assertTrue(telcoService != null); }
+
+
+    // Carlos
+    @Test
+    public void testGetCallsbyId () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
+        // Creamos un cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+        // Añadimos varias chamadas a nome do novo cliente
+        Collection<PhoneCall> addedcalls = new ArrayList<>(4);
+        PhoneCall c;
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(1), (long) 180, PhoneCallType.LOCAL, "600300100");
+        addedcalls.add(c);
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusDays(1), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        addedcalls.add(c);
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusDays(3), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        addedcalls.add(c);
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(8), (long) 400, PhoneCallType.LOCAL, "981856382");
+        addedcalls.add(c);
+
+        // Agora sacamos as chamadas rexistradas dese cliente
+        Collection<PhoneCall> retrievedcalls = telcoService.getCallsbyId(perico.getCustomerId(), null, null, null, null, null);
+
+        // E comparamos
+        assertEquals(addedcalls, retrievedcalls);
+
+        //Ahora borramos as chamadas
+        // TODO: ver cómo facer para borrar as chamadas sen meter o método na interface
+        for (PhoneCall call : addedcalls) {
+            telcoService.removeCall(call.getPhoneCallId());
+        }
+
+        //E borramos o cliente
+        telcoService.removeCustomer(perico.getCustomerId());
+    }
+
+    //Carlos
+    @Test
+    public void testGetCallsByMonth() throws InputValidationException, UnexpectedCallStatusException, MonthNotClosedException, InstanceNotFoundException, CustomerHasCallsException {
+        // Primeiro creamos un novo cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+
+        // Añadimos varias chamadas a nome do novo cliente
+        Collection<PhoneCall> augustcalls = new ArrayList<>(4);
+        PhoneCall c;
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 8, 13, 45), (long) 180, PhoneCallType.LOCAL, "600300100");
+        augustcalls.add(c);
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.FEBRUARY, 24, 6,53), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        c = telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 20, 12, 32), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        augustcalls.add(c);
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.APRIL, 14, 22, 17), (long) 400, PhoneCallType.LOCAL, "981856382");
+
+        // Agora sacamos as chamadas do cliente en agosto do 2021.
+        Collection<PhoneCall> retrievedcalls = telcoService.getCallsbyMonth(perico.getCustomerId(), Month.AUGUST.getValue(), 2021);
+
+        // E comprobamos que sexan as dúas (e só esas dúas)
+        assertEquals(augustcalls, retrievedcalls);
+
+        // Agora probamos a cambiar o estado das chamadas a "BILLED"
+        telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
+
+        // Temos que volver a sacalas do servicio
+        retrievedcalls = telcoService.getCallsbyMonth(perico.getCustomerId(), Month.AUGUST.getValue(), 2021);
+
+        // E comprobar que están "BILLED"
+        for (PhoneCall call: retrievedcalls) {
+            assertEquals(call.getPhoneCallStatus(), PhoneCallStatus.BILLED);
+        }
+
+        //Borramos todas as chamadas
+        telcoService.clearCalls();
+
+        //Borramos o cliente
+        telcoService.removeCustomer(perico.getCustomerId());
+    }
+
+
 }

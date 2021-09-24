@@ -1,6 +1,6 @@
 package es.udc.rs.telco.model.telcoservice;
 import es.udc.rs.telco.model.customer.Customer;
-import es.udc.rs.telco.model.exceptions.CallNotPendingException;
+import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
 import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
@@ -17,9 +17,9 @@ public interface TelcoService {
     public List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
                                         PhoneCallType tipo, Integer start_position, Integer amount);
 
-    public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, CallNotPendingException;
+    public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException;
 
-    public void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws CallNotPendingException, MonthNotClosedException;
+    public void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws UnexpectedCallStatusException, MonthNotClosedException;
 
     public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException;
 

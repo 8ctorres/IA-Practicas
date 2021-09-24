@@ -1,13 +1,11 @@
 package es.udc.rs.telco.model.telcoservice;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 
 import es.udc.rs.telco.model.customer.Customer;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
-import es.udc.rs.telco.model.exceptions.CallNotPendingException;
+import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
 import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
@@ -156,7 +154,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, CallNotPendingException {
+	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException {
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
 			throw new MonthNotClosedException("O mes aínda non rematou");
@@ -167,21 +165,13 @@ public class MockTelcoService implements TelcoService {
 		Collection<PhoneCall> calls = new ArrayList<>();
 		for (PhoneCall call: phoneCallsMap.values()) {
 			// Recorremos toda a colección de chamadas
-			if (call.getCustomerId() == customerId){
+			if (call.getCustomerId() == customerId) {
 				// Si é do cliente que esperamos, comprobamos o mes e o ano
 				LocalDateTime date = call.getStartDate();
-				if ((date.getMonthValue() == month) && (date.getYear() == year)){
+				if ((date.getMonthValue() == month) && (date.getYear() == year)) {
 					// Si coincide, gardamos o obxeto PhoneCall nunha nova lista
 					calls.add(call);
 				}
-			}
-		}
-
-		// Agora percorremos toda a lista de chamadas e comprobamos que todas están en estado "PENDING"
-		for (PhoneCall call: calls) {
-			if (!(call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING))){
-				// Si atopamos algunha que non estea PENDING, sacamos un erro
-				throw new CallNotPendingException("Hai unha chamada que non está en estado PENDING");
 			}
 		}
 
@@ -189,9 +179,20 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws CallNotPendingException, MonthNotClosedException {
+	public void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws UnexpectedCallStatusException, MonthNotClosedException {
 		// Recuperamos as chamadas do mes indicado
 		Collection<PhoneCall> calls = getCallsbyMonth(customerId, month, year);
+
+		// Agora percorremos toda a lista de chamadas e comprobamos que todas están en estado no estado adecuado
+		PhoneCallStatus expectedStatus = (newstatus == PhoneCallStatus.BILLED ? PhoneCallStatus.PENDING : PhoneCallStatus.BILLED);
+
+		for (PhoneCall call: calls) {
+			if (!(call.getPhoneCallStatus().equals(expectedStatus))){
+				// Si atopamos algunha que non estea no estado correcto, sacamos un erro
+				throw new UnexpectedCallStatusException("A chamada" + call.getPhoneCallId().toString() + " non está no estado esperado");
+			}
+		}
+
 		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas ó estado correspondiente
 		for (PhoneCall call: calls) {
 			call.setPhoneCallStatus(newstatus);
