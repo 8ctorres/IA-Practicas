@@ -181,5 +181,50 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(perico.getCustomerId());
     }
 
+    // Carlos
+    @Test
+    public void testCallAlreadyBilled(){
+        //Primeiro creamos un cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+
+        //Engadimos varias chamadas ó seu nome
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 8, 13, 45), (long) 180, PhoneCallType.LOCAL, "600300100");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 24, 6,53), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 20, 12, 32), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 14, 22, 17), (long) 400, PhoneCallType.LOCAL, "981856382");
+
+        //Pasamos as chamadas a estado BILLED
+        telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
+
+        //Volvemos a intentar pasar as chamadas a estado BILLED de novo
+        //Debe saltar a excepción UnexpectedPhoneCallStatusException
+        assertException(UnexpectedPhoneCallStatusException.class, () => {
+            telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
+        });
+
+        //Borramos as chamadas
+        telcoService.clearCalls();
+
+        //Borramos o cliente
+        telcoService.removeCustomer(perico.getCustomerId());
+    }
+
+    // Carlos
+    @Test
+    public void testMonthNotClosed(){
+        //Primeiro creamos un cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+
+        //Engadimos varias chamadas ó seu nome, que pertencen ó mes actual (por tanto que aínda non rematou)
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(1), (long) 180, PhoneCallType.LOCAL, "600300100");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(2), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(3), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(4), (long) 400, PhoneCallType.LOCAL, "981856382");
+
+        //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
+        assertThrows(MonthNotClosedException.class, () => {
+            telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+        });
+    }
 
 }
