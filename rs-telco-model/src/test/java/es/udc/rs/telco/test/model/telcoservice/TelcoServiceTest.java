@@ -121,25 +121,24 @@ public class TelcoServiceTest {
     @Test
     public void testGetCustomerByName () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
         //creamos customers
-        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        Customer pablo1 = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
         Customer carlos = telcoService.addCustomer("Carlos", "43658721Y", "Calle Real, 34", "666777888");
         Customer isma = telcoService.addCustomer("Ismael", "65872143N", "Ronda de nelle, 76", "666111222");
+        Customer pablo2 = telcoService.addCustomer("Pablo", "11436587T", "los cantones, 124", "666555442");
         //Añadimos al los clientes
         Collection<Customer> mycustomer = new ArrayList<>();
         Customer c;
-        c = telcoService.addCustomer(pablo.getName(), pablo.getDni(), pablo.getAddress(), pablo.getPhoneNumber());
-        c = telcoService.addCustomer(carlos.getName(), carlos.getDni(), carlos.getAddress(), carlos.getPhoneNumber());
-        c= telcoService.addCustomer(isma.getName(), isma.getDni(), isma.getAddress(), isma.getPhoneNumber());
+        c = telcoService.addCustomer(pablo1.getName(), pablo1.getDni(), pablo1.getAddress(), pablo1.getPhoneNumber());
+        c = telcoService.addCustomer(pablo2.getName(), pablo2.getDni(), pablo2.getAddress(), pablo2.getPhoneNumber());
         //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
-        Collection<Customer> customers = telcoService.getCustomersbyName("PABLO CARLOS ISMA", null, null);
-        //Collection<Customer> customers = telcoService.getCustomersbyName("CARLOS", null, null);
-        //Collection<Customer> customers = telcoService.getCustomersbyName("ISMA", null, null);
+        Collection<Customer> customers = telcoService.getCustomersbyName("PABLO", null, null);
         //Comparamos
         assertEquals(mycustomer, customers);
 
-        telcoService.removeCustomer(pablo.getCustomerId());
+        telcoService.removeCustomer(pablo1.getCustomerId());
         telcoService.removeCustomer(carlos.getCustomerId());
         telcoService.removeCustomer(isma.getCustomerId());
+        telcoService.removeCustomer(pablo2.getCustomerId());
 
         for (Customer cust : mycustomer) {
             telcoService.removeCustomer(cust.getCustomerId());
