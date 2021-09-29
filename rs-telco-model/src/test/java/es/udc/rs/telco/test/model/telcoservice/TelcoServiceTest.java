@@ -99,13 +99,64 @@ public class TelcoServiceTest {
 
 
     @Test
-    public void testFindCustomerByDNI (){ assertTrue(telcoService != null); }
+    public void testFindCustomerByDNI () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
+        //creamos tres clientes
+        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        Customer carlos = telcoService.addCustomer("Carlos", "43658721Y", "Calle Real, 34", "666777888");
+        Customer isma = telcoService.addCustomer("Ismael", "65872143N", "Ronda de nelle, 76", "666111222");
+        //Buscamos a los clientes por su dni
+        Customer c1 = telcoService.findCustomerByDNI("21436587T");
+        Customer c2 = telcoService.findCustomerByDNI("43658721Y");
+        Customer c3 = telcoService.findCustomerByDNI("65872143N");
+        //Comparamos los resultados
+        assertEquals(pablo.getDni(),c1.getDni());
+        assertEquals(carlos.getDni(), c2.getDni());
+        assertEquals(isma.getDni(), c3.getDni());
+        //Eliminamos los customers creados
+        telcoService.removeCustomer(pablo.getCustomerId());
+        telcoService.removeCustomer(carlos.getCustomerId());
+        telcoService.removeCustomer(isma.getCustomerId());
+    }
 
     @Test
-    public void testGetCustomerByName (){ assertTrue(telcoService != null); }
+    public void testGetCustomerByName () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
+        //creamos customers
+        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        Customer carlos = telcoService.addCustomer("Carlos", "43658721Y", "Calle Real, 34", "666777888");
+        Customer isma = telcoService.addCustomer("Ismael", "65872143N", "Ronda de nelle, 76", "666111222");
+        //Añadimos al los clientes
+        Collection<Customer> mycustomer = new ArrayList<>();
+        Customer c;
+        c = telcoService.addCustomer(pablo.getName(), pablo.getDni(), pablo.getAddress(), pablo.getPhoneNumber());
+        c = telcoService.addCustomer(carlos.getName(), carlos.getDni(), carlos.getAddress(), carlos.getPhoneNumber());
+        c= telcoService.addCustomer(isma.getName(), isma.getDni(), isma.getAddress(), isma.getPhoneNumber());
+        //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
+        Collection<Customer> customers = telcoService.getCustomersbyName("PABLO CARLOS ISMA", null, null);
+        //Collection<Customer> customers = telcoService.getCustomersbyName("CARLOS", null, null);
+        //Collection<Customer> customers = telcoService.getCustomersbyName("ISMA", null, null);
+        //Comparamos
+        assertEquals(mycustomer, customers);
+
+        telcoService.removeCustomer(pablo.getCustomerId());
+        telcoService.removeCustomer(carlos.getCustomerId());
+        telcoService.removeCustomer(isma.getCustomerId());
+
+        for (Customer cust : mycustomer) {
+            telcoService.removeCustomer(cust.getCustomerId());
+        }
+    }
 
     @Test
-    public void testAddCall (){ assertTrue(telcoService != null); }
+    public void testAddCall () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
+        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        PhoneCall phoneCall = telcoService.addCall(pablo.getCustomerId(), LocalDateTime.now().minusHours(1), (long) 85, PhoneCallType.LOCAL, "666777888");
+        long c = phoneCall.getPhoneCallId();
+
+        assertEquals(phoneCall.getPhoneCallId(), c);
+
+        //telcoService.removeCall(phoneCall.getPhoneCallId());
+        telcoService.removeCustomer(pablo.getCustomerId());
+    }
 
 
     // Carlos
