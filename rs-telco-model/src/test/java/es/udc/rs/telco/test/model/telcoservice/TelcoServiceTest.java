@@ -244,7 +244,7 @@ public class TelcoServiceTest {
 
     // Carlos
     @Test
-    public void testCallAlreadyBilled(){
+    public void testCallAlreadyBilled() throws InputValidationException, MonthNotClosedException, UnexpectedCallStatusException, InstanceNotFoundException, CustomerHasCallsException {
         //Primeiro creamos un cliente
         Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
 
@@ -259,12 +259,12 @@ public class TelcoServiceTest {
 
         //Volvemos a intentar pasar as chamadas a estado BILLED de novo
         //Debe saltar a excepción UnexpectedPhoneCallStatusException
-        assertException(UnexpectedPhoneCallStatusException.class, () => {
+        assertThrows(UnexpectedCallStatusException.class, () -> {
             telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
         });
 
         //Borramos as chamadas
-        telcoService.clearCalls();
+        this.clearCalls();
 
         //Borramos o cliente
         telcoService.removeCustomer(perico.getCustomerId());
@@ -272,7 +272,7 @@ public class TelcoServiceTest {
 
     // Carlos
     @Test
-    public void testMonthNotClosed(){
+    public void testMonthNotClosed() throws InputValidationException {
         //Primeiro creamos un cliente
         Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
 
@@ -283,7 +283,7 @@ public class TelcoServiceTest {
         telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(4), (long) 400, PhoneCallType.LOCAL, "981856382");
 
         //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
-        assertThrows(MonthNotClosedException.class, () => {
+        assertThrows(MonthNotClosedException.class, () -> {
             telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
         });
     }
