@@ -7,6 +7,7 @@ import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
+import es.udc.rs.telco.model.telcoservice.MockTelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
@@ -24,6 +25,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TelcoServiceTest {
 
     private static TelcoService telcoService = null;
+
+    private void clearCalls(){
+        MockTelcoService mock = (MockTelcoService) telcoService;
+        mock.clearCalls();
+    }
+
+    private void removeCall(Long callId){
+        MockTelcoService mock = (MockTelcoService) telcoService;
+        mock.removeCall(callId);
+    }
 
     @BeforeAll
     public static void init() {
@@ -134,7 +145,7 @@ public class TelcoServiceTest {
         //Ahora borramos as chamadas
         // TODO: ver cómo facer para borrar as chamadas sen meter o método na interface
         for (PhoneCall call : addedcalls) {
-            telcoService.removeCall(call.getPhoneCallId());
+            this.removeCall(call.getPhoneCallId());
         }
 
         //E borramos o cliente
@@ -175,7 +186,7 @@ public class TelcoServiceTest {
         }
 
         //Borramos todas as chamadas
-        telcoService.clearCalls();
+        this.clearCalls();
 
         //Borramos o cliente
         telcoService.removeCustomer(perico.getCustomerId());

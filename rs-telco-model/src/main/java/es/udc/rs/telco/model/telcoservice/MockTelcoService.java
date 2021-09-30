@@ -199,17 +199,12 @@ public class MockTelcoService implements TelcoService {
 		}
 	}
 
-	private void clearCalls(){
+	public void clearCalls() {
 		// This method deletes all the calls in the system. Used for unit tests only. Not exposed in the interface
 		phoneCallsMap.clear();
 	}
 
-	private void clearCustomers(){
-		// This method deletes all the customers in the system. Used for unit tests only. Not exposed in the interface.
-		clientsMap.clear();
-	}
-
-	private void removeCall(Long callId){
+	public void removeCall(Long callId){
 		// This method deletes a call from the system. Used for unit tests only. Not exposed in the interface.
 		phoneCallsMap.remove(callId);
 	}
