@@ -110,13 +110,63 @@ public class TelcoServiceTest {
 
 
     @Test
-    public void testFindCustomerByDNI (){ assertTrue(telcoService != null); }
+    public void testFindCustomerByDNI () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
+        //creamos tres clientes
+        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        Customer carlos = telcoService.addCustomer("Carlos", "43658721Y", "Calle Real, 34", "666777888");
+        Customer isma = telcoService.addCustomer("Ismael", "65872143N", "Ronda de nelle, 76", "666111222");
+        //Buscamos a los clientes por su dni
+        Customer c1 = telcoService.findCustomerByDNI("21436587T");
+        Customer c2 = telcoService.findCustomerByDNI("43658721Y");
+        Customer c3 = telcoService.findCustomerByDNI("65872143N");
+        //Comparamos los resultados
+        assertEquals(pablo.getDni(),c1.getDni());
+        assertEquals(carlos.getDni(), c2.getDni());
+        assertEquals(isma.getDni(), c3.getDni());
+        //Eliminamos los customers creados
+        telcoService.removeCustomer(pablo.getCustomerId());
+        telcoService.removeCustomer(carlos.getCustomerId());
+        telcoService.removeCustomer(isma.getCustomerId());
+    }
 
     @Test
-    public void testGetCustomerByName (){ assertTrue(telcoService != null); }
+    public void testGetCustomerByName () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
+        //creamos customers
+        Customer pablo1 = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        Customer carlos = telcoService.addCustomer("Carlos", "43658721Y", "Calle Real, 34", "666777888");
+        Customer isma = telcoService.addCustomer("Ismael", "65872143N", "Ronda de nelle, 76", "666111222");
+        Customer pablo2 = telcoService.addCustomer("Pablo", "11436587T", "los cantones, 124", "666555442");
+        //Añadimos al los clientes
+        Collection<Customer> mycustomer = new ArrayList<>();
+        Customer c;
+        c = telcoService.addCustomer(pablo1.getName(), pablo1.getDni(), pablo1.getAddress(), pablo1.getPhoneNumber());
+        c = telcoService.addCustomer(pablo2.getName(), pablo2.getDni(), pablo2.getAddress(), pablo2.getPhoneNumber());
+        //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
+        Collection<Customer> customers = telcoService.getCustomersbyName("PABLO", null, null);
+        //Comparamos
+        assertEquals(mycustomer, customers);
+
+        telcoService.removeCustomer(pablo1.getCustomerId());
+        telcoService.removeCustomer(carlos.getCustomerId());
+        telcoService.removeCustomer(isma.getCustomerId());
+        telcoService.removeCustomer(pablo2.getCustomerId());
+
+        for (Customer cust : mycustomer) {
+            telcoService.removeCustomer(cust.getCustomerId());
+        }
+    }
 
     @Test
-    public void testAddCall (){ assertTrue(telcoService != null); }
+    public void testAddCall () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
+        Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
+        PhoneCall phoneCall = telcoService.addCall(pablo.getCustomerId(), LocalDateTime.now().minusHours(1), (long) 85, PhoneCallType.LOCAL, "666777888");
+        long c = phoneCall.getPhoneCallId();
+
+        assertEquals(phoneCall.getPhoneCallId(), c);
+
+        //telcoService.removeCall(phoneCall.getPhoneCallId());
+        telcoService.removeCustomer(pablo.getCustomerId());
+    }
 
 
     // Carlos
@@ -192,5 +242,50 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(perico.getCustomerId());
     }
 
+    // Carlos
+    @Test
+    public void testCallAlreadyBilled(){
+        //Primeiro creamos un cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+
+        //Engadimos varias chamadas ó seu nome
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 8, 13, 45), (long) 180, PhoneCallType.LOCAL, "600300100");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 24, 6,53), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 20, 12, 32), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.of(2021, Month.AUGUST, 14, 22, 17), (long) 400, PhoneCallType.LOCAL, "981856382");
+
+        //Pasamos as chamadas a estado BILLED
+        telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
+
+        //Volvemos a intentar pasar as chamadas a estado BILLED de novo
+        //Debe saltar a excepción UnexpectedPhoneCallStatusException
+        assertException(UnexpectedPhoneCallStatusException.class, () => {
+            telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
+        });
+
+        //Borramos as chamadas
+        telcoService.clearCalls();
+
+        //Borramos o cliente
+        telcoService.removeCustomer(perico.getCustomerId());
+    }
+
+    // Carlos
+    @Test
+    public void testMonthNotClosed(){
+        //Primeiro creamos un cliente
+        Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
+
+        //Engadimos varias chamadas ó seu nome, que pertencen ó mes actual (por tanto que aínda non rematou)
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(1), (long) 180, PhoneCallType.LOCAL, "600300100");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(2), (long) 600, PhoneCallType.INTERNATIONAL, "0018005437689");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(3), (long) 240, PhoneCallType.NATIONAL, "900200300");
+        telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(4), (long) 400, PhoneCallType.LOCAL, "981856382");
+
+        //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
+        assertThrows(MonthNotClosedException.class, () => {
+            telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+        });
+    }
 
 }
