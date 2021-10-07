@@ -16,8 +16,8 @@ import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 public class MockTelcoService implements TelcoService {
 
-	private Map<Long, Customer> clientsMap = new LinkedHashMap<Long, Customer>();
-	private Map<Long, PhoneCall> phoneCallsMap = new LinkedHashMap<Long,PhoneCall>();
+	private final Map<Long, Customer> clientsMap = new LinkedHashMap<>();
+	private final Map<Long, PhoneCall> phoneCallsMap = new LinkedHashMap<>();
 	//private static Map<Long, List<PhoneCall>> phoneCallsByUserMap = new LinkedHashMap<Long,List<PhoneCall>>();
 
 	private long lastClientId = 0;
@@ -139,7 +139,7 @@ public class MockTelcoService implements TelcoService {
 
 		for (PhoneCall call: phoneCallsMap.values()) {
 			// Recorremos toda a colección de chamadas
-			if ((call.getCustomerId() == customerId)
+			if ((call.getCustomerId().equals(customerId))
 					&& ((start_time == null) || (call.getStartDate().isAfter(start_time)))
 					&& ((end == null) || (call.getStartDate().isBefore(end)))
 					&& ((tipo == null) || (call.getPhoneCallType().equals(tipo)))) {
@@ -165,7 +165,7 @@ public class MockTelcoService implements TelcoService {
 		Collection<PhoneCall> calls = new ArrayList<>();
 		for (PhoneCall call: phoneCallsMap.values()) {
 			// Recorremos toda a colección de chamadas
-			if (call.getCustomerId() == customerId) {
+			if (call.getCustomerId().equals(customerId)) {
 				// Si é do cliente que esperamos, comprobamos o mes e o ano
 				LocalDateTime date = call.getStartDate();
 				if ((date.getMonthValue() == month) && (date.getYear() == year)) {

@@ -42,7 +42,6 @@ public class TelcoServiceTest {
 
     }
 
-
     //Isma
     @Test
     public void testAddCustomerAndFindCustomerById() throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
@@ -62,11 +61,13 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(customer2.getCustomerId());
     }
 
+    // Isma
     @Test
     public void testCustomerNotFound() {
         assertThrows(InstanceNotFoundException.class, () -> telcoService.findCustomerById(Long.valueOf("9000")));
     }
 
+    // Isma
     @Test
     public void testRemoveCustomer() throws InputValidationException, CustomerHasCallsException, InstanceNotFoundException {
         //Se crean 2 clientes para la prueba
@@ -80,9 +81,9 @@ public class TelcoServiceTest {
         assertEquals(customer2, c2);
         //Se borra lo creado en la prueba
         telcoService.removeCustomer(customer2.getCustomerId());
-
     }
 
+    // Isma
     @Test
     public void testRemoveCustomerWithCalls() throws InputValidationException {
         //Se crea 1 cliente para la prueba
@@ -93,6 +94,7 @@ public class TelcoServiceTest {
         assertThrows(CustomerHasCallsException.class, () -> telcoService.removeCustomer(customer1.getCustomerId()));
     }
 
+    // Isma
     @Test
     public void testModifyCustomer() throws InputValidationException, CustomerHasCallsException, InstanceNotFoundException {
         //Se crea 1 cliente para la prueba
@@ -106,7 +108,6 @@ public class TelcoServiceTest {
         //Se borra lo creado en la prueba
         telcoService.removeCustomer(customer1.getCustomerId());
     }
-
 
     //Pablo
     @Test
@@ -128,6 +129,7 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(carlos.getCustomerId());
         telcoService.removeCustomer(isma.getCustomerId());
     }
+
     //Pablo
     @Test
     public void testGetCustomerByName () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
@@ -138,7 +140,6 @@ public class TelcoServiceTest {
         Customer pablo2 = telcoService.addCustomer("Pablo", "11436587T", "los cantones, 124", "666555442");
         //Añadimos al los clientes
         Collection<Customer> mycustomer = new ArrayList<>();
-        Customer c;
         mycustomer.add(pablo1);
         mycustomer.add(pablo2);
         //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
@@ -150,8 +151,8 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(carlos.getCustomerId());
         telcoService.removeCustomer(isma.getCustomerId());
         telcoService.removeCustomer(pablo2.getCustomerId());
-
     }
+
     //Pablo
     @Test
     public void testAddCall () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
@@ -164,7 +165,6 @@ public class TelcoServiceTest {
         this.removeCall(phoneCall.getPhoneCallId());
         telcoService.removeCustomer(pablo.getCustomerId());
     }
-
 
     // Carlos
     @Test
@@ -190,7 +190,6 @@ public class TelcoServiceTest {
         assertEquals(addedcalls, retrievedcalls);
 
         //Ahora borramos as chamadas
-        // TODO: ver cómo facer para borrar as chamadas sen meter o método na interface
         for (PhoneCall call : addedcalls) {
             this.removeCall(call.getPhoneCallId());
         }
@@ -256,9 +255,8 @@ public class TelcoServiceTest {
 
         //Volvemos a intentar pasar as chamadas a estado BILLED de novo
         //Debe saltar a excepción UnexpectedPhoneCallStatusException
-        assertThrows(UnexpectedCallStatusException.class, () -> {
-            telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
-        });
+        assertThrows(UnexpectedCallStatusException.class, () ->
+                telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED));
 
         //Borramos as chamadas
         this.clearCalls();
@@ -280,9 +278,7 @@ public class TelcoServiceTest {
         telcoService.addCall(perico.getCustomerId(), LocalDateTime.now().minusHours(4), (long) 400, PhoneCallType.LOCAL, "981856382");
 
         //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
-        assertThrows(MonthNotClosedException.class, () -> {
-            telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear());
-        });
+        assertThrows(MonthNotClosedException.class, () -> telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear()));
     }
 
 }
