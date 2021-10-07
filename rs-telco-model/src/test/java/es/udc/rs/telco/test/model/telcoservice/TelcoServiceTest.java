@@ -164,7 +164,7 @@ public class TelcoServiceTest {
 
         assertEquals(phoneCall.getPhoneCallId(), c);
 
-        //telcoService.removeCall(phoneCall.getPhoneCallId());
+        this.removeCall(phoneCall.getPhoneCallId());
         telcoService.removeCustomer(pablo.getCustomerId());
     }
 
