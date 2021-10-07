@@ -87,7 +87,7 @@ public class MockTelcoService implements TelcoService {
 		//Buscamos al cliente en la lista por su DNI
 		Customer c = null;
 		for (Customer customer: clientsMap.values()){
-			if ((customer.getName().equals(dni))) {
+			if ((customer.getDni().equals(dni))) {
 				c = customer;
 				// Break porque suponemos que los DNIs no se repiten, entonces al encontrar
 				// un cliente que tiene el DNI que buscamos, ya paramos de buscar

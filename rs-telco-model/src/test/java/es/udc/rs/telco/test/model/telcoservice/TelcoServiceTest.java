@@ -108,7 +108,7 @@ public class TelcoServiceTest {
     }
 
 
-
+    //Pablo
     @Test
     public void testFindCustomerByDNI () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
         //creamos tres clientes
@@ -128,7 +128,7 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(carlos.getCustomerId());
         telcoService.removeCustomer(isma.getCustomerId());
     }
-
+    //Pablo
     @Test
     public void testGetCustomerByName () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException{
         //creamos customers
@@ -139,8 +139,8 @@ public class TelcoServiceTest {
         //Añadimos al los clientes
         Collection<Customer> mycustomer = new ArrayList<>();
         Customer c;
-        c = telcoService.addCustomer(pablo1.getName(), pablo1.getDni(), pablo1.getAddress(), pablo1.getPhoneNumber());
-        c = telcoService.addCustomer(pablo2.getName(), pablo2.getDni(), pablo2.getAddress(), pablo2.getPhoneNumber());
+        mycustomer.add(pablo1);
+        mycustomer.add(pablo2);
         //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
         Collection<Customer> customers = telcoService.getCustomersbyName("PABLO", null, null);
         //Comparamos
@@ -155,7 +155,7 @@ public class TelcoServiceTest {
             telcoService.removeCustomer(cust.getCustomerId());
         }
     }
-
+    //Pablo
     @Test
     public void testAddCall () throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
         Customer pablo = telcoService.addCustomer("Pablo", "21436587T", "los cantones, 123", "666555444");
