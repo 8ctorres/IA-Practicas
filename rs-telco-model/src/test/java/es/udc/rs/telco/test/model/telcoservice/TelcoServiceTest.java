@@ -284,7 +284,7 @@ public class TelcoServiceTest {
 
         //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
         assertThrows(MonthNotClosedException.class, () -> {
-            telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+            telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear());
         });
     }
 
