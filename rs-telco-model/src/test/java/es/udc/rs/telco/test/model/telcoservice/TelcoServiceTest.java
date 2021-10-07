@@ -151,9 +151,6 @@ public class TelcoServiceTest {
         telcoService.removeCustomer(isma.getCustomerId());
         telcoService.removeCustomer(pablo2.getCustomerId());
 
-        for (Customer cust : mycustomer) {
-            telcoService.removeCustomer(cust.getCustomerId());
-        }
     }
     //Pablo
     @Test
