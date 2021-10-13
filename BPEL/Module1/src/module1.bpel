@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<process
+    name="module1"
+    targetNamespace="http://enterprise.netbeans.org/bpel/Module1/module1"
+    xmlns:tns="http://enterprise.netbeans.org/bpel/Module1/module1"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2"
+    xmlns:sxat="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Attachment"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:ns2="http://rs.udc.es/reward" xmlns:ns0="http://rs.udc.es/billing" xmlns:ns1="http://rs.udc.es/rating" xmlns:ns3="http://rs.udc.es/telco">
+    <import namespace="http://rs.udc.es/reward" location="RewardService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://rs.udc.es/billing" location="BillingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://rs.udc.es/rating" location="RatingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://rs.udc.es/telco" location="TelcoService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://rs.udc.es/billing" location="BillingService_schema.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
+    <import namespace="http://rs.udc.es/rating" location="RatingService_schema.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
+    <import namespace="http://rs.udc.es/telco" location="TelcoService_schema.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
+    <import namespace="http://rs.udc.es/reward" location="RewardService_schema.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/BillingServiceWrapper" location="BillingServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/RatingServiceWrapper" location="RatingServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/RewardServiceWrapper" location="RewardServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BillingService" xmlns:tns="http://enterprise.netbeans.org/bpel/BillingServiceWrapper" partnerLinkType="tns:BillingProviderLinkType" partnerRole="BillingProviderRole"/>
+        <partnerLink name="RatingService" xmlns:tns="http://enterprise.netbeans.org/bpel/RatingServiceWrapper" partnerLinkType="tns:RatingProviderLinkType" partnerRole="RatingProviderRole"/>
+        <partnerLink name="RewardService" xmlns:tns="http://enterprise.netbeans.org/bpel/RewardServiceWrapper" partnerLinkType="tns:RewardProviderLinkType" partnerRole="RewardProviderRole"/>
+    </partnerLinks>
+    <sequence>
+   </sequence>
+</process>
