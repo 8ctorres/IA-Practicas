@@ -14,7 +14,7 @@ target/
 rs-telco-client/src/main/java/es/udc/rs/telco/client/service/rest/dto/*
 
 # Open ESB - WS BPEL Module + Composite Application folders
-nbproject/
+# nbproject/
 build/
 jbiServiceUnits/
 build/

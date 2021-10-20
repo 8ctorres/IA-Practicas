@@ -21,11 +21,62 @@
     <import namespace="http://enterprise.netbeans.org/bpel/BillingServiceWrapper" location="BillingServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://enterprise.netbeans.org/bpel/RatingServiceWrapper" location="RatingServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://enterprise.netbeans.org/bpel/RewardServiceWrapper" location="RewardServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/TelcoServiceWrapper" location="TelcoServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" location="TelcoFlowInterface.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <partnerLinks>
+        <partnerLink name="FlowInterface" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" partnerLinkType="tns:TelcoFlowInterface" myRole="TelcoFlowInterfacePortTypeRole"/>
         <partnerLink name="BillingService" xmlns:tns="http://enterprise.netbeans.org/bpel/BillingServiceWrapper" partnerLinkType="tns:BillingProviderLinkType" partnerRole="BillingProviderRole"/>
         <partnerLink name="RatingService" xmlns:tns="http://enterprise.netbeans.org/bpel/RatingServiceWrapper" partnerLinkType="tns:RatingProviderLinkType" partnerRole="RatingProviderRole"/>
         <partnerLink name="RewardService" xmlns:tns="http://enterprise.netbeans.org/bpel/RewardServiceWrapper" partnerLinkType="tns:RewardProviderLinkType" partnerRole="RewardProviderRole"/>
+        <partnerLink name="TelcoService" xmlns:tns="http://enterprise.netbeans.org/bpel/TelcoServiceWrapper" partnerLinkType="tns:TelcoProviderLinkType" partnerRole="TelcoProviderRole"/>
     </partnerLinks>
+    <variables>
+        <variable name="TelcoFlowOperationOut" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" messageType="tns:TelcoFlowOperationResponse"/>
+        <variable name="FindCallsToBillOut" messageType="ns3:findCallsToBillResponse">
+            <sxed:editor>
+                <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+            </sxed:editor>
+        </variable>
+        <variable name="FindCallsToBillIn" messageType="ns3:findCallsToBill"/>
+        <variable name="TelcoFlowOperationIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" messageType="tns:TelcoFlowOperationRequest"/>
+    </variables>
     <sequence>
-   </sequence>
+        <receive name="Receive1" createInstance="yes" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationIn"/>
+        <assign name="Assign1">
+            <copy>
+                <from variable="TelcoFlowOperationIn"/>
+                <to variable="FindCallsToBillIn"/>
+            </copy>
+        </assign>
+        <invoke name="Invoke1" partnerLink="TelcoService" operation="findCallsToBill" portType="ns3:TelcoProvider" inputVariable="FindCallsToBillIn" outputVariable="FindCallsToBillOut"/>
+        <flow name="Flow1">
+            <forEach name="ForEach1" parallel="no" counterName="ForEach1Counter">
+                <startCounterValue>1</startCounterValue>
+                <finalCounterValue>count($FindCallsToBillOut.parameters/return)</finalCounterValue>
+                <completionCondition>
+                    <branches>count($FindCallsToBillOut.parameters/return)</branches>
+                </completionCondition>
+                <scope name="Scope1">
+                    <variables>
+                        <variable name="GetPhoneCallPriceOut" messageType="ns1:getPhoneCallPriceResponse"/>
+                        <variable name="GetPhoneCallPriceIn" messageType="ns1:getPhoneCallPrice"/>
+                    </variables>
+                    <sequence name="Sequence1">
+                        <assign name="Assign2">
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to variable="TelcoFlowOperationIn"/>
+                            </copy>
+                        </assign>
+                        <invoke name="Invoke2" partnerLink="RatingService" operation="getPhoneCallPrice" portType="ns1:RatingProvider" inputVariable="GetPhoneCallPriceIn" outputVariable="GetPhoneCallPriceOut"/>
+                    </sequence>
+                </scope>
+            </forEach>
+        </flow>
+        <reply name="Reply1" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationOut"/>
+    </sequence>
 </process>

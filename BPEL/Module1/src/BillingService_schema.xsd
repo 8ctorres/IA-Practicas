@@ -28,6 +28,12 @@
             <xs:element name="type" type="tns:phoneCallType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
+    
+    <xs:complexType name="pricedPhoneCallsList">
+        <xs:sequence>
+            <xs:element name="priced-call" type="tns:pricedPhoneCall" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="createAndSendBillResponse">
         <xs:sequence>
