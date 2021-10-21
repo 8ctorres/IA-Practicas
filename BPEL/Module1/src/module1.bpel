@@ -9,7 +9,7 @@
     xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
     xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2"
     xmlns:sxat="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Attachment"
-    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:ns2="http://rs.udc.es/reward" xmlns:ns0="http://rs.udc.es/billing" xmlns:ns1="http://rs.udc.es/rating" xmlns:ns3="http://rs.udc.es/telco">
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:ns2="http://rs.udc.es/reward" xmlns:ns0="http://rs.udc.es/billing" xmlns:ns1="http://rs.udc.es/rating" xmlns:ns3="http://rs.udc.es/telco" xmlns:ns4="http://enterprise.netbeans.org/bpel/WizardCorrelationProperties">
     <import namespace="http://rs.udc.es/reward" location="RewardService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://rs.udc.es/billing" location="BillingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://rs.udc.es/rating" location="RatingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
@@ -23,8 +23,8 @@
     <import namespace="http://enterprise.netbeans.org/bpel/RewardServiceWrapper" location="RewardServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://enterprise.netbeans.org/bpel/TelcoServiceWrapper" location="TelcoServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" location="TelcoFlowInterface.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
-    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" location="BillingFlowInterface.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>   
-    
+    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" location="BillingFlowInterface.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/WizardCorrelationProperties" location="WizardCorrelationProperties.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <partnerLinks>
         <partnerLink name="BillingFlowInterface" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" partnerLinkType="tns:BillingFlowInterface" myRole="BillingFlowInterfacePortTypeRole"/>
         <partnerLink name="FlowInterface" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" partnerLinkType="tns:TelcoFlowInterface" myRole="TelcoFlowInterfacePortTypeRole"/>
@@ -34,6 +34,18 @@
         <partnerLink name="TelcoService" xmlns:tns="http://enterprise.netbeans.org/bpel/TelcoServiceWrapper" partnerLinkType="tns:TelcoProviderLinkType" partnerRole="TelcoProviderRole"/>
     </partnerLinks>
     <variables>
+        <variable name="RemovePendingPointsOut" messageType="ns2:removePendingPointsResponse"/>
+        <variable name="RemovePendingPointsIn" messageType="ns2:removePendingPoints"/>
+        <variable name="ConfirmPendingPointsOut" messageType="ns2:confirmPendingPointsResponse"/>
+        <variable name="ConfirmPendingPointsIn" messageType="ns2:confirmPendingPoints"/>
+        <variable name="ChangeStatusOut1" messageType="ns3:changeStatusResponse"/>
+        <variable name="ChangeStatusIn1" messageType="ns3:changeStatus"/>
+        <variable name="BillingNotifyBilledOperationIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" messageType="tns:BillingNotifyBilledOperationRequest"/>
+        <variable name="AddPendingPointsOut" messageType="ns2:addPendingPointsResponse"/>
+        <variable name="AddPendingPointsIn" messageType="ns2:addPendingPoints"/>
+        <variable name="ChangeStatusOut" messageType="ns3:changeStatusResponse"/>
+        <variable name="ChangeStatusIn" messageType="ns3:changeStatus"/>
+        <variable name="BillingNotifySentOperationIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" messageType="tns:BillingNotifySentOperationRequest"/>
         <variable name="GetDiscountOut" messageType="ns1:getDiscountResponse"/>
         <variable name="GetDiscountIn" messageType="ns1:getDiscount"/>
         <variable name="CreateAndSendBillOut" messageType="ns0:createAndSendBillResponse"/>
@@ -51,8 +63,19 @@
         <variable name="FindCallsToBillIn" messageType="ns3:findCallsToBill"/>
         <variable name="TelcoFlowOperationIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" messageType="tns:TelcoFlowOperationRequest"/>
     </variables>
+    <correlationSets>
+        <correlationSet name="wzrd_set_Receive1_Receive2" properties="ns4:wzrd_prop_int_int"/>
+        <correlationSet name="wzrd_set_Receive1_Receive2_1" properties="ns4:wzrd_prop_int_int"/>
+        <correlationSet name="wzrd_set_Receive1_Receive2_2" properties="ns4:wzrd_prop_long_long"/>
+    </correlationSets>
     <sequence>
-        <receive name="Receive1" createInstance="yes" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationIn"/>
+        <receive name="Receive1" createInstance="yes" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationIn">
+            <correlations>
+                <correlation set="wzrd_set_Receive1_Receive2" initiate="yes"/>
+                <correlation set="wzrd_set_Receive1_Receive2_1" initiate="yes"/>
+                <correlation set="wzrd_set_Receive1_Receive2_2" initiate="yes"/>
+            </correlations>
+        </receive>
         <assign name="Assign1">
             <copy>
                 <from variable="TelcoFlowOperationIn" part="customerId"/>
@@ -246,6 +269,116 @@
             </copy>
         </assign>
         <invoke name="Invoke4" partnerLink="BillingService" operation="createAndSendBill" portType="ns0:BillingProvider" inputVariable="CreateAndSendBillIn" outputVariable="CreateAndSendBillOut"/>
+        <receive name="Receive2" createInstance="no" partnerLink="BillingFlowInterface" operation="BillingNotifySentOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" portType="tns:BillingFlowInterfacePortType" variable="BillingNotifySentOperationIn">
+            <correlations>
+                <correlation set="wzrd_set_Receive1_Receive2" initiate="no"/>
+                <correlation set="wzrd_set_Receive1_Receive2_1" initiate="no"/>
+                <correlation set="wzrd_set_Receive1_Receive2_2" initiate="no"/>
+            </correlations>
+        </receive>
+        <assign name="Assign6">
+            <copy>
+                <from variable="BillingNotifySentOperationIn" part="customerId"/>
+                <to>$ChangeStatusIn.parameters/customerId</to>
+            </copy>
+            <copy>
+                <from variable="BillingNotifySentOperationIn" part="month"/>
+                <to>$ChangeStatusIn.parameters/month</to>
+            </copy>
+            <copy>
+                <from variable="BillingNotifySentOperationIn" part="year"/>
+                <to>$ChangeStatusIn.parameters/year</to>
+            </copy>
+            <copy>
+                <from>'BILLED'</from>
+                <to>$ChangeStatusIn.parameters/newPhoneCallStatus</to>
+            </copy>
+        </assign>
+        <invoke name="Invoke5" partnerLink="TelcoService" operation="changeStatus" portType="ns3:TelcoProvider" inputVariable="ChangeStatusIn" outputVariable="ChangeStatusOut"/>
+        <assign name="Assign7">
+            <copy>
+                <from variable="BillingNotifySentOperationIn" part="customerId"/>
+                <to>$AddPendingPointsIn.parameters/customerId</to>
+            </copy>
+            <copy>
+                <from>round($CreateAndSendBillOut.parameters/return/amount div 10)</from>
+                <to>$AddPendingPointsIn.parameters/points</to>
+            </copy>
+        </assign>
+        <invoke name="Invoke6" partnerLink="RewardService" operation="addPendingPoints" portType="ns2:RewardProvider" inputVariable="AddPendingPointsIn" outputVariable="AddPendingPointsOut"/>
+        <receive name="Receive3" createInstance="no" partnerLink="BillingFlowInterface" operation="BillingNotifyBilledOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" portType="tns:BillingFlowInterfacePortType" variable="BillingNotifyBilledOperationIn">
+            <correlations>
+                <correlation set="wzrd_set_Receive1_Receive2" initiate="no"/>
+                <correlation set="wzrd_set_Receive1_Receive2_1" initiate="no"/>
+                <correlation set="wzrd_set_Receive1_Receive2_2" initiate="no"/>
+            </correlations>
+        </receive>
+        <if name="If1">
+            <condition>$BillingNotifyBilledOperationIn.billPaid</condition>
+            <sequence name="Sequence2">
+                <assign name="Assign8">
+                    <copy>
+                        <from variable="BillingNotifyBilledOperationIn" part="customerId"/>
+                        <to>$ChangeStatusIn1.parameters/customerId</to>
+                    </copy>
+                    <copy>
+                        <from variable="BillingNotifyBilledOperationIn" part="month"/>
+                        <to>$ChangeStatusIn1.parameters/month</to>
+                    </copy>
+                    <copy>
+                        <from variable="BillingNotifyBilledOperationIn" part="year"/>
+                        <to>$ChangeStatusIn1.parameters/year</to>
+                    </copy>
+                    <copy>
+                        <from>'PAID'</from>
+                        <to>$ChangeStatusIn1.parameters/newPhoneCallStatus</to>
+                    </copy>
+                    <copy>
+                        <from>$AddPendingPointsIn.parameters/customerId</from>
+                        <to>$ConfirmPendingPointsIn.parameters/customerId</to>
+                    </copy>
+                    <copy>
+                        <from>$AddPendingPointsIn.parameters/points</from>
+                        <to>$ConfirmPendingPointsIn.parameters/points</to>
+                    </copy>
+                </assign>
+                <invoke name="Invoke7" partnerLink="TelcoService" operation="changeStatus" portType="ns3:TelcoProvider" inputVariable="ChangeStatusIn1" outputVariable="ChangeStatusOut1"/>
+                <invoke name="Invoke8" partnerLink="RewardService" operation="confirmPendingPoints" portType="ns2:RewardProvider" inputVariable="ConfirmPendingPointsIn" outputVariable="ConfirmPendingPointsOut"/>
+            </sequence>
+            <else>
+                <sequence name="Sequence3">
+                    <assign name="Assign9">
+                        <copy>
+                            <from>$AddPendingPointsIn.parameters/customerId</from>
+                            <to>$RemovePendingPointsIn.parameters/customertId</to>
+                        </copy>
+                        <copy>
+                            <from>$AddPendingPointsIn.parameters/points</from>
+                            <to>$RemovePendingPointsIn.parameters/points</to>
+                        </copy>
+                    </assign>
+                    <invoke name="Invoke9" partnerLink="RewardService" operation="removePendingPoints" portType="ns2:RewardProvider" inputVariable="RemovePendingPointsIn" outputVariable="RemovePendingPointsOut"/>
+                </sequence>
+            </else>
+        </if>
+        <assign name="Assign10">
+            <copy>
+                <from>$CreateAndSendBillOut.parameters/return/billId</from>
+                <to variable="TelcoFlowOperationOut" part="invoiceId"/>
+            </copy>
+            <copy>
+                <from>$CreateAndSendBillOut.parameters/return/amount</from>
+                <to variable="TelcoFlowOperationOut" part="totalAmount"/>
+            </copy>
+            <copy>
+                <from variable="BillingNotifyBilledOperationIn" part="billPaid"/>
+                <to variable="TelcoFlowOperationOut" part="paid"/>
+            </copy>
+            <copy>
+                <from>$FindCallsToBillOut.parameters/return</from>
+                <to variable="TelcoFlowOperationOut" part="billedPhoneCalls"/>
+            </copy>
+        </assign>
         <reply name="Reply1" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationOut"/>
     </sequence>
 </process>
