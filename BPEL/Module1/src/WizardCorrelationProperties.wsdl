@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="WizardCorrelationProperties.wsdl" targetNamespace="http://enterprise.netbeans.org/bpel/WizardCorrelationProperties" xmlns:tns="http://enterprise.netbeans.org/bpel/WizardCorrelationProperties" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:ns="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" xmlns:ns1="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface">
+    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" location="BillingFlowInterface.wsdl"/>
+    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" location="TelcoFlowInterface.wsdl"/>
+    <vprop:property name="wzrd_prop_int_int" type="xsd:int"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_int_int" messageType="ns:BillingNotifySentOperationRequest" part="year"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_int_int" messageType="ns1:TelcoFlowOperationRequest" part="year"/>
+    <vprop:property name="wzrd_prop_long_long" type="xsd:long"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_long_long" messageType="ns:BillingNotifySentOperationRequest" part="customerId"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_long_long" messageType="ns1:TelcoFlowOperationRequest" part="customerId"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_int_int" messageType="ns:BillingNotifySentOperationRequest" part="month"/>
+    <vprop:propertyAlias propertyName="tns:wzrd_prop_int_int" messageType="ns1:TelcoFlowOperationRequest" part="month"/>
+</definitions>

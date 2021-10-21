@@ -9,9 +9,10 @@
              xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              targetNamespace="CA1"
-             xmlns:tns="CA1" xmlns:ns="http://rs.udc.es/telco" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface">
+             xmlns:tns="CA1" xmlns:ns="http://rs.udc.es/telco" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" xmlns:ns2="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface">
     <import namespace="http://rs.udc.es/telco" location="../jbiServiceUnits/Module1/TelcoService.wsdl"/>
     <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" location="../jbiServiceUnits/Module1/TelcoFlowInterface.wsdl"/>
+    <import namespace="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" location="../jbiServiceUnits/Module1/BillingFlowInterface.wsdl"/>
     <portType name="dummyCasaPortType"/>
     <binding name="casaBinding1" type="ns1:TelcoFlowInterfacePortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -25,9 +26,29 @@
             </output>
         </operation>
     </binding>
+    <binding name="casaBinding2" type="ns2:BillingFlowInterfacePortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="BillingNotifySentOperation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="CA1"/>
+            </input>
+        </operation>
+        <operation name="BillingNotifyBilledOperation">
+            <soap:operation/>
+            <input name="input2">
+                <soap:body use="literal" namespace="CA1"/>
+            </input>
+        </operation>
+    </binding>
     <service name="CA1Service1">
         <port name="TelcoFlowPort" binding="tns:casaBinding1">
             <soap:address location="http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort"/>
+        </port>
+    </service>
+    <service name="CA1Service2">
+        <port name="BillingFlowPort" binding="tns:casaBinding2">
+            <soap:address location="http://localhost:8123/CA1/CA1/BillingFlowInterfacePort"/>
         </port>
     </service>
 </definitions>

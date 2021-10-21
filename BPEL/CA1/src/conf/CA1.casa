@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<casa xmlns="http://java.sun.com/xml/ns/casa" xmlns:ns1="http://rs.udc.es/billing" xmlns:ns2="http://rs.udc.es/telco" xmlns:ns3="http://rs.udc.es/rating" xmlns:ns4="http://rs.udc.es/reward" xmlns:ns5="CA1" xmlns:ns6="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" xmlns:ns7="http://enterprise.netbeans.org/bpel/Module1/module1" xmlns:xlink="http://www.w3.org/2000/xlink">
+<casa xmlns="http://java.sun.com/xml/ns/casa" xmlns:ns1="http://rs.udc.es/billing" xmlns:ns2="http://rs.udc.es/telco" xmlns:ns3="http://rs.udc.es/rating" xmlns:ns4="http://rs.udc.es/reward" xmlns:ns5="CA1" xmlns:ns6="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" xmlns:ns7="http://j2ee.netbeans.org/wsdl/Module1/src/BillingFlowInterface" xmlns:ns8="http://enterprise.netbeans.org/bpel/Module1/module1" xmlns:xlink="http://www.w3.org/2000/xlink">
     <endpoints>
         <endpoint endpoint-name="BillingProviderPort" interface-name="ns1:BillingProvider" name="endpoint1" service-name="ns1:BillingProviderService"/>
         <endpoint endpoint-name="TelcoProviderPort" interface-name="ns2:TelcoProvider" name="endpoint2" service-name="ns2:TelcoProviderService"/>
         <endpoint endpoint-name="RatingProviderPort" interface-name="ns3:RatingProvider" name="endpoint3" service-name="ns3:RatingProviderService"/>
         <endpoint endpoint-name="RewardProviderPort" interface-name="ns4:RewardProvider" name="endpoint4" service-name="ns4:RewardProviderService"/>
         <endpoint endpoint-name="TelcoFlowPort" interface-name="ns6:TelcoFlowInterfacePortType" name="endpoint5" service-name="ns5:CA1Service1"/>
-        <endpoint display-name="FlowInterface" endpoint-name="TelcoFlowInterfacePortTypeRole_myRole" file-path="module1.bpel" interface-name="ns6:TelcoFlowInterfacePortType" name="endpoint6" process-name="module1" service-name="ns7:FlowInterface"/>
-        <endpoint display-name="BillingService" endpoint-name="BillingProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns1:BillingProvider" name="endpoint7" process-name="module1" service-name="ns7:BillingService"/>
-        <endpoint display-name="RatingService" endpoint-name="RatingProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns3:RatingProvider" name="endpoint8" process-name="module1" service-name="ns7:RatingService"/>
-        <endpoint display-name="RewardService" endpoint-name="RewardProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns4:RewardProvider" name="endpoint9" process-name="module1" service-name="ns7:RewardService"/>
-        <endpoint display-name="TelcoService" endpoint-name="TelcoProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns2:TelcoProvider" name="endpoint10" process-name="module1" service-name="ns7:TelcoService"/>
+        <endpoint endpoint-name="BillingFlowPort" interface-name="ns7:BillingFlowInterfacePortType" name="endpoint6" service-name="ns5:CA1Service2"/>
+        <endpoint display-name="BillingFlowInterface" endpoint-name="BillingFlowInterfacePortTypeRole_myRole" file-path="module1.bpel" interface-name="ns7:BillingFlowInterfacePortType" name="endpoint7" process-name="module1" service-name="ns8:BillingFlowInterface"/>
+        <endpoint display-name="FlowInterface" endpoint-name="TelcoFlowInterfacePortTypeRole_myRole" file-path="module1.bpel" interface-name="ns6:TelcoFlowInterfacePortType" name="endpoint8" process-name="module1" service-name="ns8:FlowInterface"/>
+        <endpoint display-name="BillingService" endpoint-name="BillingProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns1:BillingProvider" name="endpoint9" process-name="module1" service-name="ns8:BillingService"/>
+        <endpoint display-name="RatingService" endpoint-name="RatingProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns3:RatingProvider" name="endpoint10" process-name="module1" service-name="ns8:RatingService"/>
+        <endpoint display-name="RewardService" endpoint-name="RewardProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns4:RewardProvider" name="endpoint11" process-name="module1" service-name="ns8:RewardService"/>
+        <endpoint display-name="TelcoService" endpoint-name="TelcoProviderRole_partnerRole" file-path="module1.bpel" interface-name="ns2:TelcoProvider" name="endpoint12" process-name="module1" service-name="ns8:TelcoService"/>
     </endpoints>
     <service-units>
         <service-engine-service-unit artifacts-zip="Module1.jar" component-name="sun-bpel-engine" defined="true" description="Represents this Service Unit" internal="true" name="CA1-Module1" unit-name="Module1" unknown="false" x="200" y="382">
-            <provides endpoint="endpoint6"/>
-            <consumes endpoint="endpoint7"/>
-            <consumes endpoint="endpoint8"/>
+            <provides endpoint="endpoint7"/>
+            <provides endpoint="endpoint8"/>
             <consumes endpoint="endpoint9"/>
             <consumes endpoint="endpoint10"/>
+            <consumes endpoint="endpoint11"/>
+            <consumes endpoint="endpoint12"/>
         </service-engine-service-unit>
         <binding-component-service-unit artifacts-zip="sun-http-binding.jar" component-name="sun-http-binding" description="Represents this Service Unit" name="CA1-sun-http-binding" unit-name="sun-http-binding">
             <ports>
-                <port bindingType="soap" x="67" y="501">
+                <port bindingType="soap" x="67" y="520">
                     <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service1']/port[@name='TelcoFlowPort'])" xlink:type="simple"/>
                     <consumes endpoint="endpoint5"/>
                     <provides endpoint="endpoint5"/>
+                </port>
+                <port bindingType="soap" x="67" y="440">
+                    <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service2']/port[@name='BillingFlowPort'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint6"/>
+                    <provides endpoint="endpoint6"/>
                 </port>
                 <port x="67" y="277">
                     <link xlink:href="../jbiServiceUnits/Module1/TelcoService.wsdl#xpointer(/definitions/service[@name='TelcoProviderService']/port[@name='TelcoProviderPort'])" xlink:type="simple"/>
@@ -51,16 +59,18 @@
         </binding-component-service-unit>
     </service-units>
     <connections>
-        <connection consumer="endpoint5" mode="" provider="endpoint6" route-type="" routing-rule="" state="unchanged"/>
-        <connection consumer="endpoint7" mode="" provider="endpoint1" route-type="" routing-rule="" state="unchanged"/>
-        <connection consumer="endpoint10" mode="" provider="endpoint2" route-type="" routing-rule="" state="unchanged"/>
-        <connection consumer="endpoint8" mode="" provider="endpoint3" route-type="" routing-rule="" state="unchanged"/>
-        <connection consumer="endpoint9" mode="" provider="endpoint4" route-type="" routing-rule="" state="unchanged"/>
+        <connection consumer="endpoint5" mode="" provider="endpoint8" route-type="" routing-rule="" state="unchanged"/>
+        <connection consumer="endpoint9" mode="" provider="endpoint1" route-type="" routing-rule="" state="unchanged"/>
+        <connection consumer="endpoint12" mode="" provider="endpoint2" route-type="" routing-rule="" state="unchanged"/>
+        <connection consumer="endpoint6" mode="" provider="endpoint7" route-type="direct" routing-rule="" state="new"/>
+        <connection consumer="endpoint10" mode="" provider="endpoint3" route-type="" routing-rule="" state="unchanged"/>
+        <connection consumer="endpoint11" mode="" provider="endpoint4" route-type="" routing-rule="" state="unchanged"/>
     </connections>
     <porttypes>
         <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/portType[@name='dummyCasaPortType'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/TelcoService.wsdl#xpointer(/definitions/portType[@name='TelcoProvider'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RatingService.wsdl#xpointer(/definitions/portType[@name='RatingProvider'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/Module1/BillingFlowInterface.wsdl#xpointer(/definitions/portType[@name='BillingFlowInterfacePortType'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/TelcoFlowInterface.wsdl#xpointer(/definitions/portType[@name='TelcoFlowInterfacePortType'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/BillingService.wsdl#xpointer(/definitions/portType[@name='BillingProvider'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RewardService.wsdl#xpointer(/definitions/portType[@name='RewardProvider'])" xlink:type="simple"/>
@@ -68,19 +78,23 @@
     </porttypes>
     <bindings>
         <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/binding[@name='casaBinding1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/binding[@name='casaBinding2'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/TelcoService.wsdl#xpointer(/definitions/binding[@name='TelcoProviderPortBinding'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RatingService.wsdl#xpointer(/definitions/binding[@name='RatingProviderPortBinding'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/BillingService.wsdl#xpointer(/definitions/binding[@name='BillingProviderPortBinding'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RewardService.wsdl#xpointer(/definitions/binding[@name='RewardProviderPortBinding'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/CA1.wsdl#xpointer(/definitions/binding[@name='casaBinding1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/CA1.wsdl#xpointer(/definitions/binding[@name='casaBinding2'])" xlink:type="simple"/>
     </bindings>
     <services>
         <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiasa/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service2'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/TelcoService.wsdl#xpointer(/definitions/service[@name='TelcoProviderService'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RatingService.wsdl#xpointer(/definitions/service[@name='RatingProviderService'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/BillingService.wsdl#xpointer(/definitions/service[@name='BillingProviderService'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/Module1/RewardService.wsdl#xpointer(/definitions/service[@name='RewardProviderService'])" xlink:type="simple"/>
         <link xlink:href="../jbiServiceUnits/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/CA1.wsdl#xpointer(/definitions/service[@name='CA1Service2'])" xlink:type="simple"/>
     </services>
     <regions>
         <region name="WSDL Endpoints" width="150"/>
