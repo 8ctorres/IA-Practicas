@@ -54,7 +54,11 @@
                 <sxed:predicate path="$CreateAndSendBillIn.parameters/priced-call[$ForEach1Counter]" source="to"/>
             </sxed:editor>
         </variable>
-        <variable name="TelcoFlowOperationOut" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" messageType="tns:TelcoFlowOperationResponse"/>
+        <variable name="TelcoFlowOperationOut" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" messageType="tns:TelcoFlowOperationResponse">
+            <sxed:editor>
+                <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+            </sxed:editor>
+        </variable>
         <variable name="FindCallsToBillOut" messageType="ns3:findCallsToBillResponse">
             <sxed:editor>
                 <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
@@ -228,27 +232,119 @@
                                     </sxed:editor>
                                 </to>
                             </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/customerId
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/customerId
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/destinationNumber
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/destinationNumber
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/duration
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/duration
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/phoneCallId
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/phoneCallId
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/phoneCallType
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/phoneCallType
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$FindCallsToBillOut.parameters/return[$ForEach1Counter]/startDate
+                                    <sxed:editor>
+                                        <sxed:predicate path="$FindCallsToBillOut.parameters/return[$ForEach1Counter]" source="from"/>
+                                    </sxed:editor>
+                                </from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/startDate
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
+                            <copy>
+                                <from>$GetPhoneCallPriceOut.parameters/return</from>
+                                <to>$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]/price
+                                    <sxed:editor>
+                                        <sxed:predicate path="$TelcoFlowOperationOut.billedPhoneCalls/priced-call[$ForEach1Counter]" source="to"/>
+                                    </sxed:editor>
+                                </to>
+                            </copy>
                         </assign>
                     </sequence>
                 </scope>
             </forEach>
-            <sequence name="FlowSequence">
-                <assign name="Assign4">
-                    <copy>
-                        <from variable="TelcoFlowOperationIn" part="customerId"/>
-                        <to>$GetDiscountIn.parameters/customerId</to>
-                    </copy>
-                    <copy>
-                        <from variable="TelcoFlowOperationIn" part="month"/>
-                        <to>$GetDiscountIn.parameters/month</to>
-                    </copy>
-                    <copy>
-                        <from variable="TelcoFlowOperationIn" part="year"/>
-                        <to>$GetDiscountIn.parameters/year</to>
-                    </copy>
-                </assign>
-                <invoke name="Invoke3" partnerLink="RatingService" operation="getDiscount" portType="ns1:RatingProvider" inputVariable="GetDiscountIn" outputVariable="GetDiscountOut"/>
-            </sequence>
+            <scope name="Scope2">
+                <faultHandlers>
+                    <catch faultName="ns1:RatingException">
+                        <assign name="Assign11">
+                            <copy>
+                                <from>0</from>
+                                <to>$GetDiscountOut.parameters/return</to>
+                            </copy>
+                        </assign>
+                    </catch>
+                </faultHandlers>
+                <sequence name="FlowSequence">
+                    <assign name="Assign4">
+                            <copy>
+                                    <from variable="TelcoFlowOperationIn" part="customerId"/>
+                                        <to>$GetDiscountIn.parameters/customerId</to>
+                                </copy>
+                                <copy>
+                                    <from variable="TelcoFlowOperationIn" part="month"/>
+                                        <to>$GetDiscountIn.parameters/month</to>
+                                </copy>
+                                <copy>
+                                    <from variable="TelcoFlowOperationIn" part="year"/>
+                                        <to>$GetDiscountIn.parameters/year</to>
+                                </copy>
+                        </assign>
+                        <invoke name="Invoke3" partnerLink="RatingService" operation="getDiscount" portType="ns1:RatingProvider" inputVariable="GetDiscountIn" outputVariable="GetDiscountOut"/>
+                </sequence>
+            </scope>
         </flow>
         <assign name="Assign5">
             <copy>
@@ -373,10 +469,6 @@
             <copy>
                 <from variable="BillingNotifyBilledOperationIn" part="billPaid"/>
                 <to variable="TelcoFlowOperationOut" part="paid"/>
-            </copy>
-            <copy>
-                <from>$FindCallsToBillOut.parameters/return</from>
-                <to variable="TelcoFlowOperationOut" part="billedPhoneCalls"/>
             </copy>
         </assign>
         <reply name="Reply1" partnerLink="FlowInterface" operation="TelcoFlowOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/Module1/src/TelcoFlowInterface" portType="tns:TelcoFlowInterfacePortType" variable="TelcoFlowOperationOut"/>
