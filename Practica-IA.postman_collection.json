@@ -1,0 +1,553 @@
+{
+	"info": {
+		"_postman_id": "4a611f05-062b-413a-be7a-affdae5e35ea",
+		"name": "IA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "RewardService",
+			"item": [
+				{
+					"name": "Casos de prueba 1,2 (Cliente 2)",
+					"item": [
+						{
+							"name": "Get Pending Points",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:getPendingPoints>\n            <!--Optional:-->\n            <customerId>2</customerId>\n        </rew:getPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-wscontrib",
+										"services",
+										"RewardService"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Points",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:getPoints>\n            <!--Optional:-->\n            <customerId>2</customerId>\n        </rew:getPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-wscontrib",
+										"services",
+										"RewardService"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Add Pending Points",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:addPendingPoints>\n            <!--Optional:-->\n            <customerId>?</customerId>\n            <points>?</points>\n        </rew:addPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7070",
+							"path": [
+								"rs-telco-wscontrib",
+								"services",
+								"RewardService"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Pending Points",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:confirmPendingPoints>\n            <!--Optional:-->\n            <customerId>?</customerId>\n            <points>?</points>\n        </rew:confirmPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7070",
+							"path": [
+								"rs-telco-wscontrib",
+								"services",
+								"RewardService"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Pending Points",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:removePendingPoints>\n            <!--Optional:-->\n            <customertId>?</customertId>\n            <points>?</points>\n        </rew:removePendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7070",
+							"path": [
+								"rs-telco-wscontrib",
+								"services",
+								"RewardService"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TelcoService",
+			"item": [
+				{
+					"name": "Caso de prueba 1 (Cliente 2, Sept 2021)",
+					"item": [
+						{
+							"name": "Procesar llamadas cliente 2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"TelcoFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills Sent",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills Paid",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n            <billPaid>true</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Caso de prueba 2 (Cliente 2, Agosto 2021)",
+					"item": [
+						{
+							"name": "Procesar llamadas cliente 2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"TelcoFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills Sent",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills NOT Paid",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n            <billPaid>false</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Caso de prueba 3 (Cliente 1, Sept 2021)",
+					"item": [
+						{
+							"name": "Procesar llamadas cliente 1",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"TelcoFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills Sent",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notify Bills Paid",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n            <billPaid>true</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8123",
+									"path": [
+										"CA1",
+										"CA1",
+										"BillingFlowInterfacePort"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
