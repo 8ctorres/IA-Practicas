@@ -34,6 +34,9 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		if (name == null || DNI == null || address == null || phone == null) {
+			throw new InputValidationException("Datos mal introducidos");
+		}
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
 		//Le asignamos el siguiente ID disponible
