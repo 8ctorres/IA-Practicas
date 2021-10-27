@@ -22,7 +22,7 @@ public class MockTelcoService implements TelcoService {
 
 	private long lastClientId = 0;
 	private long lastPhoneCallId = 0;
-	
+
 
 	private synchronized long getNextClientId() {
 		return ++lastClientId;
@@ -34,19 +34,19 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
-		//Comprobamos que se pasan los parámetros necesarios
-		if (name == null || DNI == null || address == null || phone == null) {
-			throw new InputValidationException("Introduzca los datos correctamente");
+		try{
+			//Intentamos crear un cliente con los datos proporcionados
+			Customer c = new Customer(name, DNI, address, phone);
+			//Le asignamos el siguiente ID disponible
+			c.setCustomerId(getNextClientId());
+			//Le asignamos la fecha actual como fecha de creación
+			c.setCreationDate(LocalDateTime.now());
+			//Lo metemos en clientsMap con su ID
+			clientsMap.put(c.getCustomerId(), c);
+			return c;
+		} catch (NullPointerException | ClassCastException e){
+			throw new InputValidationException("Los datos son inválidos");
 		}
-		//Creamos un cliente con los datos proporcionados
-		Customer c = new Customer(name, DNI, address, phone);
-		//Le asignamos el siguiente ID disponible
-		c.setCustomerId(getNextClientId());
-		//Le asignamos la fecha actual como fecha de creación
-		c.setCreationDate(LocalDateTime.now());
-		//Lo metemos en clientsMap con su ID
-		clientsMap.put(c.getCustomerId(), c);
-		return c;
 	}
 
 	//Isma
@@ -55,17 +55,19 @@ public class MockTelcoService implements TelcoService {
 		Customer c = clientsMap.get(id);
 		if (c == null) {
 			throw new InstanceNotFoundException(id, "Cliente no encontrado");
-		} if (id == null || name == null || DNI == null || address == null) {
-			throw new InputValidationException("Introduzca los datos correctamente");
 		}
-		//Actualiza los parámetros modificables
-		c.setName(name);
-		c.setDni(DNI);
-		c.setAddress(address);
+		//Intenta actualizar los parámetros modificables
+		try{
+			c.setName(name);
+			c.setDni(DNI);
+			c.setAddress(address);
+		} catch (NullPointerException | ClassCastException e){
+			throw new InputValidationException("Los datos son inválidos");
+		}
 	}
 
 	//Isma
-	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException {
+	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
 		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
 			throw new CustomerHasCallsException("El cliente tiene llamadas registradas");
 		}

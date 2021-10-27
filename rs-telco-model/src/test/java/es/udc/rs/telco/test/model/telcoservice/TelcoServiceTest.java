@@ -85,7 +85,7 @@ public class TelcoServiceTest {
 
     // Isma
     @Test
-    public void testRemoveCustomerWithCalls() throws InputValidationException {
+    public void testRemoveCustomerWithCalls() throws InputValidationException, InstanceNotFoundException {
         //Se crea 1 cliente para la prueba
         Customer customer1 = telcoService.addCustomer("Jose", "11111111E","Calle se por favor","444555666");
         //Se le añade una llamada al cliente
@@ -267,7 +267,7 @@ public class TelcoServiceTest {
 
     // Carlos
     @Test
-    public void testMonthNotClosed() throws InputValidationException {
+    public void testMonthNotClosed() throws InputValidationException, InstanceNotFoundException {
         //Primeiro creamos un cliente
         Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
 
