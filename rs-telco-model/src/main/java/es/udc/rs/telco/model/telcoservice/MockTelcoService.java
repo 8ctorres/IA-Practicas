@@ -34,8 +34,9 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		//Comprobamos que se pasan los parámetros necesarios
 		if (name == null || DNI == null || address == null || phone == null) {
-			throw new InputValidationException("Datos mal introducidos");
+			throw new InputValidationException("Introduzca los datos correctamente");
 		}
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
@@ -54,6 +55,8 @@ public class MockTelcoService implements TelcoService {
 		Customer c = clientsMap.get(id);
 		if (c == null) {
 			throw new InstanceNotFoundException(id, "Cliente no encontrado");
+		} if (id == null || name == null || DNI == null || address == null) {
+			throw new InputValidationException("Introduzca los datos correctamente");
 		}
 		//Actualiza los parámetros modificables
 		c.setName(name);
