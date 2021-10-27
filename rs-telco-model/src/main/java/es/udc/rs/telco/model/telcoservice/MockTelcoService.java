@@ -124,7 +124,16 @@ public class MockTelcoService implements TelcoService {
 
 	//Pablo
 	public PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
-									PhoneCallType tipo, String destinationNumber) {
+									PhoneCallType tipo, String destinationNumber) throws InputValidationException, InstanceNotFoundException {
+		//Comprobamos que customerId es valido
+		try{
+			if (clientsMap.get(customerId) == null) {
+				throw new InstanceNotFoundException(customerId, "Cliente no existe");
+			}
+		} catch (NullPointerException | ClassCastException e){
+			throw new InputValidationException("CustomerId es inválido");
+		}
+
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
 		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
 		//creamos el id
