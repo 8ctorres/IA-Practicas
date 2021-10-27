@@ -89,7 +89,7 @@ public class MockTelcoService implements TelcoService {
 		for (Customer customer: clientsMap.values()){
 			if ((customer.getDni().equals(dni))) {
 				c = customer;
-				// Break porque suponemos que los DNIs no se repiten, entonces al encontrar
+				// Break porque suponemos que los DNI no se repiten, entonces al encontrar
 				// un cliente que tiene el DNI que buscamos, ya paramos de buscar
 				break;
 			}
@@ -134,8 +134,16 @@ public class MockTelcoService implements TelcoService {
 
 	//Carlos
 	public List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
-											   PhoneCallType tipo, Integer start_position, Integer amount){
+											   PhoneCallType tipo, Integer start_position, Integer amount) throws InstanceNotFoundException, InputValidationException {
 		List<PhoneCall> mycalls = new ArrayList<>();
+		//Validamos que el cliente existe
+		try {
+			if (clientsMap.get(customerId) == null) {
+				throw new InstanceNotFoundException(customerId, "There is no Customer with that customerId");
+			}
+		}catch (NullPointerException | ClassCastException e){
+			throw new InputValidationException("CustomerId is invalid");
+		}
 
 		for (PhoneCall call: phoneCallsMap.values()) {
 			// Recorremos toda a colección de chamadas
@@ -154,7 +162,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException {
+	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException {
 		// Primeiro comprobamos que o mes que nos piden xa pasou
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
 			throw new MonthNotClosedException("O mes aínda non rematou");
@@ -170,6 +178,9 @@ public class MockTelcoService implements TelcoService {
 				LocalDateTime date = call.getStartDate();
 				if ((date.getMonthValue() == month) && (date.getYear() == year)) {
 					// Si coincide, gardamos o obxeto PhoneCall nunha nova lista
+					if (call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING)) {
+						throw new UnexpectedCallStatusException("Call was not PENDING when trying to retrieve it");
+					}
 					calls.add(call);
 				}
 			}
