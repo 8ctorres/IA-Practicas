@@ -30,7 +30,7 @@ public interface TelcoService {
     List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount);
 
     PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
-                      PhoneCallType tipo, String destinationNumber);
+                      PhoneCallType tipo, String destinationNumber) throws InputValidationException, InstanceNotFoundException;
     void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException;
 
     Customer findCustomerById(Long id) throws InstanceNotFoundException;

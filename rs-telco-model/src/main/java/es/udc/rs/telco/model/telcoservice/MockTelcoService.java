@@ -34,6 +34,10 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		//Comprobamos que se pasan los parámetros necesarios
+		if (name == null || DNI == null || address == null || phone == null) {
+			throw new InputValidationException("Introduzca los datos correctamente");
+		}
 		//Creamos un cliente con los datos proporcionados
 		Customer c = new Customer(name, DNI, address, phone);
 		//Le asignamos el siguiente ID disponible
@@ -51,6 +55,8 @@ public class MockTelcoService implements TelcoService {
 		Customer c = clientsMap.get(id);
 		if (c == null) {
 			throw new InstanceNotFoundException(id, "Cliente no encontrado");
+		} if (id == null || name == null || DNI == null || address == null) {
+			throw new InputValidationException("Introduzca los datos correctamente");
 		}
 		//Actualiza los parámetros modificables
 		c.setName(name);
@@ -118,7 +124,16 @@ public class MockTelcoService implements TelcoService {
 
 	//Pablo
 	public PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
-									PhoneCallType tipo, String destinationNumber) {
+									PhoneCallType tipo, String destinationNumber) throws InputValidationException, InstanceNotFoundException {
+		//Comprobamos que customerId es valido
+		try{
+			if (clientsMap.get(customerId) == null) {
+				throw new InstanceNotFoundException(customerId, "Cliente no existe");
+			}
+		} catch (NullPointerException | ClassCastException e){
+			throw new InputValidationException("CustomerId es inválido");
+		}
+
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
 		PhoneCall p = new PhoneCall(customerId, startDate, duration, destinationNumber, tipo);
 		//creamos el id
