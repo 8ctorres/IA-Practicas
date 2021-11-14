@@ -149,7 +149,9 @@ public class MockTelcoService implements TelcoService {
 
 		//añadimos la llamada del cliente
 		phoneCallsMap.put(p.getPhoneCallId(), p);
-		return p;
+
+		//Devolvemos una copia del objeto llamada original
+		return new PhoneCall(p);
 	}
 
 	//Carlos
@@ -166,12 +168,14 @@ public class MockTelcoService implements TelcoService {
 		}
 
 		for (PhoneCall call: phoneCallsMap.values()) {
-			// Recorremos toda a colección de chamadas
+			// Recorremos toda a colección de chamadas buscando as que coinciden co customerId
+			// Engadimos á lista de saída copias dos obxectos orixinais, para non dar acceso dende fóra
+			// ós contidos dos mapas
 			if ((call.getCustomerId().equals(customerId))
 					&& ((start_time == null) || (call.getStartDate().isAfter(start_time)))
 					&& ((end == null) || (call.getStartDate().isBefore(end)))
 					&& ((tipo == null) || (call.getPhoneCallType().equals(tipo)))) {
-				mycalls.add(call);
+				mycalls.add(new PhoneCall(call));
 			}
 		}
 
@@ -201,7 +205,8 @@ public class MockTelcoService implements TelcoService {
 					if (call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING)) {
 						throw new UnexpectedCallStatusException("Call was not PENDING when trying to retrieve it");
 					}
-					calls.add(call);
+					// Usamos copias dos obxectos orixinais para evitar sacaar a fora punteiros o interior do mapa
+					calls.add(new PhoneCall(call));
 				}
 			}
 		}

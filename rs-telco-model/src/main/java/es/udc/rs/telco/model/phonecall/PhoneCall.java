@@ -22,6 +22,16 @@ public class PhoneCall {
 		this.phoneCallType = phoneCallType;
 	}
 
+	public PhoneCall(PhoneCall pc){
+		this.phoneCallId = pc.getPhoneCallId();
+		this.customerId = pc.getCustomerId();
+		this.startDate = pc.getStartDate();
+		this.duration = pc.getDuration();
+		this.destinationNumber = pc.getDestinationNumber();
+		this.phoneCallType = pc.getPhoneCallType();
+		this.phoneCallStatus = pc.getPhoneCallStatus();
+	}
+
 	public Long getPhoneCallId() {
 		return phoneCallId;
 	}
