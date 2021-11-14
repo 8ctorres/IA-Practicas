@@ -35,6 +35,12 @@ public class MockTelcoService implements TelcoService {
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
 		validateDNI(DNI);
+		//Validamos para ser consistentes con el comportamiento de la función findbyDNI que asume que los DNI son únicos
+		for (Customer cus:clientsMap.values()) {
+			if (DNI.equals(cus.getDni())) {
+				throw new InputValidationException("DNI already exists");
+			}
+		}
 		try{
 			//Intentamos crear un cliente con los datos proporcionados
 			Customer c = new Customer(name, DNI, address, phone);
