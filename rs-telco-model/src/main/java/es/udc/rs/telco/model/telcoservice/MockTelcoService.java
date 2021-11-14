@@ -212,7 +212,7 @@ public class MockTelcoService implements TelcoService {
 				LocalDateTime date = call.getStartDate();
 				if ((date.getMonthValue() == month) && (date.getYear() == year)) {
 					// Si coincide, gardamos o obxeto PhoneCall nunha nova lista
-					if (call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING)) {
+					if (!(call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING))) {
 						throw new UnexpectedCallStatusException("Call was not PENDING when trying to retrieve it");
 					}
 					// Usamos copias dos obxectos orixinais para evitar sacaar a fora punteiros o interior do mapa
@@ -241,7 +241,7 @@ public class MockTelcoService implements TelcoService {
 
 		// Agora volvemos a percorrer a lista de chamadas e poñémolas todas ó estado correspondiente
 		for (PhoneCall call: calls) {
-			call.setPhoneCallStatus(newstatus);
+			this.changeStoredCallStatus(call.getPhoneCallId(), newstatus);
 		}
 	}
 
@@ -264,6 +264,12 @@ public class MockTelcoService implements TelcoService {
 		} catch (NumberFormatException e) {
 			throw new InputValidationException("Invalid DNI: " + DNI);
 		}
+	}
+
+	// Función privada de utilidad, para poder cambiar los status de las llamadas, ya que las funciones de búsqueda
+	// devuelven copias de los objetos originales.
+	private void changeStoredCallStatus(Long callId, PhoneCallStatus newstatus){
+		this.phoneCallsMap.get(callId).setPhoneCallStatus(newstatus);
 	}
 
 }

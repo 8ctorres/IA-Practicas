@@ -101,10 +101,11 @@ public class TelcoServiceTest {
         Customer customer1 = telcoService.addCustomer("Paco", "11111111F","Rua Damiel Casteliao","987654321");
         //Se modifica el nombre, el DNI y la calle del cliente 1, que se había equivocado al registrarse
         telcoService.updateCustomer(customer1.getCustomerId(),"Francisco","11111112F","Rua Daniel Castelao");
+        customer1 = telcoService.findCustomerById(customer1.getCustomerId());
         //Se comparan los nuevos atributos del cliente 1 con los esperados
-        assertEquals(customer1.getName(), "Francisco");
-        assertEquals(customer1.getDni(), "11111112F");
-        assertEquals(customer1.getAddress(), "Rua Daniel Castelao");
+        assertEquals("Francisco", customer1.getName());
+        assertEquals("11111112F", customer1.getDni());
+        assertEquals("Rua Daniel Castelao", customer1.getAddress());
         //Se borra lo creado en la prueba
         telcoService.removeCustomer(customer1.getCustomerId());
     }
@@ -220,17 +221,6 @@ public class TelcoServiceTest {
         // E comprobamos que sexan as dúas (e só esas dúas)
         assertEquals(augustcalls, retrievedcalls);
 
-        // Agora probamos a cambiar o estado das chamadas a "BILLED"
-        telcoService.changeCallsStatus(perico.getCustomerId(), Month.AUGUST.getValue(), 2021, PhoneCallStatus.BILLED);
-
-        // Temos que volver a sacalas do servicio
-        retrievedcalls = telcoService.getCallsbyMonth(perico.getCustomerId(), Month.AUGUST.getValue(), 2021);
-
-        // E comprobar que están "BILLED"
-        for (PhoneCall call: retrievedcalls) {
-            assertEquals(call.getPhoneCallStatus(), PhoneCallStatus.BILLED);
-        }
-
         //Borramos todas as chamadas
         this.clearCalls();
 
@@ -267,7 +257,7 @@ public class TelcoServiceTest {
 
     // Carlos
     @Test
-    public void testMonthNotClosed() throws InputValidationException, InstanceNotFoundException {
+    public void testMonthNotClosed() throws InputValidationException, InstanceNotFoundException, CustomerHasCallsException {
         //Primeiro creamos un cliente
         Customer perico = telcoService.addCustomer("Perico de los palotes", "12345678P", "Ronda de Outeiro, 3000", "981167000");
 
@@ -279,6 +269,10 @@ public class TelcoServiceTest {
 
         //Agora ó intentar sacar as chamadas do mes actual, saltará a excepción MonthNotClosedException
         assertThrows(MonthNotClosedException.class, () -> telcoService.getCallsbyMonth(perico.getCustomerId(), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear()));
+
+        //Borramos as chamadas e o cliente
+        this.clearCalls();
+        telcoService.removeCustomer(perico.getCustomerId());
     }
 
 }
