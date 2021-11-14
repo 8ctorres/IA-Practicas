@@ -1,17 +1,17 @@
 package es.udc.rs.telco.model.phonecall;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class PhoneCall {
+	private Long phoneCallId;
+	private Long customerId;
+	private LocalDateTime startDate;
+	private Long duration;
+	private String destinationNumber;
+	private PhoneCallType phoneCallType;
+	private PhoneCallStatus phoneCallStatus;
 
-    private Long phoneCallId;
-    private Long customerId;
-    private LocalDateTime startDate;
-    private Long duration;
-    private String destinationNumber;
-    private PhoneCallType phoneCallType;
-    private PhoneCallStatus phoneCallStatus;
-    
 	public PhoneCall(Long clientId, LocalDateTime startDate, Long duration, String destinationNumber,
 			PhoneCallType phoneCallType) {
 		super();
@@ -89,5 +89,24 @@ public class PhoneCall {
 				", phoneCallType=" + phoneCallType +
 				", phoneCallStatus=" + phoneCallStatus +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PhoneCall phoneCall = (PhoneCall) o;
+		return Objects.equals(phoneCallId, phoneCall.phoneCallId) &&
+				customerId.equals(phoneCall.customerId) &&
+				startDate.equals(phoneCall.startDate) &&
+				duration.equals(phoneCall.duration) &&
+				destinationNumber.equals(phoneCall.destinationNumber) &&
+				phoneCallType == phoneCall.phoneCallType &&
+				phoneCallStatus == phoneCall.phoneCallStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(phoneCallId, customerId, startDate, duration, destinationNumber, phoneCallType, phoneCallStatus);
 	}
 }
