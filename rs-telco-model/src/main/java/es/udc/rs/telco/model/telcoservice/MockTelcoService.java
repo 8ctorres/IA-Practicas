@@ -44,7 +44,8 @@ public class MockTelcoService implements TelcoService {
 			c.setCreationDate(LocalDateTime.now());
 			//Lo metemos en clientsMap con su ID
 			clientsMap.put(c.getCustomerId(), c);
-			return c;
+			//Devolvemos una copia del objeto cliente
+			return new Customer(c);
 		} catch (NullPointerException | ClassCastException e){
 			throw new InputValidationException("Los datos son inválidos");
 		}
@@ -89,7 +90,8 @@ public class MockTelcoService implements TelcoService {
 		if (c == null) {
 			throw new InstanceNotFoundException(id, "Cliente no encontrado");
 		}
-		return c;
+		//Devolvemos una copia del objeto cliente
+		return new Customer(c);
 	}
 
 	//Pablo
@@ -108,7 +110,8 @@ public class MockTelcoService implements TelcoService {
 		if (c == null){
 			throw new InstanceNotFoundException(dni, "Cliente no encontrado");
 		}
-		return c;
+		//Devolvemos una copia del objeto cliente
+		return new Customer(c);
 	}
 
 	//Pablo
@@ -117,7 +120,8 @@ public class MockTelcoService implements TelcoService {
 
 		for (Customer customer: clientsMap.values()){
 			if ((customer.getName().toLowerCase().contains(name.toLowerCase()))) {
-				mycustomer.add(customer);
+				//Devolvemos una copia del objeto cliente para cada elemento de la lista
+				mycustomer.add(new Customer(customer));
 			}
 		}
 

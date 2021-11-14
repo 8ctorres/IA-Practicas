@@ -1,5 +1,7 @@
 package es.udc.rs.telco.model.customer;
 
+import es.udc.rs.telco.model.phonecall.PhoneCall;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -21,6 +23,14 @@ public class Customer {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public Customer(Customer c) {
+		this.customerId =c.getCustomerId();
+		this.name = c.getName();
+		this.dni = c.getDni();
+		this.address = c.getAddress();
+		this.phoneNumber = c.getPhoneNumber();
+		this.creationDate = c.getCreationDate();
+	}
 
 	public Long getCustomerId() {
 		return customerId;
