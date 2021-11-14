@@ -25,7 +25,7 @@ public interface TelcoService {
 
     void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException;
 
-    Customer findCustomerByDNI(String dni) throws InstanceNotFoundException;
+    Customer findCustomerByDNI(String dni) throws InstanceNotFoundException, InputValidationException;
 
     List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount);
 

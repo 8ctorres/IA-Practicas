@@ -34,6 +34,7 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public Customer addCustomer(String name, String DNI, String address, String phone) throws InputValidationException {
+		validateDNI(DNI);
 		try{
 			//Intentamos crear un cliente con los datos proporcionados
 			Customer c = new Customer(name, DNI, address, phone);
@@ -51,6 +52,7 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public void updateCustomer(Long id, String name, String DNI, String address) throws InstanceNotFoundException, InputValidationException {
+		validateDNI(DNI);
 		//Si el cliente no existe devuelve la excepción InstanceNotFoundException
 		Customer c = clientsMap.get(id);
 		if (c == null) {
@@ -91,7 +93,8 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public Customer findCustomerByDNI(String dni) throws InstanceNotFoundException {
+	public Customer findCustomerByDNI(String dni) throws InstanceNotFoundException, InputValidationException {
+		validateDNI(dni);
 		//Buscamos al cliente en la lista por su DNI
 		Customer c = null;
 		for (Customer customer: clientsMap.values()){
@@ -235,6 +238,17 @@ public class MockTelcoService implements TelcoService {
 	public void removeCall(Long callId){
 		// This method deletes a call from the system. Used for unit tests only. Not exposed in the interface.
 		phoneCallsMap.remove(callId);
+	}
+
+	private void validateDNI(String DNI) throws InputValidationException{
+		if(DNI.length() != 9){
+			throw new InputValidationException("Invalid DNI: "+DNI);
+		}
+		try{
+			Integer.parseInt(DNI.substring(0,7));
+		} catch (NumberFormatException e) {
+			throw new InputValidationException("Invalid DNI: " + DNI);
+		}
 	}
 
 }
