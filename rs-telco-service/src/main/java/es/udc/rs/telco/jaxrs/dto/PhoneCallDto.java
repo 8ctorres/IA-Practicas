@@ -1,5 +1,6 @@
 package es.udc.rs.telco.jaxrs.dto;
 
+import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
 
@@ -93,5 +94,10 @@ public class PhoneCallDto {
                 ", phoneCallType=" + phoneCallType +
                 ", phoneCallStatus=" + phoneCallStatus +
                 '}';
+    }
+
+    public static PhoneCall toModel(PhoneCallDto call){
+        return new PhoneCall(call.getCustomerId(), call.getStartDate(), call.getDuration(),
+                call.getDestinationNumber(), call.getPhoneCallType());
     }
 }
