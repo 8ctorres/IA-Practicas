@@ -2,14 +2,25 @@ package es.udc.rs.telco.jaxrs.dto;
 
 import es.udc.rs.telco.model.customer.Customer;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+
 import java.time.LocalDateTime;
 
+@XmlRootElement(name = "customer")
+@XmlType(name="customerType", propOrder = {"id", "name", "dni", "address", "phoneNumber"})
 public class CustomerDto {
-
+    @XmlAttribute(name = "customerId", required = true)
     private Long customerId;
+    @XmlElement(required = true)
     private String name;
+    @XmlElement(required = true)
     private String dni;
+    @XmlElement(required = true)
     private String address;
+    @XmlElement(required = true)
     private String phoneNumber;
 
     public CustomerDto(Long customerId, String name, String dni, String address, String phoneNumber) {
