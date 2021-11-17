@@ -14,6 +14,8 @@ public class UnexpectedCallStatusExceptionDtoJaxb {
     @XmlElement(required = true)
     private String message;
 
+    public UnexpectedCallStatusExceptionDtoJaxb(){}
+
     public UnexpectedCallStatusExceptionDtoJaxb(String message) {
         this.errorType = "UnexpectedCallStatus";
         this.message = message;

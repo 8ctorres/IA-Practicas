@@ -14,6 +14,8 @@ public class InputValidationExceptionDtoJaxb {
     @XmlElement(required = true)
     private String message;
 
+    public InputValidationExceptionDtoJaxb(){}
+
     public InputValidationExceptionDtoJaxb(String message) {
         this.errorType = "InputValidation";
         this.message = message;

@@ -1,5 +1,6 @@
 package es.udc.rs.telco.jaxrs.dto;
 
+import es.udc.rs.telco.jaxrs.exceptions.CustomerHasCallsExceptionMapper;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
@@ -13,6 +14,8 @@ public class CustomerHasCallsExceptionDtoJaxb {
     private String errorType;
     @XmlElement(required = true)
     private String message;
+
+    public CustomerHasCallsExceptionDtoJaxb(){}
 
     public CustomerHasCallsExceptionDtoJaxb(String message) {
         this.errorType = "CustomerHasCalls";

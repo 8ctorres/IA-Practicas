@@ -14,6 +14,8 @@ public class MonthNotClosedExceptionDtoJaxb {
     @XmlElement(required = true)
     private String message;
 
+    public MonthNotClosedExceptionDtoJaxb(){}
+
     public MonthNotClosedExceptionDtoJaxb(String message) {
         this.errorType = "MonthNotClosed";
         this.message = message;

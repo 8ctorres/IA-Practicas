@@ -1,9 +1,8 @@
 package es.udc.rs.telco.jaxrs.resources;
 
-import es.udc.rs.telco.jaxrs.dto.PhoneCallDto;
+import es.udc.rs.telco.jaxrs.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
-import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
@@ -20,7 +19,6 @@ import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("llamadas")
 public class PhoneCallResource {
@@ -31,8 +29,8 @@ public class PhoneCallResource {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response addPhoneCall(PhoneCallDto newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
-        PhoneCallDto addedCall = PhoneCallDto.from(
+    public Response addPhoneCall(PhoneCallDtoJaxb newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
+        PhoneCallDtoJaxb addedCall = PhoneCallDtoJaxb.from(
                 telcoService.addCall(
                         newCall.getCustomerId(),
                         newCall.getStartDate(),
@@ -52,12 +50,12 @@ public class PhoneCallResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<PhoneCallDto> getCallsByCustomerId(@NotNull @QueryParam("customerId") String customerIdStr,
-                                                   @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
-                                                   @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
-                                                   @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
-                                                   @DefaultValue("null") @QueryParam("startPos") String startPosStr,
-                                                   @DefaultValue("null") @QueryParam("amount") String amountStr)
+    public List<PhoneCallDtoJaxb> getCallsByCustomerId(@NotNull @QueryParam("customerId") String customerIdStr,
+                                                       @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
+                                                       @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
+                                                       @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
+                                                       @DefaultValue("null") @QueryParam("startPos") String startPosStr,
+                                                       @DefaultValue("null") @QueryParam("amount") String amountStr)
             throws InstanceNotFoundException, InputValidationException {
         Long customerId;
         try {
@@ -69,10 +67,10 @@ public class PhoneCallResource {
         Integer startPos = (startPosStr.equals("null") ? null : Integer.valueOf(startPosStr));
         Integer amount = (amountStr.equals("null") ? null : Integer.valueOf(amountStr));
 
-        return PhoneCallDto.from(
+        return PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyId(
                         customerId,
-                        LocalDateTime.parse(startTimeStr),
+                        LocalDateTime.parse(startTimeStr), //TODO: Ver como pasar las fechas
                         LocalDateTime.parse(endTimeStr),
                         PhoneCallType.LOCAL, //TODO: Ver como parsear el enumerado
                         startPos,
@@ -84,9 +82,9 @@ public class PhoneCallResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<PhoneCallDto> getCallsbyMonth(@NotNull @QueryParam("customerId") String customerIdStr,
-                                              @NotNull @QueryParam("month") String monthStr,
-                                              @NotNull @QueryParam("year") String yearStr)
+    public List<PhoneCallDtoJaxb> getCallsbyMonth(@NotNull @QueryParam("customerId") String customerIdStr,
+                                                  @NotNull @QueryParam("month") String monthStr,
+                                                  @NotNull @QueryParam("year") String yearStr)
             throws MonthNotClosedException, UnexpectedCallStatusException, InputValidationException {
 
         Long customerId;
@@ -100,7 +98,7 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        return PhoneCallDto.from(
+        return PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyMonth(
                         customerId,
                         month,

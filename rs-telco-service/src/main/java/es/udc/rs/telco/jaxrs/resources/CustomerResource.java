@@ -1,6 +1,6 @@
 package es.udc.rs.telco.jaxrs.resources;
 
-import es.udc.rs.telco.jaxrs.dto.CustomerDto;
+import es.udc.rs.telco.jaxrs.dto.CustomerDtoJaxb;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
@@ -24,10 +24,10 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response addCustomer(CustomerDto newcust, @Context UriInfo ui) throws InputValidationException {
+    public Response addCustomer(CustomerDtoJaxb newcust, @Context UriInfo ui) throws InputValidationException {
 
-        CustomerDto createdCustomer =
-                CustomerDto.from(telcoService.addCustomer(
+        CustomerDtoJaxb createdCustomer =
+                CustomerDtoJaxb.from(telcoService.addCustomer(
                         newcust.getName(),
                         newcust.getDni(),
                         newcust.getAddress(),
@@ -44,7 +44,7 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
-    public void updateCustomer(CustomerDto newcust, @PathParam("id") String id) throws InstanceNotFoundException, InputValidationException {
+    public void updateCustomer(CustomerDtoJaxb newcust, @PathParam("id") String id) throws InstanceNotFoundException, InputValidationException {
         newcust.setCustomerId(Long.valueOf(id));
         telcoService.updateCustomer(
                 newcust.getCustomerId(),
@@ -66,8 +66,8 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
-    public CustomerDto findCustomerById(@PathParam("id") String id) throws InstanceNotFoundException {
-        return CustomerDto.from(
+    public CustomerDtoJaxb findCustomerById(@PathParam("id") String id) throws InstanceNotFoundException {
+        return CustomerDtoJaxb.from(
                 telcoService.findCustomerById(Long.valueOf(id))
         );
     }
@@ -75,8 +75,8 @@ public class CustomerResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public CustomerDto findCustomerByDNI(@DefaultValue("") @QueryParam("dni") String dni) throws InstanceNotFoundException, InputValidationException {
-        return CustomerDto.from(
+    public CustomerDtoJaxb findCustomerByDNI(@DefaultValue("") @QueryParam("dni") String dni) throws InstanceNotFoundException, InputValidationException {
+        return CustomerDtoJaxb.from(
                 telcoService.findCustomerByDNI(dni)
         );
     }
@@ -84,12 +84,12 @@ public class CustomerResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<CustomerDto> findCustomerByName(@QueryParam("name") String name, @DefaultValue("null") String start_position, @DefaultValue("null") String amount) {
+    public List<CustomerDtoJaxb> findCustomerByName(@QueryParam("name") String name, @DefaultValue("null") String start_position, @DefaultValue("null") String amount) {
 
         Integer start_pos_Int = (start_position.equals("null") ? null : Integer.valueOf(start_position));
         Integer amountInt = (amount.equals("null") ? null : Integer.valueOf(amount));
 
-        return CustomerDto.from(
+        return CustomerDtoJaxb.from(
                 telcoService.findCustomersbyName(name, start_pos_Int, amountInt)
         );
     }

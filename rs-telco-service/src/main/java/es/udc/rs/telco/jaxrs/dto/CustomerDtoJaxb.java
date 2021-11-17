@@ -7,27 +7,27 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
-@XmlType(name="customerType", propOrder = {"id", "name", "dni", "address", "phoneNumber"})
-public class CustomerDto {
-    @XmlAttribute(name = "customerId", required = true)
+@XmlType(name="customerType", propOrder = {"name", "dni", "address", "phoneNumber"})
+public class CustomerDtoJaxb {
+    @XmlAttribute(name = "customerId", required = false)
     private Long customerId;
     @XmlElement(required = true)
     private String name;
     @XmlElement(required = true)
     private String dni;
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     private String address;
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     private String phoneNumber;
 
-    public CustomerDto(Long customerId, String name, String dni, String address, String phoneNumber) {
+    public CustomerDtoJaxb(){}
+
+    public CustomerDtoJaxb(Long customerId, String name, String dni, String address, String phoneNumber) {
         this.customerId = customerId;
         this.name = name;
         this.dni = dni;
@@ -75,8 +75,8 @@ public class CustomerDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public static CustomerDto from(Customer customer){
-        return new CustomerDto(
+    public static CustomerDtoJaxb from(Customer customer){
+        return new CustomerDtoJaxb(
                 customer.getCustomerId(),
                 customer.getName(),
                 customer.getDni(),
@@ -94,7 +94,7 @@ public class CustomerDto {
         );
     }
 
-    public static List<CustomerDto> from(Collection<Customer> customerList){
-        return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
+    public static List<CustomerDtoJaxb> from(Collection<Customer> customerList){
+        return customerList.stream().map((c) -> CustomerDtoJaxb.from(c)).collect(Collectors.toList());
     }
 }

@@ -16,6 +16,8 @@ public class InstanceNotFoundExceptionDtoJaxb {
     @XmlElement(required = true)
     private String instanceType;
 
+    public InstanceNotFoundExceptionDtoJaxb(){}
+
     public InstanceNotFoundExceptionDtoJaxb(Object instanceId, String instanceType) {
         this.errorType = "InstanceNotFound";
         this.instanceId = instanceId.toString();

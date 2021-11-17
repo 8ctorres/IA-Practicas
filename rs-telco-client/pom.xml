@@ -44,7 +44,6 @@
 			<!-- Uncomment this plugin to generate the client JAXB classes
 			     from the server schemas
 			-->
-			<!-- 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
@@ -101,7 +100,6 @@
 					</dependency>
 				</dependencies>								
 			</plugin>
-			-->
 		</plugins>
 	</build>
 

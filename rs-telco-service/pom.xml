@@ -52,7 +52,6 @@
 			     with the path to the folders that contain the JAXB
 			     classes.
 			-->
-			<!--         
            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
@@ -104,7 +103,6 @@
 					</dependency>
                 </dependencies>
             </plugin>
-            -->         
         </plugins>
     </build>
 </project>

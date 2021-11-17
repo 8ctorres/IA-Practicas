@@ -9,35 +9,39 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "phoneCall")
-@XmlType(name = "phoneCallType", propOrder = {"phoneCallId", "customerId", "startDate",
+@XmlType(name = "phoneCallType", propOrder = {"startDate",
         "duration", "destinationNumber", "phoneCallType", "phoneCallStatus"})
-public class PhoneCallDto {
-    @XmlAttribute(name = "phoneCallId", required = true)
+public class PhoneCallDtoJaxb {
+    @XmlAttribute(name = "phoneCallId", required = false)
     private Long phoneCallId;
     @XmlAttribute(name = "customerId",required = true)
     private Long customerId;
     @XmlElement(required = true)
-    private LocalDateTime startDate;
+    //Cambiamos de LocalDateTime a Long para que JAXB no tenga problemas
+    private Long startDate;
     @XmlElement(required = true)
     private Long duration;
     @XmlElement(required = true)
     private String destinationNumber;
     @XmlElement(required = true)
     private PhoneCallType phoneCallType;
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     private PhoneCallStatus phoneCallStatus;
 
-    public PhoneCallDto(Long phoneCallId, Long customerId, LocalDateTime startDate,
-                        Long duration, String destinationNumber, PhoneCallType phoneCallType,
-                        PhoneCallStatus phoneCallStatus) {
+    public PhoneCallDtoJaxb(){}
+
+    public PhoneCallDtoJaxb(Long phoneCallId, Long customerId, LocalDateTime startDate,
+                            Long duration, String destinationNumber, PhoneCallType phoneCallType,
+                            PhoneCallStatus phoneCallStatus) {
         this.phoneCallId = phoneCallId;
         this.customerId = customerId;
-        this.startDate = startDate;
+        this.startDate = startDate.toEpochSecond(ZoneOffset.UTC); //Almacenamos como epoch para que compile con JAXB
         this.duration = duration;
         this.destinationNumber = destinationNumber;
         this.phoneCallType = phoneCallType;
@@ -60,12 +64,14 @@ public class PhoneCallDto {
         this.customerId = customerId;
     }
 
+    //Almacenamos el tiempo en formato epoch para que JAX-B no tenga problemas a la hora de serializarlo
+
     public LocalDateTime getStartDate() {
-        return startDate;
+        return LocalDateTime.ofEpochSecond(startDate, 0, ZoneOffset.UTC);
     }
 
     public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+        this.startDate = startDate.toEpochSecond(ZoneOffset.UTC);
     }
 
     public Long getDuration() {
@@ -113,7 +119,7 @@ public class PhoneCallDto {
                 '}';
     }
 
-    public PhoneCall toModel(PhoneCallDto call){
+    public PhoneCall toModel(PhoneCallDtoJaxb call){
         return new PhoneCall(
                 call.getCustomerId(),
                 call.getStartDate(),
@@ -122,8 +128,8 @@ public class PhoneCallDto {
                 call.getPhoneCallType());
     }
 
-    public static PhoneCallDto from(PhoneCall call){
-        return new PhoneCallDto(
+    public static PhoneCallDtoJaxb from(PhoneCall call){
+        return new PhoneCallDtoJaxb(
                 call.getPhoneCallId(),
                 call.getCustomerId(),
                 call.getStartDate(),
@@ -133,7 +139,7 @@ public class PhoneCallDto {
                 call.getPhoneCallStatus());
     }
 
-    public static List<PhoneCallDto> from(Collection<PhoneCall> phoneCalls){
-        return phoneCalls.stream().map((c) -> PhoneCallDto.from(c)).collect(Collectors.toList());
+    public static List<PhoneCallDtoJaxb> from(Collection<PhoneCall> phoneCalls){
+        return phoneCalls.stream().map((c) -> PhoneCallDtoJaxb.from(c)).collect(Collectors.toList());
     }
 }
