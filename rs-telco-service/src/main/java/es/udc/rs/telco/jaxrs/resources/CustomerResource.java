@@ -20,7 +20,7 @@ import java.util.List;
 public class CustomerResource {
     public CustomerResource(){}
 
-    TelcoService telcoService = TelcoServiceFactory.getService();
+    private TelcoService telcoService = TelcoServiceFactory.getService();
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)

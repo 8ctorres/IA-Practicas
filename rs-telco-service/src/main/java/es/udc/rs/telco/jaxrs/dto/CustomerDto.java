@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,6 +74,7 @@ public class CustomerDto {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public static CustomerDto from(Customer customer){
         return new CustomerDto(
                 customer.getCustomerId(),
@@ -82,6 +84,7 @@ public class CustomerDto {
                 customer.getPhoneNumber()
         );
     }
+
     public Customer toModel(){
         return new Customer(
                 this.getName(),
@@ -91,7 +94,7 @@ public class CustomerDto {
         );
     }
 
-    public List<CustomerDto> from(List<Customer> customerList){
+    public static List<CustomerDto> from(Collection<Customer> customerList){
         return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
     }
 }

@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @XmlRootElement(name = "phoneCall")
 @XmlType(name = "phoneCallType", propOrder = {"phoneCallId", "customerId", "startDate",
@@ -110,7 +113,7 @@ public class PhoneCallDto {
                 '}';
     }
 
-    public static PhoneCall toModel(PhoneCallDto call){
+    public PhoneCall toModel(PhoneCallDto call){
         return new PhoneCall(
                 call.getCustomerId(),
                 call.getStartDate(),
@@ -119,7 +122,7 @@ public class PhoneCallDto {
                 call.getPhoneCallType());
     }
 
-    public PhoneCallDto from(PhoneCall call){
+    public static PhoneCallDto from(PhoneCall call){
         return new PhoneCallDto(
                 call.getPhoneCallId(),
                 call.getCustomerId(),
@@ -128,5 +131,9 @@ public class PhoneCallDto {
                 call.getDestinationNumber(),
                 call.getPhoneCallType(),
                 call.getPhoneCallStatus());
+    }
+
+    public static List<PhoneCallDto> from(Collection<PhoneCall> phoneCalls){
+        return phoneCalls.stream().map((c) -> PhoneCallDto.from(c)).collect(Collectors.toList());
     }
 }
