@@ -97,7 +97,22 @@ public class PhoneCallDto {
     }
 
     public static PhoneCall toModel(PhoneCallDto call){
-        return new PhoneCall(call.getCustomerId(), call.getStartDate(), call.getDuration(),
-                call.getDestinationNumber(), call.getPhoneCallType());
+        return new PhoneCall(
+                call.getCustomerId(),
+                call.getStartDate(),
+                call.getDuration(),
+                call.getDestinationNumber(),
+                call.getPhoneCallType());
+    }
+
+    public PhoneCallDto from(PhoneCall call){
+        return new PhoneCallDto(
+                call.getPhoneCallId(),
+                call.getCustomerId(),
+                call.getStartDate(),
+                call.getDuration(),
+                call.getDestinationNumber(),
+                call.getPhoneCallType(),
+                call.getPhoneCallStatus());
     }
 }
