@@ -8,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
 @XmlType(name="customerType", propOrder = {"id", "name", "dni", "address", "phoneNumber"})
@@ -86,5 +89,9 @@ public class CustomerDto {
                 this.getAddress(),
                 this.getPhoneNumber()
         );
+    }
+
+    public List<CustomerDto> from(List<Customer> customerList){
+        return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
     }
 }
