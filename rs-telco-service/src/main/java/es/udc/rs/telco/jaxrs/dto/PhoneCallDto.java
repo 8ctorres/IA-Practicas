@@ -4,15 +4,29 @@ import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
 
+@XmlRootElement(name = "phoneCall")
+@XmlType(name = "phoneCallType", propOrder = {"phoneCallId", "customerId", "startDate",
+        "duration", "destinationNumber", "phoneCallType", "phoneCallStatus"})
 public class PhoneCallDto {
+    @XmlAttribute(name = "phoneCallId", required = true)
     private Long phoneCallId;
+    @XmlAttribute(name = "customerId",required = true)
     private Long customerId;
+    @XmlElement(required = true)
     private LocalDateTime startDate;
+    @XmlElement(required = true)
     private Long duration;
+    @XmlElement(required = true)
     private String destinationNumber;
+    @XmlElement(required = true)
     private PhoneCallType phoneCallType;
+    @XmlElement(required = true)
     private PhoneCallStatus phoneCallStatus;
 
     public PhoneCallDto(Long phoneCallId, Long customerId, LocalDateTime startDate,
