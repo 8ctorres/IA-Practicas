@@ -27,7 +27,7 @@ public interface TelcoService {
 
     Customer findCustomerByDNI(String dni) throws InstanceNotFoundException, InputValidationException;
 
-    List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount);
+    List<Customer> findCustomersbyName(String name, Integer start_position, Integer amount);
 
     PhoneCall addCall(Long customerId, LocalDateTime startDate, Long duration,
                       PhoneCallType tipo, String destinationNumber) throws InputValidationException, InstanceNotFoundException;
