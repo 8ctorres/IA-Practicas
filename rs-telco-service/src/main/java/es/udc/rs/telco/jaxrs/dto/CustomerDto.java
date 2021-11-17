@@ -91,7 +91,7 @@ public class CustomerDto {
         );
     }
 
-    public List<CustomerDto> from(List<Customer> customerList){
+    public static List<CustomerDto> from(List<Customer> customerList){
         return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
     }
 }

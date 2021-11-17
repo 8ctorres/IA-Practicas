@@ -144,7 +144,7 @@ public class TelcoServiceTest {
         mycustomer.add(pablo1);
         mycustomer.add(pablo2);
         //Buscamos el cliente por el nombre sin tener en cuenta las mayusculas
-        Collection<Customer> customers = telcoService.getCustomersbyName("PABLO", null, null);
+        Collection<Customer> customers = telcoService.findCustomersbyName("PABLO", null, null);
         //Comparamos
         assertEquals(mycustomer, customers);
 

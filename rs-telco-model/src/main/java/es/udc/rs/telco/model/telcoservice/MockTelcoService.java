@@ -121,7 +121,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Pablo
-	public List<Customer> getCustomersbyName(String name, Integer start_position, Integer amount){
+	public List<Customer> findCustomersbyName(String name, Integer start_position, Integer amount){
 		List<Customer> mycustomer = new ArrayList<>();
 
 		for (Customer customer: clientsMap.values()){
