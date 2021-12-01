@@ -62,6 +62,7 @@ public class CustomerResource {
         telcoService.removeCustomer(Long.valueOf(id));
     }
 
+
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
@@ -75,7 +76,8 @@ public class CustomerResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public CustomerDtoJaxb findCustomerByDNI(@DefaultValue("") @QueryParam("dni") String dni) throws InstanceNotFoundException, InputValidationException {
+    @Path("/{dni}")
+    public CustomerDtoJaxb findCustomerByDNI(@PathParam("dni") String dni) throws InstanceNotFoundException, InputValidationException {
         return CustomerDtoJaxb.from(
                 telcoService.findCustomerByDNI(dni)
         );
@@ -93,4 +95,5 @@ public class CustomerResource {
                 telcoService.findCustomersbyName(name, start_pos_Int, amountInt)
         );
     }
+
 }

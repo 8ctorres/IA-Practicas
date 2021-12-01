@@ -50,13 +50,44 @@ public class PhoneCallResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<PhoneCallDtoJaxb> getCallsByCustomerId(@NotNull @QueryParam("customerId") String customerIdStr,
-                                                       @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
-                                                       @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
-                                                       @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
-                                                       @DefaultValue("null") @QueryParam("startPos") String startPosStr,
-                                                       @DefaultValue("null") @QueryParam("amount") String amountStr)
+    public List<PhoneCallDtoJaxb> getCallsBy(@NotNull @QueryParam("customerId") String customerIdStr,
+                                             @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
+                                             @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
+                                             @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
+                                             @DefaultValue("null") @QueryParam("startPos") String startPosStr,
+                                             @DefaultValue("null") @QueryParam("amount") String amountStr,
+                                             @DefaultValue("null") @QueryParam("month") String monthStr,
+                                             @DefaultValue("null") @QueryParam("year") String yearStr
+                                             ) throws InputValidationException, InstanceNotFoundException, MonthNotClosedException, UnexpectedCallStatusException {
+
+        // Si están los parámetros de MES y AÑO, tiene que ser getCallsByMonth
+        if (!(monthStr.equals("null")) && !(yearStr.equals("null"))){
+            // No puede haber ningun otro parametro pasado
+            if (!(startTimeStr.equals("null"))
+                || !(endTimeStr.equals("null"))
+                || !(phoneCallTypeStr.equals("null"))
+                || !(startPosStr.equals("null"))
+                || !(amountStr.equals("null"))){
+                throw new InputValidationException("Invalid set of parameters");
+            }
+            return getCallsbyMonth(customerIdStr, monthStr, yearStr);
+        }
+        // Si no están AMBOS parámetros mes y año, no puede estar ninguno de ellos
+        else{
+            if (!(monthStr.equals("null")) || !(yearStr.equals("null"))){
+                throw new InputValidationException("Invalid set of parameters");
+            }
+            // Si no están mes ni año, es una llamada genérica de getCallsByCustomerId
+            return getCallsByCustomerId(customerIdStr, startTimeStr, endTimeStr, phoneCallTypeStr,
+                    startPosStr, amountStr);
+        }
+    }
+
+
+    private List<PhoneCallDtoJaxb> getCallsByCustomerId(String customerIdStr, String startTimeStr, String endTimeStr,
+                                                       String phoneCallTypeStr,String startPosStr, String amountStr)
             throws InstanceNotFoundException, InputValidationException {
+
         Long customerId;
         try {
             customerId = Long.valueOf(customerIdStr);
@@ -64,27 +95,27 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
+        //TODO: Pendiente valorar otras opciones de pasar las fechas
+        LocalDateTime startTime = (startTimeStr.equals("null") ? null : LocalDateTime.parse(startPosStr));
+        LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(amountStr));
+
         Integer startPos = (startPosStr.equals("null") ? null : Integer.valueOf(startPosStr));
         Integer amount = (amountStr.equals("null") ? null : Integer.valueOf(amountStr));
 
         return PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyId(
                         customerId,
-                        LocalDateTime.parse(startTimeStr), //TODO: Ver como pasar las fechas
-                        LocalDateTime.parse(endTimeStr),
-                        PhoneCallType.LOCAL, //TODO: Ver como parsear el enumerado
+                        startTime,
+                        endTime,
+                        phoneCallTypeFromString(phoneCallTypeStr),
                         startPos,
                         amount
                 )
         );
     }
 
-    @GET
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
-    public List<PhoneCallDtoJaxb> getCallsbyMonth(@NotNull @QueryParam("customerId") String customerIdStr,
-                                                  @NotNull @QueryParam("month") String monthStr,
-                                                  @NotNull @QueryParam("year") String yearStr)
+
+    private List<PhoneCallDtoJaxb> getCallsbyMonth(String customerIdStr, String monthStr, String yearStr)
             throws MonthNotClosedException, UnexpectedCallStatusException, InputValidationException {
 
         Long customerId;
@@ -125,7 +156,7 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        telcoService.changeCallsStatus(customerId, month, year, PhoneCallStatus.BILLED); //TODO: Ver como parsear el enumerado
+        telcoService.changeCallsStatus(customerId, month, year, phoneCallStatusFromString(newStatusStr));
     }
 
     // FUNCIONES DE UTILIDAD PARA TRADUCIR LOS ENUMERADOS A STRINGS Y VICEVERSA
