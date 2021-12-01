@@ -1,5 +1,10 @@
 package es.udc.rs.telco.client.service.rest;
 
+import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
+import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
+import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
+import es.udc.ws.util.exceptions.InputValidationException;
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
@@ -7,6 +12,9 @@ import jakarta.ws.rs.core.MediaType;
 
 import es.udc.rs.telco.client.service.ClientTelcoService;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public abstract class RestClientTelcoService implements ClientTelcoService {
 
@@ -36,7 +44,37 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 		}
 		return endPointWebTarget;
 	}
-	
+
 	protected abstract MediaType getMediaType();
+
+	//Isma
+	@Override
+	public CustomerDto addCustomer(CustomerDto newCustomer) throws InputValidationException {
+		return null;
+	}
+
+	//Pablo
+	@Override
+	public PhoneCallDto addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException {
+		return null;
+	}
+
+	//Isma
+	@Override
+	public void removeCustomer(CustomerDto cust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
+
+	}
+
+	//Carlos
+	@Override
+	public List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException {
+		return null;
+	}
+
+	//Carlos
+	@Override
+	public void changeCallStatus(Long customerId, Integer month, Integer year) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
+
+	}
 
 }
