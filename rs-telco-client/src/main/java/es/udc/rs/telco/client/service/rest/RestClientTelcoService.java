@@ -2,6 +2,7 @@ package es.udc.rs.telco.client.service.rest;
 
 import com.sun.istack.NotNull;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
+import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
@@ -74,29 +75,25 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	@Override
 	public List<PhoneCallDto> getCalls(Long customerId, LocalDateTime startTime, LocalDateTime endTime, PhoneCallType type) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException {
 		//En previsión de que vamos a implementar la parte opcional de Hipermedia, no voy a añadir los paŕametros de paginacion
-		Response response = getEndpointWebTarget().path("llamadas").
+		try (Response response = getEndpointWebTarget().path("llamadas").
 				queryParam("customerId", customerId).queryParam("startTime", startTime).
 				queryParam("endTime", endTime).queryParam("type", type).
-				request().accept(this.getMediaType()).get();
-		try{
+				request().accept(this.getMediaType()).get()){
+
 			validateResponse(Response.Status.OK, response);
-			List<PhoneCallDtoJaxb> foundCalls = response.readEntity(new GenericType<List<PhoneCallDtoJaxb>>(){});
-			return PhoneCallDto.from(foundCalls);
-		}
-		catch (InputValidationException e) {
-			throw e;
-		}catch (Exception e){
-			throw new RuntimeException(e);
-		}
-		finally{
-			if (response != null) response.close();
+			return PhoneCallDto.from(response.readEntity(new GenericType<List<PhoneCallDtoJaxb>>(){}));
 		}
 	}
 
 	//Carlos
 	@Override
-	public void changeCallStatus(Long customerId, Integer month, Integer year) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
+	public void changeCallStatus(Long customerId, Integer month, Integer year, PhoneCallStatus newstatus) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
+		try (Response response = getEndpointWebTarget().path("llamadas").path("changestatus").
+				queryParam("customerId", customerId).queryParam("month", month).queryParam("year", year).
+				queryParam("newstatus", newstatus).request().accept(this.getMediaType()).post(null)) {
 
+			validateResponse(Response.Status.NO_CONTENT, response);
+		}
 	}
 
 	private void validateResponse(Response.Status expected, @NotNull Response received) throws InputValidationException, InstanceNotFoundException{

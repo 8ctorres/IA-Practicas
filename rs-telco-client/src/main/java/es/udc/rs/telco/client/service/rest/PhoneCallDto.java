@@ -92,8 +92,8 @@ public class PhoneCallDto {
     public static PhoneCallDto from(PhoneCallDtoJaxb phoneCallDtoJaxb){
         return new PhoneCallDto(
                 phoneCallDtoJaxb.getPhoneCallId(),
-                phoneCallDtoJaxb.getCustomerId(),
-                LocalDateTime.ofEpochSecond(phoneCallDtoJaxb.getStartDate(), 0, ZoneOffset.UTC),
+                phoneCallDtoJaxb.getCustomerId(), 
+                phoneCallDtoJaxb.getStartDate(),
                 phoneCallDtoJaxb.getDuration(),
                 phoneCallDtoJaxb.getDestinationNumber(),
                 phoneCallDtoJaxb.getPhoneCallType(),
@@ -108,8 +108,7 @@ public class PhoneCallDto {
     public PhoneCallDtoJaxb toDtoJaxb(){
        PhoneCallDtoJaxb phoneCallDtoJaxb = new PhoneCallDtoJaxb();
        phoneCallDtoJaxb.setPhoneCallId(this.getPhoneCallId());
-       phoneCallDtoJaxb.setCustomerId(this.getCustomerId());
-       phoneCallDtoJaxb.setStartDate(this.getStartDate().toEpochSecond(ZoneOffset.UTC));
+       phoneCallDtoJaxb.setCustomerId(this.getCustomerId());phoneCallDtoJaxb.setStartDate(this.getStartDate());
        phoneCallDtoJaxb.setDuration(this.getDuration());
        phoneCallDtoJaxb.setDestinationNumber(this.getDestinationNumber());
        phoneCallDtoJaxb.setPhoneCallType(this.getPhoneCallType());

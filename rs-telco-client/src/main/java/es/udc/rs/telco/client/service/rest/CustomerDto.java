@@ -1,5 +1,6 @@
 package es.udc.rs.telco.client.service.rest;
 
+import es.udc.rs.telco.client.service.rest.dto.CustomerType;
 import es.udc.rs.telco.model.customer.Customer;
 
 import java.time.LocalDateTime;
@@ -16,23 +17,12 @@ public class CustomerDto {
     private LocalDateTime creationDate;
     private String phoneNumber;
 
-
-    public CustomerDto(Long id, String name, String dni, String address, String phoneNumber, LocalDateTime date) {
+    public CustomerDto(Long id, String name, String dni, String address, String phoneNumber) {
         this.customerId =id;
         this.name = name;
         this.dni = dni;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.creationDate = date;
-    }
-
-    public CustomerDto(CustomerDto c) {
-        this.customerId =c.getCustomerId();
-        this.name = c.getName();
-        this.dni = c.getDni();
-        this.address = c.getAddress();
-        this.phoneNumber = c.getPhoneNumber();
-        this.creationDate = c.getCreationDate();
     }
 
     public Long getCustomerId() {
@@ -67,14 +57,6 @@ public class CustomerDto {
         this.address = address;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -83,27 +65,27 @@ public class CustomerDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer toModel(){
-        return new Customer(
-                this.getName(),
-                this.getDni(),
-                this.getAddress(),
-                this.getPhoneNumber()
-        );
+    public CustomerType toDtoJaxb(){
+        CustomerType customerJaxb = new CustomerType();
+        customerJaxb.setCustomerId(this.getCustomerId());
+        customerJaxb.setName(this.getName());
+        customerJaxb.setDni(this.getDni());
+        customerJaxb.setAddress(this.getAddress());
+        customerJaxb.setPhoneNumber(this.getPhoneNumber());
+        return customerJaxb;
     }
 
-    public static CustomerDto from(Customer customer){
+    public static CustomerDto from(CustomerType customer){
         return new CustomerDto(
                 customer.getCustomerId(),
                 customer.getName(),
                 customer.getDni(),
                 customer.getAddress(),
-                customer.getPhoneNumber(),
-                customer.getCreationDate()
+                customer.getPhoneNumber()
         );
     }
 
-    public static List<CustomerDto> from(Collection<Customer> customerList){
+    public static List<CustomerDto> from(Collection<CustomerType> customerList){
         return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
     }
 }
