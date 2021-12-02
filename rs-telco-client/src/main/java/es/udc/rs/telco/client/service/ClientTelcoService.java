@@ -2,6 +2,7 @@ package es.udc.rs.telco.client.service;
 
 import es.udc.rs.telco.client.service.rest.CustomerDto;
 import es.udc.rs.telco.client.service.rest.PhoneCallDto;
+import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
@@ -19,7 +20,7 @@ public interface ClientTelcoService {
 
     void removeCustomer(CustomerDto cust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException;
 
-    List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException;
+    List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to, PhoneCallType type) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException;
 
     void changeCallStatus(Long customerId, Integer month, Integer year) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException;
 }
