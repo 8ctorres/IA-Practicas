@@ -37,7 +37,11 @@
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>es.udc.rs.telco</groupId>
+            <artifactId>rs-telco-model</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

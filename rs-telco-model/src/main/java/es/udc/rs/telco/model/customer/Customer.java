@@ -1,7 +1,5 @@
 package es.udc.rs.telco.model.customer;
 
-import es.udc.rs.telco.model.phonecall.PhoneCall;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
