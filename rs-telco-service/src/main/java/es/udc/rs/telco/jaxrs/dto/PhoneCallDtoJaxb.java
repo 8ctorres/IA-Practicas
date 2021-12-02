@@ -3,6 +3,7 @@ package es.udc.rs.telco.jaxrs.dto;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
+import jakarta.xml.bind.annotation.XmlSchemaType;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,8 +24,8 @@ public class PhoneCallDtoJaxb {
     @XmlAttribute(name = "customerId",required = true)
     private Long customerId;
     @XmlElement(required = true)
-    //Cambiamos de LocalDateTime a Long para que JAXB no tenga problemas
-    private Long startDate;
+    @XmlSchemaType(name = "dateTime")
+    private LocalDateTime startDate;
     @XmlElement(required = true)
     private Long duration;
     @XmlElement(required = true)
@@ -41,7 +42,7 @@ public class PhoneCallDtoJaxb {
                             PhoneCallStatus phoneCallStatus) {
         this.phoneCallId = phoneCallId;
         this.customerId = customerId;
-        this.startDate = startDate.toEpochSecond(ZoneOffset.UTC); //Almacenamos como epoch para que compile con JAXB
+        this.startDate = startDate;
         this.duration = duration;
         this.destinationNumber = destinationNumber;
         this.phoneCallType = phoneCallType;
@@ -67,11 +68,11 @@ public class PhoneCallDtoJaxb {
     //Almacenamos el tiempo en formato epoch para que JAX-B no tenga problemas a la hora de serializarlo
 
     public LocalDateTime getStartDate() {
-        return LocalDateTime.ofEpochSecond(startDate, 0, ZoneOffset.UTC);
+        return this.startDate;
     }
 
     public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate.toEpochSecond(ZoneOffset.UTC);
+        this.startDate = startDate;
     }
 
     public Long getDuration() {
