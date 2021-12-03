@@ -11,6 +11,7 @@ import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
@@ -56,7 +57,18 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	//Isma
 	@Override
 	public CustomerDto addCustomer(CustomerDto newCustomer) throws InputValidationException {
-		return null;
+
+		try {
+			 Response response = getEndpointWebTarget().path("clientes").request().accept(this.getMediaType())
+				.post(Entity.entity(newCustomer.toDtoJaxb(), this.getMediaType()));
+
+			validateResponse(Response.Status.CREATED, response);
+			return response.readEntity(CustomerDto.class);
+		} catch (InputValidationException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	//Pablo
