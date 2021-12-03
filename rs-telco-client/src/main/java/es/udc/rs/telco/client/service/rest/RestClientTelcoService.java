@@ -79,7 +79,7 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 	//Isma
 	@Override
-	public void removeCustomer(CustomerDto cust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
+	public void removeCustomer(Long idCust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
 
 	}
 
