@@ -1,23 +1,23 @@
 package es.udc.rs.telco.jaxrs.dto;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.XmlElement;
 
-@XmlRootElement(name="unexpectedCallStatusException")
-@XmlType(name="unexpectedCallStatusExceptionType")
-public class UnexpectedCallStatusExceptionDtoJaxb {
+@XmlRootElement(name="applicationException")
+@XmlType(name="applicationExceptionJaxbType")
+public class ApplicationExceptionDtoJaxb {
 
     @XmlAttribute(required = true)
     private String errorType;
     @XmlElement(required = true)
     private String message;
 
-    public UnexpectedCallStatusExceptionDtoJaxb(){}
+    public ApplicationExceptionDtoJaxb(){}
 
-    public UnexpectedCallStatusExceptionDtoJaxb(String message) {
-        this.errorType = "UnexpectedCallStatus";
+    public ApplicationExceptionDtoJaxb(String errorType, String message) {
+        this.errorType = errorType;
         this.message = message;
     }
 
@@ -39,10 +39,11 @@ public class UnexpectedCallStatusExceptionDtoJaxb {
 
     @Override
     public String toString() {
-        return "UnexpectedCallStatusExceptionDtoJaxb{" +
+        return "ApplicationExceptionDtoJaxb{" +
                 "errorType='" + errorType + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }
 
 }
+

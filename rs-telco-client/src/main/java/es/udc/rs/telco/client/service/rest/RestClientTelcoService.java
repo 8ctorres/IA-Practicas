@@ -3,13 +3,12 @@ package es.udc.rs.telco.client.service.rest;
 import com.sun.istack.NotNull;
 import es.udc.rs.telco.client.service.dto.CustomerDto;
 import es.udc.rs.telco.client.service.dto.PhoneCallDto;
-import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
-import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
-import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
+import es.udc.rs.telco.client.service.rest.dto.*;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
+import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -92,7 +91,7 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 		try {
 			Response response = getEndpointWebTarget().path("clientes/{id}").resolveTemplate("id", idCust).request().accept(this.getMediaType()).delete();
 			validateResponse(Response.Status.NO_CONTENT, response);
-		} catch (InputValidationException|InstanceNotFoundException e) {
+		} catch (InputValidationException|InstanceNotFoundException|CustomerHasCallsClientException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -101,7 +100,7 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 	//Carlos
 	@Override
-	public List<PhoneCallDto> getCalls(Long customerId, LocalDateTime startTime, LocalDateTime endTime, PhoneCallType type) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException {
+	public List<PhoneCallDto> getCalls(Long customerId, LocalDateTime startTime, LocalDateTime endTime, PhoneCallType type) throws InputValidationException, InstanceNotFoundException {
 		//En previsión de que vamos a implementar la parte opcional de Hipermedia, no voy a añadir los paŕametros de paginacion
 		try (Response response = getEndpointWebTarget().path("llamadas").
 				queryParam("customerId", customerId).queryParam("startTime", startTime).
@@ -110,21 +109,57 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 			validateResponse(Response.Status.OK, response);
 			return PhoneCallDto.from(response.readEntity(new GenericType<List<PhoneCallDtoJaxb>>(){}));
+
+		} catch (InputValidationException | InstanceNotFoundException a){
+			throw a;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
 	//Carlos
 	@Override
-	public void changeCallStatus(Long customerId, Integer month, Integer year, PhoneCallStatus newstatus) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
+	public void changeCallStatus(Long customerId, Integer month, Integer year, PhoneCallStatus newstatus)
+			throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
 		try (Response response = getEndpointWebTarget().path("llamadas").path("changestatus").
 				queryParam("customerId", customerId).queryParam("month", month).queryParam("year", year).
 				queryParam("newstatus", newstatus).request().accept(this.getMediaType()).post(null)) {
 
 			validateResponse(Response.Status.NO_CONTENT, response);
+
+		} catch (InputValidationException | InstanceNotFoundException | MonthNotClosedClientException | UnexpectedCallStatusClientException a){
+			throw a;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	private void validateResponse(Response.Status expected, @NotNull Response received) throws InputValidationException, InstanceNotFoundException{
+	private void validateResponse(Response.Status expected, @NotNull Response received) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException, UnexpectedCallStatusClientException, MonthNotClosedClientException {
+		Response.Status responsestatus = Response.Status.fromStatusCode(received.getStatus());
+		if (!(received.getMediaType().equals(this.getMediaType())
+			|| (responsestatus.equals(Response.Status.NO_CONTENT)))){
+			throw new RuntimeException("Unknown Error. Http status code = " + received.getStatus());
+		}
+
+		switch (responsestatus){
+			case BAD_REQUEST:
+				InputValidationExceptionDtoJaxb exInputVal = received.readEntity(InputValidationExceptionDtoJaxb.class);
+				throw new InputValidationException(exInputVal.getMessage());
+			case NOT_FOUND:
+				InstanceNotFoundExceptionDtoJaxb exNotFound = received.readEntity(InstanceNotFoundExceptionDtoJaxb.class);
+				throw new InstanceNotFoundException(exNotFound.getInstanceId(), exNotFound.getInstanceType());
+			case CONFLICT:
+				ApplicationExceptionDtoJaxb appEx = received.readEntity(ApplicationExceptionDtoJaxb.class);
+				switch (appEx.getErrorType()){
+					case "CustomerHasCalls":
+						throw new CustomerHasCallsClientException(appEx.getMessage());
+					case "MonthNotClosed":
+						throw new MonthNotClosedClientException(appEx.getMessage());
+					case "UnexpectedCallStatus":
+						throw new UnexpectedCallStatusClientException(appEx.getMessage());
+				}
+
+		}
 
 	}
 

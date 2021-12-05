@@ -6,11 +6,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlRootElement(name = "instanceNotFoundException")
-@XmlType(name="instanceNotFoundExceptionType", propOrder = {"instanceId", "instanceType"})
+@XmlType(name="instanceNotFoundExceptionJaxbType", propOrder = {"instanceId", "instanceType"})
 public class InstanceNotFoundExceptionDtoJaxb {
 
-    @XmlAttribute(required = true)
-    private String errorType;
     @XmlElement(required = true)
     private String instanceId;
     @XmlElement(required = true)
@@ -19,19 +17,10 @@ public class InstanceNotFoundExceptionDtoJaxb {
     public InstanceNotFoundExceptionDtoJaxb(){}
 
     public InstanceNotFoundExceptionDtoJaxb(Object instanceId, String instanceType) {
-        this.errorType = "InstanceNotFound";
         this.instanceId = instanceId.toString();
         if (instanceType != null) {
             this.instanceType = instanceType.substring(instanceType.lastIndexOf('.') + 1);
         }
-    }
-
-    public String getErrorType() {
-        return errorType;
-    }
-
-    public void setErrorType(String errorType) {
-        this.errorType = errorType;
     }
 
     public String getInstanceId() {
@@ -53,7 +42,6 @@ public class InstanceNotFoundExceptionDtoJaxb {
     @Override
     public String toString() {
         return "InstanceNotFoundExceptionDtoJaxb{" +
-                "errorType='" + errorType + '\'' +
                 ", instanceId='" + instanceId + '\'' +
                 ", instanceType='" + instanceType + '\'' +
                 '}';

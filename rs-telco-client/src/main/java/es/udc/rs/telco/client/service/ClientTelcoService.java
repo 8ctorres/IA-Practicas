@@ -17,11 +17,15 @@ public interface ClientTelcoService {
 
     Long addCustomer(CustomerDto newCustomer) throws InputValidationException;
 
-    PhoneCallDto addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException;
+    PhoneCallDto addCall(PhoneCallDto newCall)
+            throws InputValidationException, InstanceNotFoundException;
 
-    void removeCustomer(Long idCust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException;
+    void removeCustomer(Long idCust)
+            throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException;
 
-    List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to, PhoneCallType type) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException;
+    List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to, PhoneCallType type)
+            throws InputValidationException, InstanceNotFoundException;
 
-    void changeCallStatus(Long customerId, Integer month, Integer year, PhoneCallStatus newstatus) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException;
+    void changeCallStatus(Long customerId, Integer month, Integer year, PhoneCallStatus newstatus)
+            throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException;
 }
