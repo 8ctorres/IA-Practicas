@@ -9,10 +9,12 @@ import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
+import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
@@ -58,7 +60,18 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	//Isma
 	@Override
 	public CustomerDto addCustomer(CustomerDto newCustomer) throws InputValidationException {
-		return null;
+
+		try {
+			 Response response = getEndpointWebTarget().path("clientes").request().accept(this.getMediaType())
+				.post(Entity.entity(newCustomer.toDtoJaxb(), this.getMediaType()));
+
+			validateResponse(Response.Status.CREATED, response);
+			return response.readEntity(CustomerDto.class);
+		} catch (InputValidationException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	//Pablo
@@ -69,8 +82,16 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 	//Isma
 	@Override
-	public void removeCustomer(CustomerDto cust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
+	public void removeCustomer(Long idCust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
 
+		try {
+			Response response = getEndpointWebTarget().path("clientes/{id}").resolveTemplate("id", idCust).request().accept(this.getMediaType()).delete();
+			validateResponse(Response.Status.NO_CONTENT, response);
+		} catch (InputValidationException|InstanceNotFoundException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	//Carlos

@@ -19,7 +19,7 @@ public interface ClientTelcoService {
 
     PhoneCallDto addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException;
 
-    void removeCustomer(CustomerDto cust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException;
+    void removeCustomer(Long idCust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException;
 
     List<PhoneCallDto> getCalls(Long customerId, LocalDateTime from, LocalDateTime to, PhoneCallType type) throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException;
 
