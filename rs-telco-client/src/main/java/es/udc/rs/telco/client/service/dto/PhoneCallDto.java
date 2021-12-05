@@ -1,8 +1,11 @@
 package es.udc.rs.telco.client.service.dto;
 
+import es.udc.rs.telco.client.service.rest.dto.ObjectFactory;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
+import es.udc.rs.telco.model.phonecall.PhoneCall;
+import jakarta.xml.bind.JAXBElement;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -104,7 +107,7 @@ public class PhoneCallDto {
         return phoneCallDtoJaxbs.stream().map((x) -> PhoneCallDto.from(x)).collect(Collectors.toList());
     }
 
-    public PhoneCallDtoJaxb toDtoJaxb(){
+    public JAXBElement<PhoneCallDtoJaxb> toDtoJaxb(){
        PhoneCallDtoJaxb phoneCallDtoJaxb = new PhoneCallDtoJaxb();
        phoneCallDtoJaxb.setPhoneCallId(this.getPhoneCallId());
        phoneCallDtoJaxb.setCustomerId(this.getCustomerId());phoneCallDtoJaxb.setStartDate(this.getStartDate());
@@ -113,6 +116,7 @@ public class PhoneCallDto {
        phoneCallDtoJaxb.setPhoneCallType(this.getPhoneCallType());
        phoneCallDtoJaxb.setPhoneCallStatus(this.getPhoneCallStatus());
 
-       return phoneCallDtoJaxb;
+       return new ObjectFactory().createPhoneCall(phoneCallDtoJaxb);
     }
+
 }

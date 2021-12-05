@@ -8,10 +8,10 @@
             <xjc:javaType name="java.time.LocalDateTime" xmlType="xs:dateTime"
                           adapter="es.udc.rs.telco.client.service.rest.jaxb.LocalDateTimeXmlAdapter"/>
         </jxb:globalBindings>
-        <jxb:bindings node="//xs:complexType[@name='customerType']">
+        <jxb:bindings node="//xs:complexType[@name='customerJaxbType']">
             <jxb:class name="CustomerDtoJaxb"/>
         </jxb:bindings>
-        <jxb:bindings node="//xs:complexType[@name='phoneCallDtoJaxb']">
+        <jxb:bindings node="//xs:complexType[@name='phoneCallJaxbType']">
             <jxb:class name="PhoneCallDtoJaxb"/>
         </jxb:bindings>
     </jxb:bindings>

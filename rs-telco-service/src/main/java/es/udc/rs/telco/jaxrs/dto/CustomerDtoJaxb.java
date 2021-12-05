@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
-@XmlType(name="customerType", propOrder = {"name", "dni", "address", "phoneNumber"})
+@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber"})
 public class CustomerDtoJaxb {
     @XmlAttribute(name = "customerId", required = false)
     private Long customerId;

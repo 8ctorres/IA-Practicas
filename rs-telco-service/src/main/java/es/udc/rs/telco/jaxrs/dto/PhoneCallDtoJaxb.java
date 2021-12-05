@@ -4,11 +4,11 @@ import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
 import jakarta.xml.bind.annotation.XmlSchemaType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "phoneCall")
-@XmlType(name = "phoneCallType", propOrder = {"startDate",
+@XmlType(name = "phoneCallJaxbType", propOrder = {"startDate",
         "duration", "destinationNumber", "phoneCallType", "phoneCallStatus"})
 public class PhoneCallDtoJaxb {
     @XmlAttribute(name = "phoneCallId", required = false)
