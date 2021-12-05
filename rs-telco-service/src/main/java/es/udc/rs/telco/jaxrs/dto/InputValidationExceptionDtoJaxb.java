@@ -6,27 +6,16 @@ import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlRootElement(name="inputValidationException")
-@XmlType(name="inputValidationExceptionType")
+@XmlType(name="inputValidationExceptionJaxbType")
 public class InputValidationExceptionDtoJaxb {
 
-    @XmlAttribute(required = true)
-    private String errorType;
     @XmlElement(required = true)
     private String message;
 
     public InputValidationExceptionDtoJaxb(){}
 
     public InputValidationExceptionDtoJaxb(String message) {
-        this.errorType = "InputValidation";
         this.message = message;
-    }
-
-    public String getErrorType() {
-        return errorType;
-    }
-
-    public void setErrorType(String errorType) {
-        this.errorType = errorType;
     }
 
     public String getMessage() {
@@ -40,7 +29,6 @@ public class InputValidationExceptionDtoJaxb {
     @Override
     public String toString() {
         return "InputValidationExceptionDtoJaxb{" +
-                "errorType='" + errorType + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }
