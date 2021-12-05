@@ -3,6 +3,7 @@ package es.udc.rs.telco.client.ui;
 import es.udc.rs.telco.client.service.ClientTelcoService;
 import es.udc.rs.telco.client.service.ClientTelcoServiceFactory;
 import es.udc.rs.telco.client.service.dto.CustomerDto;
+import es.udc.rs.telco.client.service.dto.PhoneCallDto;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.ws.util.exceptions.InputValidationException;
@@ -77,9 +78,15 @@ public class TelcoServiceClient {
 			validateArgs(args, 6, new int[]{1, 3});
 
 			try {
-				//clientTelcoService. ....
-			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
+				PhoneCallDto call = new PhoneCallDto(null, Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
+						Long.parseLong(args[3]), args[4], phoneCallTypeFromString(args[5]), PhoneCallStatus.PENDING);
+				clientTelcoService.addCall(call);
+			}catch (InputValidationException a) {
+				printErrorMsgAndExit("Invalid arguments: " + a.getLocalizedMessage());
+			}catch (InstanceNotFoundException b){
+				printErrorMsgAndExit("Instance not found: " + b.getLocalizedMessage());
+			}catch (Exception ex) {
+				printErrorMsgAndExit("Unknown Error: " + ex.getLocalizedMessage());
 			}
 		} else {
 			printUsageAndExit();
