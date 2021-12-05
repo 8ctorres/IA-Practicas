@@ -17,7 +17,7 @@ public interface ClientTelcoService {
 
     Long addCustomer(CustomerDto newCustomer) throws InputValidationException;
 
-    PhoneCallDto addCall(PhoneCallDto newCall)
+    Long addCall(PhoneCallDto newCall)
             throws InputValidationException, InstanceNotFoundException;
 
     void removeCustomer(Long idCust)

@@ -7,8 +7,6 @@ import es.udc.rs.telco.client.service.rest.dto.*;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
-import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
-import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -23,9 +21,7 @@ import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class RestClientTelcoService implements ClientTelcoService {
 
@@ -80,8 +76,20 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 	//Pablo
 	@Override
-	public PhoneCallDto addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException {
-		return null;
+	public Long addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException {
+		try {
+			Response response = getEndpointWebTarget().path("llamadas").request().accept(this.getMediaType())
+					.post(Entity.entity(newCall.toDtoJaxb(), this.getMediaType()));
+
+			validateResponse(Response.Status.CREATED, response);
+
+			String path = response.getLocation().getPath();
+			return Long.parseLong(path.substring(path.lastIndexOf("/")+1));
+		} catch (InputValidationException | InstanceNotFoundException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	//Isma
