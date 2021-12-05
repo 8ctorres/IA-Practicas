@@ -1,6 +1,8 @@
 package es.udc.rs.telco.client.service.rest;
 
 import com.sun.istack.NotNull;
+import es.udc.rs.telco.client.service.dto.CustomerDto;
+import es.udc.rs.telco.client.service.dto.PhoneCallDto;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;

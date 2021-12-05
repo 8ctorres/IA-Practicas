@@ -1,11 +1,10 @@
-package es.udc.rs.telco.client.service.rest;
+package es.udc.rs.telco.client.service.dto;
 
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,7 +91,7 @@ public class PhoneCallDto {
     public static PhoneCallDto from(PhoneCallDtoJaxb phoneCallDtoJaxb){
         return new PhoneCallDto(
                 phoneCallDtoJaxb.getPhoneCallId(),
-                phoneCallDtoJaxb.getCustomerId(), 
+                phoneCallDtoJaxb.getCustomerId(),
                 phoneCallDtoJaxb.getStartDate(),
                 phoneCallDtoJaxb.getDuration(),
                 phoneCallDtoJaxb.getDestinationNumber(),

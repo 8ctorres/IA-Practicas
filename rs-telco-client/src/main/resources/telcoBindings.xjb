@@ -1,0 +1,18 @@
+<jxb:bindings version="3.0"
+              xmlns:jxb="https://jakarta.ee/xml/ns/jaxb"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+              xmlns:atomns="http://www.w3.org/2005/Atom">
+    <jxb:bindings schemaLocation="../../../../rs-telco-service/target/generated-resources/schemagen/schema1.xsd">
+        <jxb:globalBindings>
+            <xjc:javaType name="java.time.LocalDateTime" xmlType="xs:dateTime"
+                          adapter="es.udc.rs.telco.client.service.rest.jaxb.LocalDateTimeXmlAdapter"/>
+        </jxb:globalBindings>
+        <jxb:bindings node="//xs:complexType[@name='customerType']">
+            <jxb:class name="CustomerDtoJaxb"/>
+        </jxb:bindings>
+        <jxb:bindings node="//xs:complexType[@name='phoneCallDtoJaxb']">
+            <jxb:class name="PhoneCallDtoJaxb"/>
+        </jxb:bindings>
+    </jxb:bindings>
+</jxb:bindings>

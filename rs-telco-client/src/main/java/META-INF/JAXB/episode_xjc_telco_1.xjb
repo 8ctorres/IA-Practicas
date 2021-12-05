@@ -13,7 +13,7 @@ Generated on: 2021.11.17 at 11:57:26 PM CET
       <jaxb:package name="es.udc.rs.telco.client.service.rest.dto"/>
     </jaxb:schemaBindings>
     <jaxb:bindings scd="~tns:customerType">
-      <jaxb:class ref="es.udc.rs.telco.client.service.rest.dto.CustomerType"/>
+      <jaxb:class ref="es.udc.rs.telco.client.service.rest.dto.CustomerDtoJaxb"/>
     </jaxb:bindings>
     <jaxb:bindings scd="~tns:customerHasCallsExceptionType">
       <jaxb:class ref="es.udc.rs.telco.client.service.rest.dto.CustomerHasCallsExceptionType"/>

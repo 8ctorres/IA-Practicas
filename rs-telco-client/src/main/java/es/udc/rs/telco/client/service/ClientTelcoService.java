@@ -1,7 +1,7 @@
 package es.udc.rs.telco.client.service;
 
-import es.udc.rs.telco.client.service.rest.CustomerDto;
-import es.udc.rs.telco.client.service.rest.PhoneCallDto;
+import es.udc.rs.telco.client.service.dto.CustomerDto;
+import es.udc.rs.telco.client.service.dto.PhoneCallDto;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;

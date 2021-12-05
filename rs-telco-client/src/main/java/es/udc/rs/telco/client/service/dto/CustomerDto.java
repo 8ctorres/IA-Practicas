@@ -1,7 +1,6 @@
-package es.udc.rs.telco.client.service.rest;
+package es.udc.rs.telco.client.service.dto;
 
-import es.udc.rs.telco.client.service.rest.dto.CustomerType;
-import es.udc.rs.telco.model.customer.Customer;
+import es.udc.rs.telco.client.service.rest.dto.CustomerDtoJaxb;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -65,8 +64,8 @@ public class CustomerDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public CustomerType toDtoJaxb(){
-        CustomerType customerJaxb = new CustomerType();
+    public CustomerDtoJaxb toDtoJaxb(){
+        CustomerDtoJaxb customerJaxb = new CustomerDtoJaxb();
         customerJaxb.setCustomerId(this.getCustomerId());
         customerJaxb.setName(this.getName());
         customerJaxb.setDni(this.getDni());
@@ -75,7 +74,7 @@ public class CustomerDto {
         return customerJaxb;
     }
 
-    public static CustomerDto from(CustomerType customer){
+    public static CustomerDto from(CustomerDtoJaxb customer){
         return new CustomerDto(
                 customer.getCustomerId(),
                 customer.getName(),
@@ -85,7 +84,7 @@ public class CustomerDto {
         );
     }
 
-    public static List<CustomerDto> from(Collection<CustomerType> customerList){
+    public static List<CustomerDto> from(Collection<CustomerDtoJaxb> customerList){
         return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
     }
 }
