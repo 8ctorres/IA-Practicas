@@ -2,8 +2,7 @@ package es.udc.rs.telco.client.ui;
 
 import es.udc.rs.telco.client.service.ClientTelcoService;
 import es.udc.rs.telco.client.service.ClientTelcoServiceFactory;
-import es.udc.rs.telco.client.service.rest.CustomerDto;
-import es.udc.rs.telco.model.customer.Customer;
+import es.udc.rs.telco.client.service.dto.CustomerDto;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 

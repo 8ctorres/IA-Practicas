@@ -1,7 +1,9 @@
 package es.udc.rs.telco.client.service.dto;
 
 import es.udc.rs.telco.client.service.rest.dto.CustomerDtoJaxb;
+import es.udc.rs.telco.client.service.rest.dto.ObjectFactory;
 
+import jakarta.xml.bind.JAXBElement;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -64,15 +66,6 @@ public class CustomerDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public CustomerDtoJaxb toDtoJaxb(){
-        CustomerDtoJaxb customerJaxb = new CustomerDtoJaxb();
-        customerJaxb.setCustomerId(this.getCustomerId());
-        customerJaxb.setName(this.getName());
-        customerJaxb.setDni(this.getDni());
-        customerJaxb.setAddress(this.getAddress());
-        customerJaxb.setPhoneNumber(this.getPhoneNumber());
-        return customerJaxb;
-    }
 
     public static CustomerDto from(CustomerDtoJaxb customer){
         return new CustomerDto(
@@ -86,5 +79,17 @@ public class CustomerDto {
 
     public static List<CustomerDto> from(Collection<CustomerDtoJaxb> customerList){
         return customerList.stream().map((c) -> CustomerDto.from(c)).collect(Collectors.toList());
+    }
+
+    public JAXBElement<CustomerDtoJaxb> toDtoJaxb(){
+        CustomerDtoJaxb customerJaxb = new CustomerDtoJaxb();
+        customerJaxb.setCustomerId(this.getCustomerId());
+        customerJaxb.setName(this.getName());
+        customerJaxb.setDni(this.getDni());
+        customerJaxb.setAddress(this.getAddress());
+        customerJaxb.setPhoneNumber(this.getPhoneNumber());
+        JAXBElement<CustomerDtoJaxb> jaxbElement = new ObjectFactory().createCustomer(customerJaxb);
+        return jaxbElement;
+
     }
 }
