@@ -24,7 +24,9 @@ import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class RestClientTelcoService implements ClientTelcoService {
 
@@ -59,14 +61,17 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 
 	//Isma
 	@Override
-	public CustomerDto addCustomer(CustomerDto newCustomer) throws InputValidationException {
+	public Long addCustomer(CustomerDto newCustomer) throws InputValidationException {
 
 		try {
 			 Response response = getEndpointWebTarget().path("clientes").request().accept(this.getMediaType())
 				.post(Entity.entity(newCustomer.toDtoJaxb(), this.getMediaType()));
 
 			validateResponse(Response.Status.CREATED, response);
-			return response.readEntity(CustomerDto.class);
+
+			String path = response.getLocation().getPath();
+			return Long.parseLong(path.substring(path.lastIndexOf("/")+1));
+
 		} catch (InputValidationException e) {
 			throw e;
 		} catch (Exception e) {

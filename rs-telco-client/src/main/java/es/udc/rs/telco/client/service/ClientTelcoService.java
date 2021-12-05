@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface ClientTelcoService {
 
-    CustomerDto addCustomer(CustomerDto newCustomer) throws InputValidationException;
+    Long addCustomer(CustomerDto newCustomer) throws InputValidationException;
 
     PhoneCallDto addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException;
 

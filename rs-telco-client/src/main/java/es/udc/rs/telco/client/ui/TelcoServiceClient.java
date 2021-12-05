@@ -3,10 +3,12 @@ package es.udc.rs.telco.client.ui;
 import es.udc.rs.telco.client.service.ClientTelcoService;
 import es.udc.rs.telco.client.service.ClientTelcoServiceFactory;
 import es.udc.rs.telco.client.service.dto.CustomerDto;
+import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
+import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class TelcoServiceClient {
 
@@ -16,40 +18,30 @@ public class TelcoServiceClient {
 			printUsageAndExit();
 		}
 		ClientTelcoService clientTelcoService = ClientTelcoServiceFactory.getService();
-		if ("-addCustomer".equalsIgnoreCase(args[0])) {
-			validateArgs(args, 5, new int[] {3});
 
-			// [-addCustomer] TelcoServiceClient -addClient <name> <DNI> <address> <phone>
+		//Isma
+		if ("-addCustomer".equalsIgnoreCase(args[0])) {
+			validateArgs(args, 5, new int[]{});
+
+			// -addClient <name> <DNI> <address> <phone>
 
 			try {
-				CustomerDto c = new CustomerDto(null, args[1],args[2],args[3],args[4]);
-				clientTelcoService.addCustomer(c); // Invoke method from the clientTelcoService
-				System.out.println("Client " + c.getCustomerId() + " " + "created successfully");
+				CustomerDto c = new CustomerDto(null, args[1], args[2], args[3], args[4]);
+				Long newId = clientTelcoService.addCustomer(c); // Invoke method from the clientTelcoService
+				System.out.println("Client with ID " + newId.toString() + " created successfully");
 			} catch (InputValidationException ex) {
 				printErrorMsgAndExit("Invalid arguments: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
 				ex.printStackTrace(System.err);
 			}
 
-		} else if ("-findClient".equalsIgnoreCase(args[0])) {
-			validateArgs(args, 2, new int[] {1});
-
-			// [-findClient] ClientTelcoServiceClient -findClient <clientId>
-
-			try {
-				// ...
-			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
-			}
-
-		} else if ("-removeClient".equalsIgnoreCase(args[0])) {
-			validateArgs(args, 2, new int[] { 1 });
-
-			// [-findClient] ClientTelcoServiceClient -findClient <clientId>
+			//Isma
+		} else if ("-removeCustomer".equalsIgnoreCase(args[0])) {
+			validateArgs(args, 2, new int[]{1});
 
 			try {
 				clientTelcoService.removeCustomer(Long.parseLong(args[1]));
-				System.out.println("Customer " + args[1] + " deleted successfully '");
+				System.out.println("Customer " + args[1] + " deleted successfully");
 			} catch (InputValidationException ex) {
 				printErrorMsgAndExit("Invalid arguments: " + ex.getLocalizedMessage());
 			} catch (InstanceNotFoundException ex) {
@@ -58,6 +50,39 @@ public class TelcoServiceClient {
 				ex.printStackTrace(System.err);
 			}
 
+			//Carlos
+		} else if ("-getCalls".equalsIgnoreCase(args[0])) {
+			validateArgs(args, 2, new int[]{1});
+
+			try {
+				clientTelcoService.getCalls(Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
+						LocalDateTime.parse(args[3]), phoneCallTypeFromString(args[4]));
+			} catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			}
+
+			//Carlos
+		} else if ("-changeCallStatus".equalsIgnoreCase(args[0])) {
+			validateArgs(args, 2, new int[]{1});
+
+			try {
+				clientTelcoService.changeCallStatus(Long.parseLong(args[1]), Integer.parseInt(args[2]),
+						Integer.parseInt(args[3]), phoneCallStatusFromString(args[4]));
+			} catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			}
+
+			//Pablo
+		} else if ("-addCall".equalsIgnoreCase(args[0])) {
+			validateArgs(args, 6, new int[]{1, 3});
+
+			try {
+				//clientTelcoService. ....
+			} catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			}
+		} else {
+			printUsageAndExit();
 		}
 	}
 
@@ -87,10 +112,51 @@ public class TelcoServiceClient {
 
 	public static void printUsage() {
 		System.err.println(
-				"Usage:\n" + "    [-addClient]    TelcoServiceClient -addClient <name> ...\n" +
-		                     "    [-findClient]   TelcoServiceClient -findClient <clientId>\n" +
-						     "    [-removeClient]   TelcoServiceClient -removeClient <clientId>\n" +
-						     "    ...\n");
+				"Usage:\n" +
+						"    [-addCustomer]    TelcoServiceClient -addCustomer <name> <DNI> <address> <phoneNumber>\n" +
+						"    [-removeCustomer]    TelcoServiceClient -removeCustomer <customerId>\n" +
+						"    [-getCalls]    TelcoServiceClient -getCalls <customerId> <startTime> <endTime> [callType]\n" +
+						"    [-changeCallStatus]    TelcoServiceClient -changeCallStatus <customerId> <month> <year> <newStatus>\n" +
+						"    [-addCall]    TelcoServiceClient -addCall <customerId> <startDate> <duration> <destNumber> <type>\n" +
+						"    ...\n");
+	}
+
+	// FUNCIONES DE UTILIDAD PARA TRADUCIR LOS ENUMERADOS A STRINGS Y VICEVERSA
+
+	private static PhoneCallType phoneCallTypeFromString(String str){
+		switch (str.toUpperCase()){
+			case "LOCAL": return PhoneCallType.LOCAL;
+			case "NATIONAL": return PhoneCallType.NATIONAL;
+			case "INTERNATIONAL": return PhoneCallType.INTERNATIONAL;
+		}
+		return null;
+	}
+
+	private static String phoneCallStatustoString(PhoneCallStatus phoneCallStatus){
+		switch (phoneCallStatus){
+			case PENDING: return "PENDING";
+			case BILLED: return "BILLED";
+			case PAID: return "PAID";
+		}
+		return null;
+	}
+
+	private static PhoneCallStatus phoneCallStatusFromString(String str){
+		switch (str.toUpperCase()){
+			case "PENDING": return PhoneCallStatus.PENDING;
+			case "BILLED": return PhoneCallStatus.BILLED;
+			case "PAID": return PhoneCallStatus.PAID;
+		}
+		return null;
+	}
+
+	private static String phoneCallTypetoString(PhoneCallType phoneCallType){
+		switch (phoneCallType){
+			case LOCAL: return "LOCAL";
+			case NATIONAL: return "NATIONAL";
+			case INTERNATIONAL: return "INTERNATIONAL";
+		}
+		return null;
 	}
 
 }

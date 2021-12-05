@@ -6,6 +6,7 @@ import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -86,7 +87,9 @@ public class CustomerResource {
     @GET
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<CustomerDtoJaxb> findCustomerByName(@QueryParam("name") String name, @DefaultValue("null") String start_position, @DefaultValue("null") String amount) {
+    public List<CustomerDtoJaxb> findCustomerByName(@QueryParam("name") @NotNull String name,
+                                                    @QueryParam("startPos") @DefaultValue("null") String start_position,
+                                                    @QueryParam("amount") @DefaultValue("null") String amount) {
 
         Integer start_pos_Int = (start_position.equals("null") ? null : Integer.valueOf(start_position));
         Integer amountInt = (amount.equals("null") ? null : Integer.valueOf(amount));
