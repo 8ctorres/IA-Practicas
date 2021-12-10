@@ -41,6 +41,12 @@
             <groupId>es.udc.rs.telco</groupId>
             <artifactId>rs-telco-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>es.udc.rs.telco</groupId>
+            <artifactId>rs-telco-service</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 	<build>
