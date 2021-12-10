@@ -29,7 +29,7 @@ public class InputValidationExceptionDtoJaxb {
     @Override
     public String toString() {
         return "InputValidationExceptionDtoJaxb{" +
-                ", message='" + message + '\'' +
+                "message='" + message + '\'' +
                 '}';
     }
 

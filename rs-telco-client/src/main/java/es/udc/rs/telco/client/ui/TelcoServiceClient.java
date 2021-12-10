@@ -6,6 +6,9 @@ import es.udc.rs.telco.client.service.dto.CustomerDto;
 import es.udc.rs.telco.client.service.dto.PhoneCallDto;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
+import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
+import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
+import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
@@ -24,7 +27,7 @@ public class TelcoServiceClient {
 		if ("-addCustomer".equalsIgnoreCase(args[0])) {
 			validateArgs(args, 5, new int[]{});
 
-			// -addClient <name> <DNI> <address> <phone>
+			// -addCustomer <name> <DNI> <address> <phone>
 
 			try {
 				CustomerDto c = new CustomerDto(null, args[1], args[2], args[3], args[4]);
@@ -33,12 +36,14 @@ public class TelcoServiceClient {
 			} catch (InputValidationException ex) {
 				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
+				printErrorMsgAndExit("Error: " + ex.getLocalizedMessage());
 			}
 
 			//Isma
 		} else if ("-removeCustomer".equalsIgnoreCase(args[0])) {
 			validateArgs(args, 2, new int[]{1});
+
+			// -removeCustomer <customerId>
 
 			try {
 				clientTelcoService.removeCustomer(Long.parseLong(args[1]));
@@ -46,47 +51,65 @@ public class TelcoServiceClient {
 			} catch (InputValidationException ex) {
 				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
 			} catch (InstanceNotFoundException ex) {
-				printErrorMsgAndExit("Cliente no encontrado: " + ex.getLocalizedMessage());
-			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
+				printErrorMsgAndExit("Error: El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
+			} catch (CustomerHasCallsClientException ex) {
+				printErrorMsgAndExit("Error: " + ex.getLocalizedMessage());
+			} catch (Exception ex){
+				printErrorMsgAndExit("Error inesperado: " + ex.getLocalizedMessage());
 			}
 
 			//Carlos
 		} else if ("-getCalls".equalsIgnoreCase(args[0])) {
 			validateArgs(args, 2, new int[]{1});
 
+			// -getCalls <customerId> <time_from> <time_to> <phoneCallType>
+
 			try {
 				clientTelcoService.getCalls(Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
 						LocalDateTime.parse(args[3]), phoneCallTypeFromString(args[4]));
+			} catch (InstanceNotFoundException ex) {
+				printErrorMsgAndExit("Error: El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
+			} catch (InputValidationException ex) {
+				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
+				printErrorMsgAndExit("Error inesperado: " + ex.getLocalizedMessage());
 			}
 
 			//Carlos
 		} else if ("-changeCallStatus".equalsIgnoreCase(args[0])) {
-			validateArgs(args, 2, new int[]{1});
+			validateArgs(args, 5, new int[]{1,2,3});
+
+			// -changeCallStatus <customerId> <month> <year> <newStatus>
 
 			try {
 				clientTelcoService.changeCallStatus(Long.parseLong(args[1]), Integer.parseInt(args[2]),
 						Integer.parseInt(args[3]), phoneCallStatusFromString(args[4]));
+			} catch (InstanceNotFoundException ex) {
+				printErrorMsgAndExit("El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
+			} catch (InputValidationException ex) {
+				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
+			} catch (UnexpectedCallStatusClientException | MonthNotClosedClientException ex) {
+				printErrorMsgAndExit("Error: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
-				ex.printStackTrace(System.err);
+				printErrorMsgAndExit("Error inesperado: " + ex.getLocalizedMessage());
 			}
 
 			//Pablo
 		} else if ("-addCall".equalsIgnoreCase(args[0])) {
 			validateArgs(args, 6, new int[]{1, 3});
 
+			// -addCall <customerId> <startTime> <duration> <destinationNumber> <phoneCallType>
+
 			try {
 				PhoneCallDto call = new PhoneCallDto(null, Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
 						Long.parseLong(args[3]), args[4], phoneCallTypeFromString(args[5]), PhoneCallStatus.PENDING);
 				clientTelcoService.addCall(call);
-			}catch (InputValidationException a) {
-				printErrorMsgAndExit("Argumentos inválidos: " + a.getLocalizedMessage());
-			}catch (InstanceNotFoundException b){
-				printErrorMsgAndExit("Llamada no encontrada: " + b.getLocalizedMessage());
-			}catch (Exception ex) {
-				printErrorMsgAndExit("Error desconocido: " + ex.getLocalizedMessage());
+			} catch (InstanceNotFoundException ex) {
+				printErrorMsgAndExit("Error: El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
+			} catch (InputValidationException ex) {
+				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
+			} catch (Exception ex) {
+				printErrorMsgAndExit("Error inesperado: " + ex.getLocalizedMessage());
 			}
 		} else {
 			printUsageAndExit();

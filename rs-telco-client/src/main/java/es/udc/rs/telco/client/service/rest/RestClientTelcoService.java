@@ -134,7 +134,7 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 			throws InputValidationException, InstanceNotFoundException, MonthNotClosedClientException, UnexpectedCallStatusClientException {
 		try (Response response = getEndpointWebTarget().path("llamadas").path("changestatus").
 				queryParam("customerId", customerId).queryParam("month", month).queryParam("year", year).
-				queryParam("newstatus", newstatus).request().accept(this.getMediaType()).post(null)) {
+				queryParam("newStatus", newstatus).request().accept(this.getMediaType()).post(null)) {
 
 			validateResponse(Response.Status.NO_CONTENT, response);
 
@@ -146,30 +146,45 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	}
 
 	private void validateResponse(Response.Status expected, @NotNull Response received) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException, UnexpectedCallStatusClientException, MonthNotClosedClientException {
-		Response.Status responsestatus = Response.Status.fromStatusCode(received.getStatus());
-		if (!(received.getMediaType().equals(this.getMediaType())
-			|| (responsestatus.equals(Response.Status.NO_CONTENT)))){
-			throw new RuntimeException("Error desconocido. Código de estado Http = " + received.getStatus());
-		}
-
-		switch (responsestatus){
-			case BAD_REQUEST:
-				InputValidationExceptionDtoJaxb exInputVal = received.readEntity(InputValidationExceptionDtoJaxb.class);
-				throw new InputValidationException(exInputVal.getMessage());
-			case NOT_FOUND:
-				InstanceNotFoundExceptionDtoJaxb exNotFound = received.readEntity(InstanceNotFoundExceptionDtoJaxb.class);
-				throw new InstanceNotFoundException(exNotFound.getInstanceId(), exNotFound.getInstanceType());
-			case CONFLICT:
-				ApplicationExceptionDtoJaxb appEx = received.readEntity(ApplicationExceptionDtoJaxb.class);
-				switch (appEx.getErrorType()){
-					case "CustomerHasCalls":
-						throw new CustomerHasCallsClientException(appEx.getMessage());
-					case "MonthNotClosed":
-						throw new MonthNotClosedClientException(appEx.getMessage());
-					case "UnexpectedCallStatus":
-						throw new UnexpectedCallStatusClientException(appEx.getMessage());
-				}
-
+		if (received.getStatus() == expected.getStatusCode()){
+			//Si el código de estado es el esperado
+			if ((received.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) ||
+					(received.getStatus() == Response.Status.CREATED.getStatusCode())){
+				//Si es CREATED o NO_CONTENT, no comprobamos MediaType porque no viene nada en el cuerpo
+				return;
+			}else if (this.getMediaType().equals(received.getMediaType())){
+				//Si matchea Status Code y MediaType, la damos por válida
+				return;
+			}else{
+				//Si el StatusCode es el esperado pero el MediaType no, excepción
+				throw new RuntimeException("HTTP Error: Incompatible MediaType");
+			}
+		}else{
+			//Si el código de estado NO es el esperado
+			switch (Response.Status.fromStatusCode(received.getStatus())) {
+				case BAD_REQUEST:
+					InputValidationExceptionDtoJaxb exInputVal = received.readEntity(InputValidationExceptionDtoJaxb.class);
+					throw new InputValidationException(exInputVal.getMessage());
+				case NOT_FOUND:
+					InstanceNotFoundExceptionDtoJaxb exNotFound = received.readEntity(InstanceNotFoundExceptionDtoJaxb.class);
+					throw new InstanceNotFoundException(exNotFound.getInstanceId(), exNotFound.getInstanceType());
+				case CONFLICT:
+					ApplicationExceptionDtoJaxb appEx = received.readEntity(ApplicationExceptionDtoJaxb.class);
+					switch (appEx.getErrorType()) {
+						case "CustomerHasCalls":
+							throw new CustomerHasCallsClientException(appEx.getMessage());
+						case "MonthNotClosed":
+							throw new MonthNotClosedClientException(appEx.getMessage());
+						case "UnexpectedCallStatus":
+							throw new UnexpectedCallStatusClientException(appEx.getMessage());
+						//Nunca debería pasar con nuestro servicio.
+						default:
+							throw new RuntimeException("Unknown Application Error: " + appEx.getErrorType() + ": " + appEx.getMessage());
+					}
+				//Nunca debería pasar con nuestro servicio, excepto en errores 500
+				default:
+					throw new RuntimeException("Unknown error. HTTP Status code = " + received.getStatus());
+			}
 		}
 
 	}

@@ -42,7 +42,7 @@ public class InstanceNotFoundExceptionDtoJaxb {
     @Override
     public String toString() {
         return "InstanceNotFoundExceptionDtoJaxb{" +
-                ", instanceId='" + instanceId + '\'' +
+                "instanceId='" + instanceId + '\'' +
                 ", instanceType='" + instanceType + '\'' +
                 '}';
     }

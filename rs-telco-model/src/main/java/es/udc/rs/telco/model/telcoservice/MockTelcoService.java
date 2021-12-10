@@ -38,7 +38,7 @@ public class MockTelcoService implements TelcoService {
 		//Validamos para ser consistentes con el comportamiento de la función findbyDNI que asume que los DNI son únicos
 		for (Customer cus:clientsMap.values()) {
 			if (DNI.equals(cus.getDni())) {
-				throw new InputValidationException("DNI already exists");
+				throw new InputValidationException("Ya existe un cliente con ese DNI");
 			}
 		}
 		try{
@@ -63,7 +63,7 @@ public class MockTelcoService implements TelcoService {
 		//Si el cliente no existe devuelve la excepción InstanceNotFoundException
 		Customer c = clientsMap.get(id);
 		if (c == null) {
-			throw new InstanceNotFoundException(id, "Cliente no encontrado");
+			throw new InstanceNotFoundException(id, "Customer");
 		}
 		//Intenta actualizar los parámetros modificables
 		try{
@@ -78,14 +78,12 @@ public class MockTelcoService implements TelcoService {
 	//Isma
 	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
 		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
-			throw new CustomerHasCallsException("El cliente tiene llamadas registradas");
+			throw new CustomerHasCallsException("El cliente especificado tiene llamadas asociadas y no se puede eliminar");
 		}
+		//La comprobación de si tiene llamadas también comprueba indirectamente si el cliente existe o no,
+		//por lo que no hace falta comprobarlo de nuevo
 		//Quitamos al cliente de la lista de clientes
 		Customer c = clientsMap.remove(id);
-		//Si es nulo devuelve la excepción InstanceNotFoundException
-		if (c == null) {
-			throw new InstanceNotFoundException(id, "Cliente no encontrado");
-		}
 	}
 
 	//Isma
@@ -94,7 +92,7 @@ public class MockTelcoService implements TelcoService {
 		Customer c = clientsMap.get(id);
 		//Si es nulo devolvemos la excepción InstanceNotFoundException
 		if (c == null) {
-			throw new InstanceNotFoundException(id, "Cliente no encontrado");
+			throw new InstanceNotFoundException(id, "Customer");
 		}
 		//Devolvemos una copia del objeto cliente
 		return new Customer(c);
@@ -114,7 +112,7 @@ public class MockTelcoService implements TelcoService {
 			}
 		}
 		if (c == null){
-			throw new InstanceNotFoundException(dni, "Cliente no encontrado");
+			throw new InstanceNotFoundException(dni, "Customer");
 		}
 		//Devolvemos una copia del objeto cliente
 		return new Customer(c);
@@ -143,10 +141,10 @@ public class MockTelcoService implements TelcoService {
 		//Comprobamos que customerId es valido
 		try{
 			if (clientsMap.get(customerId) == null) {
-				throw new InstanceNotFoundException(customerId, "Cliente no existe");
+				throw new InstanceNotFoundException(customerId, "Customer");
 			}
 		} catch (NullPointerException | ClassCastException e){
-			throw new InputValidationException("CustomerId es inválido");
+			throw new InputValidationException("CustomerId inválido");
 		}
 
 		//Se crea llamada donde nos proporcionan customerId, fecha y hora, duracion, tipo y destino
@@ -171,10 +169,10 @@ public class MockTelcoService implements TelcoService {
 		//Validamos que el cliente existe
 		try {
 			if (clientsMap.get(customerId) == null) {
-				throw new InstanceNotFoundException(customerId, "No existe el cliente con ese ID");
+				throw new InstanceNotFoundException(customerId, "Customer");
 			}
 		}catch (NullPointerException | ClassCastException e){
-			throw new InputValidationException("ID del cliente inválido");
+			throw new InputValidationException("CustomerId inválido");
 		}
 
 		for (PhoneCall call: phoneCallsMap.values()) {
@@ -199,7 +197,7 @@ public class MockTelcoService implements TelcoService {
 	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException {
 		// Primero comprobamos que el mes que nos piden ya pasó
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
-			throw new MonthNotClosedException("El mes aún no acabó");
+			throw new MonthNotClosedException("No se puede realizar la operación porque el mes especificado todavía no terminó");
 		}
 
 		// Esta operación sería más sencilla si tuviésemos el mapa "phoneCallsByUser", a costa de complicar la operación
@@ -212,9 +210,6 @@ public class MockTelcoService implements TelcoService {
 				LocalDateTime date = call.getStartDate();
 				if ((date.getMonthValue() == month) && (date.getYear() == year)) {
 					// Si coincide, guardamos el objeto PhoneCall en una nueva lista
-					if (!(call.getPhoneCallStatus().equals(PhoneCallStatus.PENDING))) {
-						throw new UnexpectedCallStatusException("La llamada no tenía el estado PENDING cuando se intentó recuperar");
-					}
 					// Usamos copias de los objetos originales para evitar sacar a fuera punteros al interior del mapa
 					calls.add(new PhoneCall(call));
 				}
