@@ -29,9 +29,9 @@ public class TelcoServiceClient {
 			try {
 				CustomerDto c = new CustomerDto(null, args[1], args[2], args[3], args[4]);
 				Long newId = clientTelcoService.addCustomer(c); // Invoke method from the clientTelcoService
-				System.out.println("Client with ID " + newId.toString() + " created successfully");
+				System.out.println("Cliente con ID " + newId.toString() + " creado con éxito");
 			} catch (InputValidationException ex) {
-				printErrorMsgAndExit("Invalid arguments: " + ex.getLocalizedMessage());
+				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
 				ex.printStackTrace(System.err);
 			}
@@ -42,11 +42,11 @@ public class TelcoServiceClient {
 
 			try {
 				clientTelcoService.removeCustomer(Long.parseLong(args[1]));
-				System.out.println("Customer " + args[1] + " deleted successfully");
+				System.out.println("Cliente " + args[1] + " borrado con éxito");
 			} catch (InputValidationException ex) {
-				printErrorMsgAndExit("Invalid arguments: " + ex.getLocalizedMessage());
+				printErrorMsgAndExit("Argumentos inválidos: " + ex.getLocalizedMessage());
 			} catch (InstanceNotFoundException ex) {
-				printErrorMsgAndExit("Instance not found: " + ex.getLocalizedMessage());
+				printErrorMsgAndExit("Cliente no encontrado: " + ex.getLocalizedMessage());
 			} catch (Exception ex) {
 				ex.printStackTrace(System.err);
 			}
@@ -82,11 +82,11 @@ public class TelcoServiceClient {
 						Long.parseLong(args[3]), args[4], phoneCallTypeFromString(args[5]), PhoneCallStatus.PENDING);
 				clientTelcoService.addCall(call);
 			}catch (InputValidationException a) {
-				printErrorMsgAndExit("Invalid arguments: " + a.getLocalizedMessage());
+				printErrorMsgAndExit("Argumentos inválidos: " + a.getLocalizedMessage());
 			}catch (InstanceNotFoundException b){
-				printErrorMsgAndExit("Instance not found: " + b.getLocalizedMessage());
+				printErrorMsgAndExit("Llamada no encontrada: " + b.getLocalizedMessage());
 			}catch (Exception ex) {
-				printErrorMsgAndExit("Unknown Error: " + ex.getLocalizedMessage());
+				printErrorMsgAndExit("Error desconocido: " + ex.getLocalizedMessage());
 			}
 		} else {
 			printUsageAndExit();
@@ -119,7 +119,7 @@ public class TelcoServiceClient {
 
 	public static void printUsage() {
 		System.err.println(
-				"Usage:\n" +
+				"Uso:\n" +
 						"    [-addCustomer]    TelcoServiceClient -addCustomer <name> <DNI> <address> <phoneNumber>\n" +
 						"    [-removeCustomer]    TelcoServiceClient -removeCustomer <customerId>\n" +
 						"    [-getCalls]    TelcoServiceClient -getCalls <customerId> <startTime> <endTime> [callType]\n" +

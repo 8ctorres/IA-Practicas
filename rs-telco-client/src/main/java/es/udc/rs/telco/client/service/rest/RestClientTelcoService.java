@@ -149,7 +149,7 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 		Response.Status responsestatus = Response.Status.fromStatusCode(received.getStatus());
 		if (!(received.getMediaType().equals(this.getMediaType())
 			|| (responsestatus.equals(Response.Status.NO_CONTENT)))){
-			throw new RuntimeException("Unknown Error. Http status code = " + received.getStatus());
+			throw new RuntimeException("Error desconocido. Código de estado Http = " + received.getStatus());
 		}
 
 		switch (responsestatus){
