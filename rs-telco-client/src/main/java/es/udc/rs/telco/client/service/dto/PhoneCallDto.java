@@ -4,7 +4,6 @@ import es.udc.rs.telco.client.service.rest.dto.ObjectFactory;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallStatus;
 import es.udc.rs.telco.client.service.rest.dto.PhoneCallType;
-import es.udc.rs.telco.model.phonecall.PhoneCall;
 import jakarta.xml.bind.JAXBElement;
 
 import java.time.LocalDateTime;

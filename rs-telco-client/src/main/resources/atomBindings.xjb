@@ -1,0 +1,12 @@
+<jxb:bindings version="3.0"
+    xmlns:jxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns1="http://www.w3.org/2005/Atom">
+
+    <jxb:bindings schemaLocation="../../../../rs-telco-service/target/generated-resources/schemagen/schema1.xsd">
+        <jxb:bindings node="//xs:complexType[@name='atomLinkType']">
+            <jxb:class name="AtomLinkDtoJaxb"/>
+        </jxb:bindings>
+    </jxb:bindings>
+    
+</jxb:bindings>    

@@ -37,16 +37,6 @@
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>es.udc.rs.telco</groupId>
-            <artifactId>rs-telco-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>es.udc.rs.telco</groupId>
-            <artifactId>rs-telco-service</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 	<build>
@@ -67,9 +57,12 @@
 						<configuration>
 							<sources>
 								<source>../rs-telco-service/target/generated-resources/schemagen/schema1.xsd</source>
+								<source>../rs-telco-service/target/generated-resources/schemagen/schema2.xsd</source>
+								<source>../rs-telco-service/target/generated-resources/schemagen/schema3.xsd</source>
 							</sources>
 							<xjbSources>
 								<xjbSource>src/main/resources/telcoBindings.xjb</xjbSource>
+								<xjbSource>src/main/resources/atomBindings.xjb</xjbSource>
 							</xjbSources>
 							<outputDirectory>src/main/java</outputDirectory>
 							<clearOutputDir>false</clearOutputDir>
