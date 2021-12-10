@@ -28,27 +28,25 @@ public class PhoneCallResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     public Response addPhoneCall(PhoneCallDtoJaxb newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
-        PhoneCallDtoJaxb addedCall = PhoneCallDtoJaxb.from(
+
+        Long newId =
                 telcoService.addCall(
                         newCall.getCustomerId(),
                         newCall.getStartDate(),
                         newCall.getDuration(),
                         newCall.getPhoneCallType(),
                         newCall.getDestinationNumber()
-                )
-        );
+                ).getPhoneCallId();
 
         return Response.created(
                 URI.create(
-                        ui.getRequestUri().toString() + "/" + addedCall.getPhoneCallId().toString()
+                        ui.getRequestUri().toString() + "/" + newId.toString()
                 )
         ).build();
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     public List<PhoneCallDtoJaxb> getCallsBy(@NotNull @QueryParam("customerId") String customerIdStr,
                                              @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
@@ -57,7 +55,8 @@ public class PhoneCallResource {
                                              @DefaultValue("null") @QueryParam("startPos") String startPosStr,
                                              @DefaultValue("null") @QueryParam("amount") String amountStr,
                                              @DefaultValue("null") @QueryParam("month") String monthStr,
-                                             @DefaultValue("null") @QueryParam("year") String yearStr
+                                             @DefaultValue("null") @QueryParam("year") String yearStr,
+                                             @Context UriInfo ui
                                              ) throws InputValidationException, InstanceNotFoundException, MonthNotClosedException, UnexpectedCallStatusException {
 
         // Si están los parámetros de MES y AÑO, tiene que ser getCallsByMonth
@@ -70,7 +69,7 @@ public class PhoneCallResource {
                 || !(amountStr.equals("null"))){
                 throw new InputValidationException("Parámetros inválidos");
             }
-            return getCallsbyMonth(customerIdStr, monthStr, yearStr);
+            return getCallsbyMonth(customerIdStr, monthStr, yearStr, ui);
         }
         // Si no están AMBOS parámetros mes y año, no puede estar ninguno de ellos
         else{
@@ -79,13 +78,13 @@ public class PhoneCallResource {
             }
             // Si no están mes ni año, es una llamada genérica de getCallsByCustomerId
             return getCallsByCustomerId(customerIdStr, startTimeStr, endTimeStr, phoneCallTypeStr,
-                    startPosStr, amountStr);
+                    startPosStr, amountStr, ui);
         }
     }
 
 
     private List<PhoneCallDtoJaxb> getCallsByCustomerId(String customerIdStr, String startTimeStr, String endTimeStr,
-                                                       String phoneCallTypeStr,String startPosStr, String amountStr)
+                                                       String phoneCallTypeStr,String startPosStr, String amountStr, UriInfo ui)
             throws InstanceNotFoundException, InputValidationException {
 
         Long customerId;
@@ -95,7 +94,6 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        //TODO: Pendiente valorar otras opciones de pasar las fechas
         LocalDateTime startTime = (startTimeStr.equals("null") ? null : LocalDateTime.parse(startPosStr));
         LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(amountStr));
 
@@ -110,12 +108,11 @@ public class PhoneCallResource {
                         phoneCallTypeFromString(phoneCallTypeStr),
                         startPos,
                         amount
-                )
-        );
+                ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
     }
 
 
-    private List<PhoneCallDtoJaxb> getCallsbyMonth(String customerIdStr, String monthStr, String yearStr)
+    private List<PhoneCallDtoJaxb> getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui)
             throws MonthNotClosedException, UnexpectedCallStatusException, InputValidationException {
 
         Long customerId;
@@ -134,8 +131,7 @@ public class PhoneCallResource {
                         customerId,
                         month,
                         year
-                )
-        );
+                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
     }
 
     @POST

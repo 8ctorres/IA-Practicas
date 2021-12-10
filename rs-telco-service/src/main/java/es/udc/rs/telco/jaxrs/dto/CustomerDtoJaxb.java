@@ -1,18 +1,21 @@
 package es.udc.rs.telco.jaxrs.dto;
 
+import es.udc.rs.telco.jaxrs.resources.CustomerResource;
 import es.udc.rs.telco.model.customer.Customer;
 
+import jakarta.ws.rs.core.UriBuilder;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
-@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber"})
+@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber", "self"})
 public class CustomerDtoJaxb {
     @XmlAttribute(name = "customerId", required = false)
     private Long customerId;
@@ -24,15 +27,19 @@ public class CustomerDtoJaxb {
     private String address;
     @XmlElement(required = false)
     private String phoneNumber;
+    @XmlElement(name = "link", namespace = "http://www.w3.org/2005/Atom")
+    private AtomLinkDtoJaxb self;
 
     public CustomerDtoJaxb(){}
 
-    public CustomerDtoJaxb(Long customerId, String name, String dni, String address, String phoneNumber) {
+    public CustomerDtoJaxb(Long customerId, String name, String dni,
+                           String address, String phoneNumber, AtomLinkDtoJaxb self) {
         this.customerId = customerId;
         this.name = name;
         this.dni = dni;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.self = self;
     }
 
     public Long getCustomerId() {
@@ -75,13 +82,28 @@ public class CustomerDtoJaxb {
         this.phoneNumber = phoneNumber;
     }
 
-    public static CustomerDtoJaxb from(Customer customer){
+    public AtomLinkDtoJaxb getSelf() {
+        return self;
+    }
+
+    public void setSelf(AtomLinkDtoJaxb self) {
+        this.self = self;
+    }
+
+    public static CustomerDtoJaxb from(Customer customer, URI baseUri, Class<?> resourceClass,
+                                       String mediaType){
+        //Construye la URI del Link añadiendole el recurso y el customerId a la ruta
+        URI linkUri = UriBuilder.fromUri(baseUri).
+                path(UriBuilder.fromResource(resourceClass).build().toString()).
+                path(customer.getCustomerId().toString()).build();
+
         return new CustomerDtoJaxb(
                 customer.getCustomerId(),
                 customer.getName(),
                 customer.getDni(),
                 customer.getAddress(),
-                customer.getPhoneNumber()
+                customer.getPhoneNumber(),
+                new AtomLinkDtoJaxb(linkUri, "self", mediaType, "Self Link")
         );
     }
 
@@ -94,7 +116,9 @@ public class CustomerDtoJaxb {
         );
     }
 
-    public static List<CustomerDtoJaxb> from(Collection<Customer> customerList){
-        return customerList.stream().map((c) -> CustomerDtoJaxb.from(c)).collect(Collectors.toList());
+    public static List<CustomerDtoJaxb> from(Collection<Customer> customerList, URI baseUri,
+                                             Class<?> resourceClass, String mediaType){
+        return customerList.stream().map((c) ->
+                CustomerDtoJaxb.from(c, baseUri, resourceClass, mediaType)).collect(Collectors.toList());
     }
 }

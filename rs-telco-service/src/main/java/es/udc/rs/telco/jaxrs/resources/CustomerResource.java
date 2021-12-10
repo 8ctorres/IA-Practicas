@@ -24,26 +24,24 @@ public class CustomerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     public Response addCustomer(CustomerDtoJaxb newcust, @Context UriInfo ui) throws InputValidationException {
 
-        CustomerDtoJaxb createdCustomer =
-                CustomerDtoJaxb.from(telcoService.addCustomer(
+        Long createdId =
+                telcoService.addCustomer(
                         newcust.getName(),
                         newcust.getDni(),
                         newcust.getAddress(),
                         newcust.getPhoneNumber()
-        ));
+                ).getCustomerId();
 
         return Response.created(
                 URI.create(
-                        ui.getRequestUri().toString() + "/" + createdCustomer.getCustomerId().toString())
+                        ui.getRequestUri().toString() + "/" + createdId.toString())
         ).build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
     public void updateCustomer(CustomerDtoJaxb newcust, @PathParam("id") String id) throws InstanceNotFoundException, InputValidationException {
         newcust.setCustomerId(Long.valueOf(id));
@@ -56,8 +54,6 @@ public class CustomerResource {
     }
 
     @DELETE
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
     public void deleteCustomer(@PathParam("id") String id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
         telcoService.removeCustomer(Long.valueOf(id));
@@ -65,37 +61,37 @@ public class CustomerResource {
 
 
     @GET
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
-    public CustomerDtoJaxb findCustomerById(@PathParam("id") String id) throws InstanceNotFoundException {
+    public CustomerDtoJaxb findCustomerById(@PathParam("id") String id, @Context UriInfo ui) throws InstanceNotFoundException {
         return CustomerDtoJaxb.from(
-                telcoService.findCustomerById(Long.valueOf(id))
-        );
+                telcoService.findCustomerById(Long.valueOf(id)),
+                ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/{dni}")
-    public CustomerDtoJaxb findCustomerByDNI(@PathParam("dni") String dni) throws InstanceNotFoundException, InputValidationException {
+    public CustomerDtoJaxb findCustomerByDNI(@PathParam("dni") String dni, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
         return CustomerDtoJaxb.from(
-                telcoService.findCustomerByDNI(dni)
+                telcoService.findCustomerByDNI(dni),
+                ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString()
         );
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     public List<CustomerDtoJaxb> findCustomerByName(@QueryParam("name") @NotNull String name,
                                                     @QueryParam("startPos") @DefaultValue("null") String start_position,
-                                                    @QueryParam("amount") @DefaultValue("null") String amount) {
+                                                    @QueryParam("amount") @DefaultValue("null") String amount,
+                                                    @Context UriInfo ui) {
 
         Integer start_pos_Int = (start_position.equals("null") ? null : Integer.valueOf(start_position));
         Integer amountInt = (amount.equals("null") ? null : Integer.valueOf(amount));
 
         return CustomerDtoJaxb.from(
-                telcoService.findCustomersbyName(name, start_pos_Int, amountInt)
+                telcoService.findCustomersbyName(name, start_pos_Int, amountInt),
+                ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString()
         );
     }
 
