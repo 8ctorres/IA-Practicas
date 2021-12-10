@@ -68,14 +68,14 @@ public class PhoneCallResource {
                 || !(phoneCallTypeStr.equals("null"))
                 || !(startPosStr.equals("null"))
                 || !(amountStr.equals("null"))){
-                throw new InputValidationException("Invalid set of parameters");
+                throw new InputValidationException("Parámetros inválidos");
             }
             return getCallsbyMonth(customerIdStr, monthStr, yearStr);
         }
         // Si no están AMBOS parámetros mes y año, no puede estar ninguno de ellos
         else{
             if (!(monthStr.equals("null")) || !(yearStr.equals("null"))){
-                throw new InputValidationException("Invalid set of parameters");
+                throw new InputValidationException("Parámetros inválidos");
             }
             // Si no están mes ni año, es una llamada genérica de getCallsByCustomerId
             return getCallsByCustomerId(customerIdStr, startTimeStr, endTimeStr, phoneCallTypeStr,
