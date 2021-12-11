@@ -11,10 +11,7 @@ import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -98,9 +95,9 @@ public class PhoneCallResource {
         LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(amountStr));
 
         //Valor por defecto, startPos = 0
-        int startPos = (startPosStr.equals("null") ? 0 : Integer.valueOf(startPosStr));
+        int startPos = (startPosStr.equals("null") ? 0 : Integer.parseInt(startPosStr));
         //Valor por defecto, amount = 2
-        int amount = (amountStr.equals("null") ? 2 : Integer.valueOf(amountStr));
+        int amount = (amountStr.equals("null") ? 2 : Integer.parseInt(amountStr));
 
         List<PhoneCallDtoJaxb> foundCalls = PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyId(
@@ -108,15 +105,35 @@ public class PhoneCallResource {
                         startTime,
                         endTime,
                         phoneCallTypeFromString(phoneCallTypeStr)
-                ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
+                ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML);
 
-        int startIndex = (foundCalls.size() >= startPos ? foundCalls.size()-1 : startPos);
-        int toIndex = (foundCalls.size() >= (startPos+amount) ? foundCalls.size()-1 : startPos+amount);
-
+        //int startIndex = (foundCalls.size() >= startPos ? foundCalls.size()-1 : startPos);
+        //int toIndex = (foundCalls.size() >= (startIndex+amount) ? foundCalls.size() : startIndex+amount);
+        int startIndex = Math.max(foundCalls.size()-1, startPos);
+        int toIndex = Math.max(foundCalls.size(), startIndex + amount);
         Response.ResponseBuilder response = Response.ok(foundCalls.subList(startIndex, toIndex));
 
-        //TODO: crear los 3 links, comprobando si hay previous y next, y meterselos
+        response.link(ui.getRequestUri(), "self");
 
+        if(startIndex > 0) {
+            int prevStartIndex = Math.max((startIndex - amount), 0);
+
+            URI previousUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
+                    .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
+                    .queryParam("startPos", prevStartIndex).queryParam("amount", amountStr).build();
+
+            response.link(previousUri, "previous");
+        }
+
+        if((startIndex + amount) < foundCalls.size()) {
+            int nextStartIndex = startIndex + amount;
+
+            URI nextUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
+                    .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
+                    .queryParam("startPos", nextStartIndex).queryParam("amount", amountStr).build();
+
+            response.link(nextUri, "next");
+        }
         return response.build();
     }
 
@@ -141,7 +158,7 @@ public class PhoneCallResource {
                         customerId,
                         month,
                         year
-                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString())
+                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML)
         ).build();
     }
 
