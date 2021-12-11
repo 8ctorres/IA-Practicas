@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface TelcoService {
     List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
-                                 PhoneCallType tipo, Integer start_position, Integer amount) throws InstanceNotFoundException, InputValidationException;
+                                 PhoneCallType tipo) throws InstanceNotFoundException, InputValidationException;
 
     Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException;
 

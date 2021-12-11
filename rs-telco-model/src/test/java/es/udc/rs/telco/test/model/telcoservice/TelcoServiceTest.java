@@ -185,7 +185,7 @@ public class TelcoServiceTest {
         addedcalls.add(c);
 
         // Ahora sacamos las llamadas registradas de ese cliente
-        Collection<PhoneCall> retrievedcalls = telcoService.getCallsbyId(perico.getCustomerId(), null, null, null, null, null);
+        Collection<PhoneCall> retrievedcalls = telcoService.getCallsbyId(perico.getCustomerId(), null, null, null);
 
         // Comparamos
         assertEquals(addedcalls, retrievedcalls);

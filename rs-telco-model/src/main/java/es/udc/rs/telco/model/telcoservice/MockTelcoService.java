@@ -23,7 +23,6 @@ public class MockTelcoService implements TelcoService {
 	private long lastClientId = 0;
 	private long lastPhoneCallId = 0;
 
-
 	private synchronized long getNextClientId() {
 		return ++lastClientId;
 	}
@@ -77,7 +76,7 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
-		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
+		if (!(getCallsbyId(id, null, null, null).isEmpty())){
 			throw new CustomerHasCallsException("El cliente especificado tiene llamadas asociadas y no se puede eliminar");
 		}
 		//La comprobación de si tiene llamadas también comprueba indirectamente si el cliente existe o no,
@@ -164,7 +163,7 @@ public class MockTelcoService implements TelcoService {
 
 	//Carlos
 	public List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
-											   PhoneCallType tipo, Integer start_position, Integer amount) throws InstanceNotFoundException, InputValidationException {
+											   PhoneCallType tipo) throws InstanceNotFoundException, InputValidationException {
 		List<PhoneCall> mycalls = new ArrayList<>();
 		//Validamos que el cliente existe
 		try {
@@ -187,10 +186,17 @@ public class MockTelcoService implements TelcoService {
 			}
 		}
 
-		start_position = (start_position == null ? 0 : start_position);
-		amount = (amount == null ? mycalls.size() : amount);
+		class PhoneCallComparator implements Comparator<PhoneCall>{
+			@Override
+			//NOTE: This comparator is not always consistent with equals, as it only compares by phoneCallId
+			public int compare(PhoneCall o1, PhoneCall o2) {
+				return o1.getPhoneCallId().compareTo(o2.getPhoneCallId());
+			}
+		}
 
-		return mycalls.subList(start_position, amount);
+		mycalls.sort(new PhoneCallComparator());
+
+		return mycalls;
 	}
 
 	//Carlos

@@ -81,7 +81,7 @@ public class CustomerResource {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public List<CustomerDtoJaxb> findCustomerByName(@QueryParam("name") @NotNull String name,
+    public Response findCustomerByName(@QueryParam("name") @NotNull String name,
                                                     @QueryParam("startPos") @DefaultValue("null") String start_position,
                                                     @QueryParam("amount") @DefaultValue("null") String amount,
                                                     @Context UriInfo ui) {
@@ -89,10 +89,12 @@ public class CustomerResource {
         Integer start_pos_Int = (start_position.equals("null") ? null : Integer.valueOf(start_position));
         Integer amountInt = (amount.equals("null") ? null : Integer.valueOf(amount));
 
-        return CustomerDtoJaxb.from(
+        List<CustomerDtoJaxb> found = CustomerDtoJaxb.from(
                 telcoService.findCustomersbyName(name, start_pos_Int, amountInt),
                 ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString()
         );
+
+        return Response.ok(found).link(ui.getRequestUri(), "self").build();
     }
 
 }

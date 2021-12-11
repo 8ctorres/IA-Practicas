@@ -48,7 +48,7 @@ public class PhoneCallResource {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public List<PhoneCallDtoJaxb> getCallsBy(@NotNull @QueryParam("customerId") String customerIdStr,
+    public Response getCallsBy(@NotNull @QueryParam("customerId") String customerIdStr,
                                              @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
                                              @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
                                              @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
@@ -83,7 +83,7 @@ public class PhoneCallResource {
     }
 
 
-    private List<PhoneCallDtoJaxb> getCallsByCustomerId(String customerIdStr, String startTimeStr, String endTimeStr,
+    private Response getCallsByCustomerId(String customerIdStr, String startTimeStr, String endTimeStr,
                                                        String phoneCallTypeStr,String startPosStr, String amountStr, UriInfo ui)
             throws InstanceNotFoundException, InputValidationException {
 
@@ -97,22 +97,31 @@ public class PhoneCallResource {
         LocalDateTime startTime = (startTimeStr.equals("null") ? null : LocalDateTime.parse(startPosStr));
         LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(amountStr));
 
-        Integer startPos = (startPosStr.equals("null") ? null : Integer.valueOf(startPosStr));
-        Integer amount = (amountStr.equals("null") ? null : Integer.valueOf(amountStr));
+        //Valor por defecto, startPos = 0
+        int startPos = (startPosStr.equals("null") ? 0 : Integer.valueOf(startPosStr));
+        //Valor por defecto, amount = 2
+        int amount = (amountStr.equals("null") ? 2 : Integer.valueOf(amountStr));
 
-        return PhoneCallDtoJaxb.from(
+        List<PhoneCallDtoJaxb> foundCalls = PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyId(
                         customerId,
                         startTime,
                         endTime,
-                        phoneCallTypeFromString(phoneCallTypeStr),
-                        startPos,
-                        amount
+                        phoneCallTypeFromString(phoneCallTypeStr)
                 ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
+
+        int startIndex = (foundCalls.size() >= startPos ? foundCalls.size()-1 : startPos);
+        int toIndex = (foundCalls.size() >= (startPos+amount) ? foundCalls.size()-1 : startPos+amount);
+
+        Response.ResponseBuilder response = Response.ok(foundCalls.subList(startIndex, toIndex));
+
+        //TODO: crear los 3 links, comprobando si hay previous y next, y meterselos
+
+        return response.build();
     }
 
 
-    private List<PhoneCallDtoJaxb> getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui)
+    private Response getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui)
             throws MonthNotClosedException, UnexpectedCallStatusException, InputValidationException {
 
         Long customerId;
@@ -126,12 +135,14 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        return PhoneCallDtoJaxb.from(
+        return Response.ok(
+                PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyMonth(
                         customerId,
                         month,
                         year
-                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString());
+                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString())
+        ).build();
     }
 
     @POST
