@@ -1,6 +1,7 @@
 package es.udc.rs.telco.jaxrs.resources;
 
 import es.udc.rs.telco.jaxrs.dto.CustomerDtoJaxb;
+import es.udc.rs.telco.jaxrs.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.model.customer.Customer;
 import es.udc.rs.telco.model.exceptions.CustomerHasCallsException;
 import es.udc.rs.telco.model.telcoservice.TelcoService;
@@ -141,22 +142,55 @@ public class CustomerResource {
             description = "Devuelve los clientes cuyo nombre coincide con las palabras clave especificadas")
     @ApiResponse(responseCode = "200", description="Clientes cuyo nombre coincide con las palabras clave especificadas")
     public Response findCustomerByName(@Parameter(description = "Palabras clave a buscar", required = true) @QueryParam("name") @NotNull String name,
-                                       @Parameter(description = "Cliente desde el que se empiezan a mostrar los resultados", required = false) @QueryParam("startPos") @DefaultValue("null") String start_position,
-                                       @Parameter(description = "Cantidad de clientes a mostrar", required = false) @QueryParam("amount") @DefaultValue("null") String amount,
+                                       @Parameter(description = "Cliente desde el que se empiezan a mostrar los resultados", required = false) @QueryParam("startPos") @DefaultValue("null") String startPosStr,
+                                       @Parameter(description = "Cantidad de clientes a mostrar", required = false) @QueryParam("amount") @DefaultValue("null") String amountStr,
                                                     @Context UriInfo ui) {
 
-        Integer start_pos_Int = (start_position.equals("null") ? null : Integer.valueOf(start_position));
-        Integer amountInt = (amount.equals("null") ? null : Integer.valueOf(amount));
+        //Valor por defecto, startPos = 0
+        int startPos = (startPosStr.equals("null") ? 0 : Integer.parseInt(startPosStr));
+        //Valor por defecto, amount = 2
+        int amount = (amountStr.equals("null") ? 2 : Integer.parseInt(amountStr));
 
-        List<CustomerDtoJaxb> found = CustomerDtoJaxb.from(
-                telcoService.findCustomersbyName(name, start_pos_Int, amountInt),
-                ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString()
+        List<CustomerDtoJaxb> foundCustomers = CustomerDtoJaxb.from(
+                telcoService.findCustomersbyName(name, startPos, amount+1), //Pedimos amount+1 para poder comprobar fácilmente si hay más
+                ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML
         );
 
-        GenericEntity<List<CustomerDtoJaxb>> entity = new GenericEntity<>(found){};
+        boolean hasNext = (foundCustomers.size() == amount+1); //Si se pidieron amount+1 items y no se recibieron todos, es porque ya se acabaron
 
-        return Response.ok(entity).
-                link(ui.getRequestUri(), "self").build();
+        List<CustomerDtoJaxb> foundSubList;
+
+        if (hasNext){
+            foundSubList = foundCustomers.subList(0, amount);
+        }else{
+            foundSubList = foundCustomers;
+        }
+
+        GenericEntity<List<CustomerDtoJaxb>> entity = new GenericEntity<>(foundSubList){};
+
+        Response.ResponseBuilder response = Response.ok(entity);
+
+        response.link(ui.getRequestUri(), "self");
+
+        if(startPos > 0) {
+            int prevStartIndex = Math.max((startPos - amount), 0);
+
+            URI previousUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
+                    .queryParam("name", name).queryParam("startPos", prevStartIndex).queryParam("amount", amount).build();
+
+            response.link(previousUri, "previous");
+        }
+
+        if(hasNext) {
+            int nextStartIndex = startPos + amount;
+
+            URI nextUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
+                    .queryParam("name", name).queryParam("startPos", nextStartIndex).queryParam("amount", amount).build();
+
+            response.link(nextUri, "next");
+        }
+
+        return response.build();
     }
 
 }

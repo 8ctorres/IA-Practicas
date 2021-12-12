@@ -130,24 +130,29 @@ public class PhoneCallResource {
                         customerId,
                         startTime,
                         endTime,
-                        phoneCallTypeFromString(phoneCallTypeStr)
+                        phoneCallTypeFromString(phoneCallTypeStr),
+                        startPos,
+                        startPos+amount +1 //Se pasa +1 para poder comprobar si existe el siguiente o no
                 ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML);
 
-        //int startIndex = (foundCalls.size() >= startPos ? foundCalls.size()-1 : startPos);
-        //int toIndex = (foundCalls.size() >= (startIndex+amount) ? foundCalls.size() : startIndex+amount);
-        int startIndex = Math.max(foundCalls.size()-1, startPos);
-        int toIndex = Math.max(foundCalls.size(), startIndex + amount);
+        boolean hasNext = (foundCalls.size() == amount+1); //Si se pidieron amount+1 items y no se recibieron todos, es porque ya se acabaron
 
-        List<PhoneCallDtoJaxb> foundSubList = foundCalls.subList(startIndex, toIndex);
+        List<PhoneCallDtoJaxb> foundSubList;
 
-        GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<List<PhoneCallDtoJaxb>>(foundSubList){};
+        if (hasNext){
+            foundSubList = foundCalls.subList(0, amount);
+        }else{
+            foundSubList = foundCalls;
+        }
+
+        GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<>(foundSubList){};
 
         Response.ResponseBuilder response = Response.ok(entity);
 
         response.link(ui.getRequestUri(), "self");
 
-        if(startIndex > 0) {
-            int prevStartIndex = Math.max((startIndex - amount), 0);
+        if(startPos > 0) {
+            int prevStartIndex = Math.max((startPos - amount), 0);
 
             URI previousUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
                     .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
@@ -156,8 +161,8 @@ public class PhoneCallResource {
             response.link(previousUri, "previous");
         }
 
-        if((startIndex + amount) < foundCalls.size()) {
-            int nextStartIndex = startIndex + amount;
+        if(hasNext) {
+            int nextStartIndex = startPos + amount;
 
             URI nextUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
                     .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
@@ -165,6 +170,7 @@ public class PhoneCallResource {
 
             response.link(nextUri, "next");
         }
+
         return response.build();
     }
 
@@ -183,14 +189,16 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        return Response.ok(
-                PhoneCallDtoJaxb.from(
-                telcoService.getCallsbyMonth(
-                        customerId,
-                        month,
-                        year
-                ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML)
-        ).build();
+        List<PhoneCallDtoJaxb> calls = PhoneCallDtoJaxb.from(
+                        telcoService.getCallsbyMonth(
+                                customerId,
+                                month,
+                                year
+                        ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML);
+
+        GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<>(calls){};
+
+        return Response.ok(entity).link(ui.getRequestUri(), "self").build();
     }
 
     @POST

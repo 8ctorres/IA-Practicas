@@ -76,7 +76,7 @@ public class MockTelcoService implements TelcoService {
 
 	//Isma
 	public void removeCustomer(Long id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
-		if (!(getCallsbyId(id, null, null, null).isEmpty())){
+		if (!(getCallsbyId(id, null, null, null, null, null).isEmpty())){
 			throw new CustomerHasCallsException("El cliente especificado tiene llamadas asociadas y no se puede eliminar");
 		}
 		//La comprobación de si tiene llamadas también comprueba indirectamente si el cliente existe o no,
@@ -119,19 +119,24 @@ public class MockTelcoService implements TelcoService {
 
 	//Pablo
 	public List<Customer> findCustomersbyName(String name, Integer start_position, Integer amount){
-		List<Customer> mycustomer = new ArrayList<>();
+		List<Customer> mycustomers = new ArrayList<>();
 
 		for (Customer customer: clientsMap.values()){
 			if ((customer.getName().toLowerCase().contains(name.toLowerCase()))) {
 				//Devolvemos una copia del objeto cliente para cada elemento de la lista
-				mycustomer.add(new Customer(customer));
+				mycustomers.add(new Customer(customer));
 			}
 		}
 
-		start_position = (start_position == null ? 0 : start_position);
-		amount = (amount == null ? mycustomer.size() : amount);
+		class CustomerComparator implements Comparator<Customer>{
+			@Override
+			//NOTE: This comparator is not always consistent with equals, as it only compares by CustomerId
+			public int compare(Customer o1, Customer o2) {
+				return o1.getCustomerId().compareTo(o2.getCustomerId());
+			}
+		}
 
-		return mycustomer.subList(start_position, amount);
+		return safeSubList(mycustomers, start_position, amount, new CustomerComparator());
 	}
 
 	//Pablo
@@ -163,7 +168,9 @@ public class MockTelcoService implements TelcoService {
 
 	//Carlos
 	public List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
-											   PhoneCallType tipo) throws InstanceNotFoundException, InputValidationException {
+											   PhoneCallType tipo, Integer start_position, Integer amount)
+			throws InstanceNotFoundException, InputValidationException {
+
 		List<PhoneCall> mycalls = new ArrayList<>();
 		//Validamos que el cliente existe
 		try {
@@ -194,9 +201,7 @@ public class MockTelcoService implements TelcoService {
 			}
 		}
 
-		mycalls.sort(new PhoneCallComparator());
-
-		return mycalls;
+		return safeSubList(mycalls, start_position, amount, new PhoneCallComparator());
 	}
 
 	//Carlos
@@ -271,6 +276,28 @@ public class MockTelcoService implements TelcoService {
 	// devuelven copias de los objetos originales.
 	private void changeStoredCallStatus(Long callId, PhoneCallStatus newstatus){
 		this.phoneCallsMap.get(callId).setPhoneCallStatus(newstatus);
+	}
+
+	private static <T> List<T> safeSubList(List<T> input, Integer startPos, Integer amount, Comparator<T> comparator) {
+		if (input.isEmpty()) {
+			return input;
+		}
+
+		startPos = (startPos == null ? 0 : startPos);
+		amount = (amount == null ? (input.size() - startPos) : amount);
+
+		if (startPos > input.size()){
+			return new ArrayList<T>(); //Si startPos se pasa de largo, devolvemos lista vacía
+		}
+
+		int startIndex = Math.min(input.size()-1, startPos);
+		int toIndex = Math.min(input.size(), startIndex + amount);
+
+		List<T> callsSubList = input.subList(startIndex, toIndex);
+
+		callsSubList.sort(comparator);
+
+		return callsSubList;
 	}
 
 }

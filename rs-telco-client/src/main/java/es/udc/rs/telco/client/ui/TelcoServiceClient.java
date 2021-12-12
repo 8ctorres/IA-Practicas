@@ -84,6 +84,8 @@ public class TelcoServiceClient {
 			try {
 				clientTelcoService.changeCallStatus(Long.parseLong(args[1]), Integer.parseInt(args[2]),
 						Integer.parseInt(args[3]), phoneCallStatusFromString(args[4]));
+
+				System.out.println("Estado de las llamadas cambiado correctamente");
 			} catch (InstanceNotFoundException ex) {
 				printErrorMsgAndExit("El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
 			} catch (InputValidationException ex) {
@@ -103,7 +105,9 @@ public class TelcoServiceClient {
 			try {
 				PhoneCallDto call = new PhoneCallDto(null, Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
 						Long.parseLong(args[3]), args[4], phoneCallTypeFromString(args[5]), PhoneCallStatus.PENDING);
-				clientTelcoService.addCall(call);
+				Long newId = clientTelcoService.addCall(call);
+
+				System.out.println("Llamada con ID " + newId.toString() + " creada correctamente");
 			} catch (InstanceNotFoundException ex) {
 				printErrorMsgAndExit("Error: El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
 			} catch (InputValidationException ex) {
