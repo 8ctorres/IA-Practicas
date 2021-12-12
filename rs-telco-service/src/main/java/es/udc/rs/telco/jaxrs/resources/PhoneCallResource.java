@@ -1,5 +1,6 @@
 package es.udc.rs.telco.jaxrs.resources;
 
+import es.udc.rs.telco.jaxrs.dto.CustomerDtoJaxb;
 import es.udc.rs.telco.jaxrs.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
@@ -9,6 +10,13 @@ import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -25,6 +33,14 @@ public class PhoneCallResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    @Operation(summary = "Creación de una nueva llamada", description = "Los parámetros de la llamada deben indicarse en el cuerpo de la petición")
+    @ApiResponse(responseCode = "201", description = "Llamada creada correctamente",
+            content = @Content(schema = @Schema(implementation = PhoneCallDtoJaxb.class)))
+    @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description = "Cliente no encontrado",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
     public Response addPhoneCall(PhoneCallDtoJaxb newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
 
         Long newId =

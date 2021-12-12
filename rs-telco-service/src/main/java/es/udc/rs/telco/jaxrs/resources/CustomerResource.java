@@ -49,7 +49,7 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Operation(summary = "Creación de un nuevo cliente", description = "Los parámetros del cliente deben indicarse en el cuerpo de la petición")
-    @ApiResponse(responseCode = "201", description = "URI que apunta al cliente creado correctamente",
+    @ApiResponse(responseCode = "201", description = "Cliente creado correctamente",
             content = @Content(schema = @Schema(implementation = CustomerDtoJaxb.class)))
     @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
             content = @Content(schema = @Schema(implementation = InputValidationException.class)))

@@ -9,6 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +44,7 @@ public class CustomerDtoJaxb {
         this.self = self;
     }
 
+    @Schema(description = "ID del cliente", allowableValues =  {}, required=true)
     public Long getCustomerId() {
         return customerId;
     }
@@ -50,6 +53,7 @@ public class CustomerDtoJaxb {
         this.customerId = customerId;
     }
 
+    @Schema(description = "Nombre del cliente", allowableValues =  {}, required=true)
     public String getName() {
         return name;
     }
@@ -58,6 +62,7 @@ public class CustomerDtoJaxb {
         this.name = name;
     }
 
+    @Schema(description = "DNI del cliente", allowableValues =  {}, required=true)
     public String getDni() {
         return dni;
     }
@@ -66,6 +71,7 @@ public class CustomerDtoJaxb {
         this.dni = dni;
     }
 
+    @Schema(description = "Dirección del cliente", allowableValues =  {}, required=true)
     public String getAddress() {
         return address;
     }
@@ -74,6 +80,7 @@ public class CustomerDtoJaxb {
         this.address = address;
     }
 
+    @Schema(description = "Número de teléfono del cliente", allowableValues =  {}, required=true)
     public String getPhoneNumber() {
         return phoneNumber;
     }
