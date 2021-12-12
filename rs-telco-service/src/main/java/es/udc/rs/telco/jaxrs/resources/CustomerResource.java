@@ -45,13 +45,11 @@ public class CustomerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     @Operation(summary = "Creación de un nuevo cliente", description = "Los parámetros del cliente deben indicarse en el cuerpo de la petición")
-    @ApiResponse(responseCode = "201", description = "Cliente creado correctamente",
-            content = @Content(schema = @Schema(implementation = CustomerDtoJaxb.class)))
+    @ApiResponse(responseCode = "201", description = "Cliente creado correctamente")
     @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
             content = @Content(schema = @Schema(implementation = InputValidationException.class)))
-    public Response addCustomer(@RequestBody(description = "Objeto cliente creado", required = true,
+    public Response addCustomer(@RequestBody(description = "Objeto cliente para crear", required = true,
             content = @Content(schema = @Schema(implementation = CustomerDtoJaxb.class))) CustomerDtoJaxb newcust, @Context UriInfo ui) throws InputValidationException {
 
         Long createdId =
@@ -70,13 +68,14 @@ public class CustomerResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
     @Operation(summary = "Actualizar un cliente registrado",
             description = "Los datos del cliente actualizables deben especificarse en el cuerpo de la petición")
     @ApiResponse(responseCode  = "200", description="Cliente actualizado con éxito")
-    @ApiResponse(responseCode = "400", description="InputValidationException")
-    @ApiResponse(responseCode = "404", description="InstanceNotFoundException")
+    @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description = "El ID del cliente indicado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
     public void updateCustomer(CustomerDtoJaxb newcust, @Parameter(description = "ID del cliente a actualizar", required = true)
             @PathParam("id") String id) throws InstanceNotFoundException, InputValidationException {
         newcust.setCustomerId(Long.valueOf(id));
@@ -89,13 +88,16 @@ public class CustomerResource {
     }
 
     @DELETE
-    @Produces(MediaType.APPLICATION_XML)
     @Path("/{id : \\d+}")
     @Operation(summary = "Eliminar un cliente registrado",
             description = "Se debe especificar el ID del cliente a eliminar, pero si este tiene llamadas registradas no se eliminará")
     @ApiResponse(responseCode  = "200", description="Cliente eliminado con éxito")
-    @ApiResponse(responseCode = "400", description="InputValidationException o CustomerHasCallsException")
-    @ApiResponse(responseCode = "404", description="InstanceNotFoundException")
+    @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description = "El ID del cliente indicado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
+    @ApiResponse(responseCode = "409", description = "El cliente indicado tiene llamadas asociadas y por tanto no se puede eliminar",
+            content = @Content(schema = @Schema(implementation = CustomerHasCallsException.class)))
     public void deleteCustomer(@Parameter(description = "ID del cliente a eliminar", required = true)
                                    @PathParam("id") String id) throws InstanceNotFoundException, CustomerHasCallsException, InputValidationException {
         telcoService.removeCustomer(Long.valueOf(id));
@@ -107,7 +109,8 @@ public class CustomerResource {
     @Path("/{id : \\d+}")
     @Operation(summary = "Buscar un cliente por su ID", description = "Muestra el cliente que contenga el ID especificado si lo encuentra")
     @ApiResponse(responseCode = "200", description="Cliente encontrado con éxito")
-    @ApiResponse(responseCode = "404", description= "InstanceNotFoundException")
+    @ApiResponse(responseCode = "404", description = "El ID del cliente indicado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
     public CustomerDtoJaxb findCustomerById(@Parameter(description = "ID del cliente a buscar", required = true) @PathParam("id") String id,
                                             @Context UriInfo ui) throws InstanceNotFoundException {
         return CustomerDtoJaxb.from(
@@ -120,8 +123,10 @@ public class CustomerResource {
     @Path("/{dni}")
     @Operation(summary = "Buscar un cliente por su DNI", description = "Muestra el cliente que contenga el DNI especificado si lo encuentra")
     @ApiResponse(responseCode = "200", description="Cliente encontrado con éxito")
-    @ApiResponse(responseCode = "400", description="InputValidationException")
-    @ApiResponse(responseCode = "404", description= "InstanceNotFoundException")
+    @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description = "El DNI del cliente indicado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
     public CustomerDtoJaxb findCustomerByDNI(@Parameter(description = "DNI del cliente a buscar", required = true) @PathParam("dni") String dni,
                                              @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
         return CustomerDtoJaxb.from(

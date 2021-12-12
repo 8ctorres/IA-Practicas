@@ -17,7 +17,7 @@ public interface TelcoService {
     List<PhoneCall> getCallsbyId(Long customerId, LocalDateTime start_time, LocalDateTime end,
                                  PhoneCallType tipo) throws InstanceNotFoundException, InputValidationException;
 
-    Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException;
+    Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException;
 
     void changeCallsStatus(Long customerId, int month, int year, PhoneCallStatus newstatus) throws UnexpectedCallStatusException, MonthNotClosedException;
 

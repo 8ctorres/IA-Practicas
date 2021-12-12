@@ -200,7 +200,7 @@ public class MockTelcoService implements TelcoService {
 	}
 
 	//Carlos
-	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException, UnexpectedCallStatusException {
+	public Collection<PhoneCall> getCallsbyMonth(Long customerId, int month, int year) throws MonthNotClosedException {
 		// Primero comprobamos que el mes que nos piden ya pasó
 		if (LocalDateTime.now().isBefore(LocalDateTime.of(year, month, 1, 0, 0).plusMonths(1))){
 			throw new MonthNotClosedException("No se puede realizar la operación porque el mes especificado todavía no terminó");

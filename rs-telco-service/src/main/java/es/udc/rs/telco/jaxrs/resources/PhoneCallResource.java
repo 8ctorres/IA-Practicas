@@ -1,6 +1,6 @@
 package es.udc.rs.telco.jaxrs.resources;
 
-import es.udc.rs.telco.jaxrs.dto.CustomerDtoJaxb;
+
 import es.udc.rs.telco.jaxrs.dto.PhoneCallDtoJaxb;
 import es.udc.rs.telco.model.exceptions.MonthNotClosedException;
 import es.udc.rs.telco.model.exceptions.UnexpectedCallStatusException;
@@ -10,13 +10,12 @@ import es.udc.rs.telco.model.telcoservice.TelcoService;
 import es.udc.rs.telco.model.telcoservice.TelcoServiceFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -33,15 +32,14 @@ public class PhoneCallResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     @Operation(summary = "Creación de una nueva llamada", description = "Los parámetros de la llamada deben indicarse en el cuerpo de la petición")
-    @ApiResponse(responseCode = "201", description = "Llamada creada correctamente",
-            content = @Content(schema = @Schema(implementation = PhoneCallDtoJaxb.class)))
-    @ApiResponse(responseCode = "400", description = "Algún parámetro es incorrecto",
+    @ApiResponse(responseCode = "201", description = "Llamada creada correctamente")
+    @ApiResponse(responseCode = "400", description = "Los argumentos son inválidos o incorrectos",
             content = @Content(schema = @Schema(implementation = InputValidationException.class)))
-    @ApiResponse(responseCode = "404", description = "Cliente no encontrado",
+    @ApiResponse(responseCode = "404", description = "El ID del cliente indicado no existe",
             content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
-    public Response addPhoneCall(PhoneCallDtoJaxb newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
+    public Response addPhoneCall(@RequestBody(description = "Objeto llamadas para crear", required = true,
+            content = @Content(schema = @Schema(implementation = PhoneCallDtoJaxb.class))) PhoneCallDtoJaxb newCall, @Context UriInfo ui) throws InstanceNotFoundException, InputValidationException {
 
         Long newId =
                 telcoService.addCall(
@@ -61,16 +59,28 @@ public class PhoneCallResource {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public Response getCallsBy(@NotNull @QueryParam("customerId") String customerIdStr,
-                                             @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
-                                             @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
-                                             @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
-                                             @DefaultValue("null") @QueryParam("startPos") String startPosStr,
-                                             @DefaultValue("null") @QueryParam("amount") String amountStr,
-                                             @DefaultValue("null") @QueryParam("month") String monthStr,
-                                             @DefaultValue("null") @QueryParam("year") String yearStr,
+    @Operation(summary = "Buscar llamadas según unos parámetros",
+            description = "Si se indican cliente, mes y año se devuelven todas las llamadas del cliente en ese mes." +
+                    "Si se indican cliente y unos constraints de tiempo, se devuelven las llamadas del cliente en ese período de tiempo, paginadas")
+    @ApiResponse(responseCode  = "200", description="Búsqueda exitosa, devuelve las llamadas")
+    @ApiResponse(responseCode = "400", description="Los argumentos son inválidos o incorrectos",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description="El ID del cliente indicado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
+    @ApiResponse(responseCode = "409", description="Error de lógica de aplicación: El mes buscado todavía no terminó",
+            content = @Content(schema = @Schema(implementation = MonthNotClosedException.class)))
+    public Response getCallsBy(@Parameter(description = "ID del cliente", required = true) @NotNull @QueryParam("customerId") String customerIdStr,
+                               @Parameter(description = "Inicio del rango de tiempo a buscar") @DefaultValue("null") @QueryParam("startTime") String startTimeStr,
+                               @Parameter(description = "Final del rango de tiempo a buscar") @DefaultValue("null") @QueryParam("endTime") String endTimeStr,
+                               @Parameter(description = "Tipo de llamadas a buscar") @DefaultValue("null") @QueryParam("type") String phoneCallTypeStr,
+                               @Parameter(description = "Posición de la lista a partir de la cual queremos resultados. Usado para paginación")
+                                   @DefaultValue("null") @QueryParam("startPos") String startPosStr,
+                               @Parameter(description = "Cantidad de resultos que queremos. Usado para paginacion")
+                                   @DefaultValue("null") @QueryParam("amount") String amountStr,
+                               @Parameter(description = "Mes de las llamadas buscadas") @DefaultValue("null") @QueryParam("month") String monthStr,
+                               @Parameter(description = "Año de las llamadas buscadas") @DefaultValue("null") @QueryParam("year") String yearStr,
                                              @Context UriInfo ui
-                                             ) throws InputValidationException, InstanceNotFoundException, MonthNotClosedException, UnexpectedCallStatusException {
+                                             ) throws InputValidationException, InstanceNotFoundException, MonthNotClosedException {
 
         // Si están los parámetros de MES y AÑO, tiene que ser getCallsByMonth
         if (!(monthStr.equals("null")) && !(yearStr.equals("null"))){
@@ -127,7 +137,12 @@ public class PhoneCallResource {
         //int toIndex = (foundCalls.size() >= (startIndex+amount) ? foundCalls.size() : startIndex+amount);
         int startIndex = Math.max(foundCalls.size()-1, startPos);
         int toIndex = Math.max(foundCalls.size(), startIndex + amount);
-        Response.ResponseBuilder response = Response.ok(foundCalls.subList(startIndex, toIndex));
+
+        List<PhoneCallDtoJaxb> foundSubList = foundCalls.subList(startIndex, toIndex);
+
+        GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<List<PhoneCallDtoJaxb>>(foundSubList){};
+
+        Response.ResponseBuilder response = Response.ok(entity);
 
         response.link(ui.getRequestUri(), "self");
 
@@ -155,7 +170,7 @@ public class PhoneCallResource {
 
 
     private Response getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui)
-            throws MonthNotClosedException, UnexpectedCallStatusException, InputValidationException {
+            throws MonthNotClosedException, InputValidationException {
 
         Long customerId;
         Integer month, year;
@@ -180,10 +195,21 @@ public class PhoneCallResource {
 
     @POST
     @Path("/changestatus")
-    public void changeStatus(@NotNull @QueryParam("customerId") String customerIdStr,
-                             @NotNull @QueryParam("month") String monthStr,
-                             @NotNull @QueryParam("year") String yearStr,
-                             @NotNull @QueryParam("newStatus") String newStatusStr)
+    @Operation(summary = "Cambiar el estado de unas llamadas",
+            description = "Las llamadas pasan de estado PENDING a BILLED, o de BILLED a PAID, representando si están ya pagadas por el cliente")
+    @ApiResponse(responseCode  = "204", description="Llamadas actualizadas con éxito")
+    @ApiResponse(responseCode = "400", description="Los argumentos son inválidos o incorrectos",
+            content = @Content(schema = @Schema(implementation = InputValidationException.class)))
+    @ApiResponse(responseCode = "404", description="El ID de cliente especificado no existe",
+            content = @Content(schema = @Schema(implementation = InstanceNotFoundException.class)))
+    @ApiResponse(responseCode = "409", description="Error de lógica de aplicación: El mes indicado todavía no está cerrado",
+            content = @Content(schema = @Schema(implementation = MonthNotClosedException.class)))
+    @ApiResponse(responseCode = "409", description="Error de lógica de aplicación: Una llamada está en un estado incoherente",
+            content = @Content(schema = @Schema(implementation = UnexpectedCallStatusException.class)))
+    public void changeStatus(@Parameter(description = "ID del cliente a actualizar") @NotNull @QueryParam("customerId") String customerIdStr,
+                             @Parameter(description = "Mes de las llamadas a actualizar") @NotNull @QueryParam("month") String monthStr,
+                             @Parameter(description = "Año de las llamadas a actualizar") @NotNull @QueryParam("year") String yearStr,
+                             @Parameter(description = "Nuevo estado para las llamadas") @NotNull @QueryParam("newStatus") String newStatusStr)
             throws InputValidationException, MonthNotClosedException, UnexpectedCallStatusException {
         Long customerId;
         Integer month, year;
