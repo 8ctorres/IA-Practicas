@@ -10,10 +10,7 @@ import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 @Path("clientes")
@@ -150,7 +148,10 @@ public class CustomerResource {
                 ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML.toString()
         );
 
-        return Response.ok(found).link(ui.getRequestUri(), "self").build();
+        GenericEntity<List<CustomerDtoJaxb>> entity = new GenericEntity<>(found){};
+
+        return Response.ok(entity).
+                link(ui.getRequestUri(), "self").build();
     }
 
 }
