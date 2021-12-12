@@ -3,6 +3,7 @@ package es.udc.rs.telco.jaxrs.dto;
 import es.udc.rs.telco.model.phonecall.PhoneCall;
 import es.udc.rs.telco.model.phonecall.PhoneCallStatus;
 import es.udc.rs.telco.model.phonecall.PhoneCallType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.xml.bind.annotation.XmlSchemaType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -62,6 +63,7 @@ public class PhoneCallDtoJaxb {
         this.phoneCallId = phoneCallId;
     }
 
+    @Schema(description = "ID del cliente", allowableValues =  {}, required=true)
     public Long getCustomerId() {
         return customerId;
     }
@@ -72,6 +74,7 @@ public class PhoneCallDtoJaxb {
 
     //Almacenamos el tiempo en formato epoch para que JAX-B no tenga problemas a la hora de serializarlo
 
+    @Schema(description = "Fecha y hora de inicio de la llamada", allowableValues =  {}, required=true)
     public LocalDateTime getStartDate() {
         return this.startDate;
     }
@@ -80,6 +83,7 @@ public class PhoneCallDtoJaxb {
         this.startDate = startDate;
     }
 
+    @Schema(description = "Duración de la llamada en segundos", allowableValues =  {}, required=true)
     public Long getDuration() {
         return duration;
     }
@@ -88,6 +92,7 @@ public class PhoneCallDtoJaxb {
         this.duration = duration;
     }
 
+    @Schema(description = "Número de teléfono del destinatario de la llamada", allowableValues =  {}, required=true)
     public String getDestinationNumber() {
         return destinationNumber;
     }
@@ -96,6 +101,7 @@ public class PhoneCallDtoJaxb {
         this.destinationNumber = destinationNumber;
     }
 
+    @Schema(description = "Tipo de llamada (local, nacional, internacional)", allowableValues =  {}, required=true)
     public PhoneCallType getPhoneCallType() {
         return phoneCallType;
     }
@@ -104,6 +110,7 @@ public class PhoneCallDtoJaxb {
         this.phoneCallType = phoneCallType;
     }
 
+    @Schema(description = "Estado de la llamada (pendiente, facturada, pagada)", allowableValues =  {}, required=true)
     public PhoneCallStatus getPhoneCallStatus() {
         return phoneCallStatus;
     }
@@ -111,7 +118,7 @@ public class PhoneCallDtoJaxb {
     public void setPhoneCallStatus(PhoneCallStatus phoneCallStatus) {
         this.phoneCallStatus = phoneCallStatus;
     }
-
+    
     public AtomLinkDtoJaxb getSelf() {
         return self;
     }
