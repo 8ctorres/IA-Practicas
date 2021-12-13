@@ -31,7 +31,7 @@ public class PhoneCallResource {
     private TelcoService telcoService = TelcoServiceFactory.getService();
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Operation(summary = "Creación de una nueva llamada", description = "Los parámetros de la llamada deben indicarse en el cuerpo de la petición")
     @ApiResponse(responseCode = "201", description = "Llamada creada correctamente")
     @ApiResponse(responseCode = "400", description = "Los argumentos son inválidos o incorrectos",
@@ -58,7 +58,7 @@ public class PhoneCallResource {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Operation(summary = "Buscar llamadas según unos parámetros",
             description = "Si se indican cliente, mes y año se devuelven todas las llamadas del cliente en ese mes." +
                     "Si se indican cliente y unos constraints de tiempo, se devuelven las llamadas del cliente en ese período de tiempo, paginadas")
@@ -79,7 +79,7 @@ public class PhoneCallResource {
                                    @DefaultValue("null") @QueryParam("amount") String amountStr,
                                @Parameter(description = "Mes de las llamadas buscadas") @DefaultValue("null") @QueryParam("month") String monthStr,
                                @Parameter(description = "Año de las llamadas buscadas") @DefaultValue("null") @QueryParam("year") String yearStr,
-                                             @Context UriInfo ui
+                                             @Context UriInfo ui, @Context HttpHeaders headers
                                              ) throws InputValidationException, InstanceNotFoundException, MonthNotClosedException {
 
         // Si están los parámetros de MES y AÑO, tiene que ser getCallsByMonth
@@ -92,7 +92,7 @@ public class PhoneCallResource {
                 || !(amountStr.equals("null"))){
                 throw new InputValidationException("Parámetros inválidos");
             }
-            return getCallsbyMonth(customerIdStr, monthStr, yearStr, ui);
+            return getCallsbyMonth(customerIdStr, monthStr, yearStr, ui, headers);
         }
         // Si no están AMBOS parámetros mes y año, no puede estar ninguno de ellos
         else{
@@ -101,13 +101,13 @@ public class PhoneCallResource {
             }
             // Si no están mes ni año, es una llamada genérica de getCallsByCustomerId
             return getCallsByCustomerId(customerIdStr, startTimeStr, endTimeStr, phoneCallTypeStr,
-                    startPosStr, amountStr, ui);
+                    startPosStr, amountStr, ui, headers);
         }
     }
 
 
     private Response getCallsByCustomerId(String customerIdStr, String startTimeStr, String endTimeStr,
-                                                       String phoneCallTypeStr,String startPosStr, String amountStr, UriInfo ui)
+                                                       String phoneCallTypeStr,String startPosStr, String amountStr, UriInfo ui, HttpHeaders headers)
             throws InstanceNotFoundException, InputValidationException {
 
         Long customerId;
@@ -122,8 +122,8 @@ public class PhoneCallResource {
 
         //Valor por defecto, startPos = 0
         int startPos = (startPosStr.equals("null") ? 0 : Integer.parseInt(startPosStr));
-        //Valor por defecto, amount = 2
-        int amount = (amountStr.equals("null") ? 2 : Integer.parseInt(amountStr));
+        //Valor por defecto, amount = 1
+        int amount = (amountStr.equals("null") ? 1 : Integer.parseInt(amountStr));
 
         List<PhoneCallDtoJaxb> foundCalls = PhoneCallDtoJaxb.from(
                 telcoService.getCallsbyId(
@@ -131,9 +131,8 @@ public class PhoneCallResource {
                         startTime,
                         endTime,
                         phoneCallTypeFromString(phoneCallTypeStr),
-                        startPos,
-                        startPos+amount +1 //Se pasa +1 para poder comprobar si existe el siguiente o no
-                ),ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML);
+                        startPos, amount +1 //Se pasa +1 para poder comprobar si existe el siguiente o no
+                ),ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers));
 
         boolean hasNext = (foundCalls.size() == amount+1); //Si se pidieron amount+1 items y no se recibieron todos, es porque ya se acabaron
 
@@ -156,7 +155,7 @@ public class PhoneCallResource {
 
             URI previousUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
                     .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
-                    .queryParam("startPos", prevStartIndex).queryParam("amount", amountStr).build();
+                    .queryParam("type", phoneCallTypeStr).queryParam("startPos", prevStartIndex).queryParam("amount", amountStr).build();
 
             response.link(previousUri, "previous");
         }
@@ -166,7 +165,7 @@ public class PhoneCallResource {
 
             URI nextUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
                     .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
-                    .queryParam("startPos", nextStartIndex).queryParam("amount", amount).build();
+                    .queryParam("type", phoneCallTypeStr).queryParam("startPos", nextStartIndex).queryParam("amount", amount).build();
 
             response.link(nextUri, "next");
         }
@@ -175,7 +174,7 @@ public class PhoneCallResource {
     }
 
 
-    private Response getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui)
+    private Response getCallsbyMonth(String customerIdStr, String monthStr, String yearStr, UriInfo ui, HttpHeaders headers)
             throws MonthNotClosedException, InputValidationException {
 
         Long customerId;
@@ -194,7 +193,7 @@ public class PhoneCallResource {
                                 customerId,
                                 month,
                                 year
-                        ), ui.getBaseUri(), this.getClass(), MediaType.APPLICATION_XML);
+                        ), ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers));
 
         GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<>(calls){};
 
@@ -267,6 +266,17 @@ public class PhoneCallResource {
             case LOCAL: return "LOCAL";
             case NATIONAL: return "NATIONAL";
             case INTERNATIONAL: return "INTERNATIONAL";
+        }
+        return null;
+    }
+
+    static String getAcceptableMediaType(HttpHeaders headers){
+        List<MediaType> acceptableMediaTypes = headers.getAcceptableMediaTypes();
+        for (MediaType mt: acceptableMediaTypes) {
+            if ((MediaType.APPLICATION_XML_TYPE.isCompatible(mt))
+                    || (MediaType.APPLICATION_JSON_TYPE.isCompatible(mt))){
+                return (mt == null ? null : mt.toString());
+            }
         }
         return null;
     }

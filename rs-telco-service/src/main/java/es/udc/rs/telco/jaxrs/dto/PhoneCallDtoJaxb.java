@@ -13,14 +13,13 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "phoneCall")
 @XmlType(name = "phoneCallJaxbType", propOrder = {"startDate",
-        "duration", "destinationNumber", "phoneCallType", "phoneCallStatus", "self"})
+        "duration", "destinationNumber", "phoneCallType", "phoneCallStatus", "link"})
 public class PhoneCallDtoJaxb {
     @XmlAttribute(name = "phoneCallId", required = false)
     private Long phoneCallId;
@@ -38,13 +37,13 @@ public class PhoneCallDtoJaxb {
     @XmlElement(required = false)
     private PhoneCallStatus phoneCallStatus;
     @XmlElement(name = "link", namespace = "http://www.w3.org/2005/Atom")
-    private AtomLinkDtoJaxb self;
+    private AtomLinkDtoJaxb link;
 
     public PhoneCallDtoJaxb(){}
 
     public PhoneCallDtoJaxb(Long phoneCallId, Long customerId, LocalDateTime startDate,
                             Long duration, String destinationNumber, PhoneCallType phoneCallType,
-                            PhoneCallStatus phoneCallStatus, AtomLinkDtoJaxb self) {
+                            PhoneCallStatus phoneCallStatus, AtomLinkDtoJaxb link) {
         this.phoneCallId = phoneCallId;
         this.customerId = customerId;
         this.startDate = startDate;
@@ -52,7 +51,7 @@ public class PhoneCallDtoJaxb {
         this.destinationNumber = destinationNumber;
         this.phoneCallType = phoneCallType;
         this.phoneCallStatus = phoneCallStatus;
-        this.self = self;
+        this.link = link;
     }
 
     public Long getPhoneCallId() {
@@ -119,12 +118,12 @@ public class PhoneCallDtoJaxb {
         this.phoneCallStatus = phoneCallStatus;
     }
     
-    public AtomLinkDtoJaxb getSelf() {
-        return self;
+    public AtomLinkDtoJaxb getLink() {
+        return link;
     }
 
-    public void setSelf(AtomLinkDtoJaxb self) {
-        this.self = self;
+    public void setLink(AtomLinkDtoJaxb link) {
+        this.link = link;
     }
 
     @Override

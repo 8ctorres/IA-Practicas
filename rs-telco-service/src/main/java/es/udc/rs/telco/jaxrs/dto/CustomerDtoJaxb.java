@@ -1,6 +1,5 @@
 package es.udc.rs.telco.jaxrs.dto;
 
-import es.udc.rs.telco.jaxrs.resources.CustomerResource;
 import es.udc.rs.telco.model.customer.Customer;
 
 import jakarta.ws.rs.core.UriBuilder;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
-@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber", "self"})
+@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber", "link"})
 public class CustomerDtoJaxb {
     @XmlAttribute(name = "customerId", required = false)
     private Long customerId;
@@ -30,18 +29,18 @@ public class CustomerDtoJaxb {
     @XmlElement(required = false)
     private String phoneNumber;
     @XmlElement(name = "link", namespace = "http://www.w3.org/2005/Atom")
-    private AtomLinkDtoJaxb self;
+    private AtomLinkDtoJaxb link;
 
     public CustomerDtoJaxb(){}
 
     public CustomerDtoJaxb(Long customerId, String name, String dni,
-                           String address, String phoneNumber, AtomLinkDtoJaxb self) {
+                           String address, String phoneNumber, AtomLinkDtoJaxb link) {
         this.customerId = customerId;
         this.name = name;
         this.dni = dni;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.self = self;
+        this.link = link;
     }
 
     @Schema(description = "ID del cliente", allowableValues =  {}, required=true)
@@ -89,12 +88,12 @@ public class CustomerDtoJaxb {
         this.phoneNumber = phoneNumber;
     }
 
-    public AtomLinkDtoJaxb getSelf() {
-        return self;
+    public AtomLinkDtoJaxb getLink() {
+        return link;
     }
 
-    public void setSelf(AtomLinkDtoJaxb self) {
-        this.self = self;
+    public void setLink(AtomLinkDtoJaxb link) {
+        this.link = link;
     }
 
     public static CustomerDtoJaxb from(Customer customer, URI baseUri, Class<?> resourceClass,

@@ -7,6 +7,7 @@ import es.udc.rs.telco.client.service.rest.dto.*;
 import es.udc.rs.telco.client.service.rest.exceptions.CustomerHasCallsClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.MonthNotClosedClientException;
 import es.udc.rs.telco.client.service.rest.exceptions.UnexpectedCallStatusClientException;
+import es.udc.rs.telco.client.service.rest.json.JaxbJsonContextResolver;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import es.udc.rs.telco.client.service.ClientTelcoService;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +44,8 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	private static Client getClient() {
 		if (client == null) {
 			client = ClientBuilder.newClient();
+			client.register(JacksonFeature.class);
+			client.register(JaxbJsonContextResolver.class);
 		}
 		return client;
 	}
