@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @XmlRootElement(name = "phoneCall")
 @XmlType(name = "phoneCallJaxbType", propOrder = {"startDate",
-        "duration", "destinationNumber", "phoneCallType", "phoneCallStatus", "link"})
+        "duration", "destinationNumber", "phoneCallType", "phoneCallStatus", "selfLink", "customerLink"})
 public class PhoneCallDtoJaxb {
     @XmlAttribute(name = "phoneCallId", required = false)
     private Long phoneCallId;
@@ -36,14 +36,16 @@ public class PhoneCallDtoJaxb {
     private PhoneCallType phoneCallType;
     @XmlElement(required = false)
     private PhoneCallStatus phoneCallStatus;
-    @XmlElement(name = "link", namespace = "http://www.w3.org/2005/Atom")
-    private AtomLinkDtoJaxb link;
+    @XmlElement(name = "selfLink", namespace = "http://www.w3.org/2005/Atom")
+    private AtomLinkDtoJaxb selfLink;
+    @XmlElement(name = "customerLink", namespace = "http://www.w3.org/2005/Atom")
+    private AtomLinkDtoJaxb customerLink;
 
     public PhoneCallDtoJaxb(){}
 
     public PhoneCallDtoJaxb(Long phoneCallId, Long customerId, LocalDateTime startDate,
                             Long duration, String destinationNumber, PhoneCallType phoneCallType,
-                            PhoneCallStatus phoneCallStatus, AtomLinkDtoJaxb link) {
+                            PhoneCallStatus phoneCallStatus, AtomLinkDtoJaxb selfLink, AtomLinkDtoJaxb customerLink) {
         this.phoneCallId = phoneCallId;
         this.customerId = customerId;
         this.startDate = startDate;
@@ -51,7 +53,8 @@ public class PhoneCallDtoJaxb {
         this.destinationNumber = destinationNumber;
         this.phoneCallType = phoneCallType;
         this.phoneCallStatus = phoneCallStatus;
-        this.link = link;
+        this.selfLink = selfLink;
+        this.customerLink = customerLink;
     }
 
     public Long getPhoneCallId() {
@@ -118,12 +121,20 @@ public class PhoneCallDtoJaxb {
         this.phoneCallStatus = phoneCallStatus;
     }
     
-    public AtomLinkDtoJaxb getLink() {
-        return link;
+    public AtomLinkDtoJaxb getSelfLink() {
+        return selfLink;
     }
 
-    public void setLink(AtomLinkDtoJaxb link) {
-        this.link = link;
+    public void setSelfLink(AtomLinkDtoJaxb selfLink) {
+        this.selfLink = selfLink;
+    }
+
+    public AtomLinkDtoJaxb getCustomerLink() {
+        return customerLink;
+    }
+
+    public void setCustomerLink(AtomLinkDtoJaxb customerLink) {
+        this.customerLink = customerLink;
     }
 
     @Override
@@ -149,11 +160,14 @@ public class PhoneCallDtoJaxb {
     }
 
     public static PhoneCallDtoJaxb from(PhoneCall call, URI baseUri, Class<?> resourceClass,
-                                        String mediaType){
+                                        String mediaType, Class<?> customerResourceClass){
         //Construye la URI del Link añadiendole el recurso y el phoneCallId a la ruta
         URI linkUri = UriBuilder.fromUri(baseUri).
                 path(UriBuilder.fromResource(resourceClass).build().toString()).
                 path(call.getPhoneCallId().toString()).build();
+        URI customerLinkUri = UriBuilder.fromUri(baseUri).
+                path(UriBuilder.fromResource(customerResourceClass).build().toString()).
+                path(call.getCustomerId().toString()).build();
 
         return new PhoneCallDtoJaxb(
                 call.getPhoneCallId(),
@@ -163,12 +177,13 @@ public class PhoneCallDtoJaxb {
                 call.getDestinationNumber(),
                 call.getPhoneCallType(),
                 call.getPhoneCallStatus(),
-                new AtomLinkDtoJaxb(linkUri, "self", mediaType, "Self link"));
+                new AtomLinkDtoJaxb(linkUri, "self", mediaType, "Self link"),
+                new AtomLinkDtoJaxb(customerLinkUri, "customer", mediaType, "Customer Link"));
     }
 
     public static List<PhoneCallDtoJaxb> from(Collection<PhoneCall> phoneCalls, URI baseUri,
-                                              Class<?> resourceClass, String mediaType){
+                                              Class<?> resourceClass, String mediaType, Class<?> customerResourceClass){
         return phoneCalls.stream().map((c) ->
-                PhoneCallDtoJaxb.from(c, baseUri, resourceClass, mediaType)).collect(Collectors.toList());
+                PhoneCallDtoJaxb.from(c, baseUri, resourceClass, mediaType, customerResourceClass)).collect(Collectors.toList());
     }
 }

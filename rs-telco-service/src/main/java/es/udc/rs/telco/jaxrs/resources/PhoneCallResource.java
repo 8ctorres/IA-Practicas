@@ -132,7 +132,7 @@ public class PhoneCallResource {
                         endTime,
                         phoneCallTypeFromString(phoneCallTypeStr),
                         startPos, amount +1 //Se pasa +1 para poder comprobar si existe el siguiente o no
-                ),ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers));
+                ),ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers), CustomerResource.class);
 
         boolean hasNext = (foundCalls.size() == amount+1); //Si se pidieron amount+1 items y no se recibieron todos, es porque ya se acabaron
 
@@ -193,7 +193,7 @@ public class PhoneCallResource {
                                 customerId,
                                 month,
                                 year
-                        ), ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers));
+                        ), ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers), CustomerResource.class);
 
         GenericEntity<List<PhoneCallDtoJaxb>> entity = new GenericEntity<>(calls){};
 

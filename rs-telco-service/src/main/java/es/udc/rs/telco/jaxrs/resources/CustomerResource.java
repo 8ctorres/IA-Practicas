@@ -114,7 +114,7 @@ public class CustomerResource {
                                             @Context UriInfo ui, @Context HttpHeaders headers) throws InstanceNotFoundException {
         return CustomerDtoJaxb.from(
                 telcoService.findCustomerById(Long.valueOf(id)),
-                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers));
+                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers), PhoneCallResource.class);
     }
 
     @GET
@@ -130,7 +130,7 @@ public class CustomerResource {
                                              @Context UriInfo ui, @Context HttpHeaders headers) throws InstanceNotFoundException, InputValidationException {
         return CustomerDtoJaxb.from(
                 telcoService.findCustomerByDNI(dni),
-                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers)
+                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers), PhoneCallResource.class
         );
     }
 
@@ -151,7 +151,7 @@ public class CustomerResource {
 
         List<CustomerDtoJaxb> foundCustomers = CustomerDtoJaxb.from(
                 telcoService.findCustomersbyName(name, startPos, amount+1), //Pedimos amount+1 para poder comprobar fácilmente si hay más
-                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers)
+                ui.getBaseUri(), this.getClass(), getAcceptableMediaType(headers), PhoneCallResource.class
         );
 
         boolean hasNext = (foundCustomers.size() == amount+1); //Si se pidieron amount+1 items y no se recibieron todos, es porque ya se acabaron

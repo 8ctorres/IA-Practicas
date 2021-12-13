@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "customer")
-@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber", "link"})
+@XmlType(name="customerJaxbType", propOrder = {"name", "dni", "address", "phoneNumber", "selfLink", "callsLink"})
 public class CustomerDtoJaxb {
     @XmlAttribute(name = "customerId", required = false)
     private Long customerId;
@@ -28,19 +28,22 @@ public class CustomerDtoJaxb {
     private String address;
     @XmlElement(required = false)
     private String phoneNumber;
-    @XmlElement(name = "link", namespace = "http://www.w3.org/2005/Atom")
-    private AtomLinkDtoJaxb link;
+    @XmlElement(name = "selfLink", namespace = "http://www.w3.org/2005/Atom")
+    private AtomLinkDtoJaxb selfLink;
+    @XmlElement(name = "callsLink", namespace = "http://www.w3.org/2005/Atom")
+    private AtomLinkDtoJaxb callsLink;
 
     public CustomerDtoJaxb(){}
 
     public CustomerDtoJaxb(Long customerId, String name, String dni,
-                           String address, String phoneNumber, AtomLinkDtoJaxb link) {
+                           String address, String phoneNumber, AtomLinkDtoJaxb selfLink, AtomLinkDtoJaxb callsLink) {
         this.customerId = customerId;
         this.name = name;
         this.dni = dni;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.link = link;
+        this.selfLink = selfLink;
+        this.callsLink = callsLink;
     }
 
     @Schema(description = "ID del cliente", allowableValues =  {}, required=true)
@@ -88,20 +91,31 @@ public class CustomerDtoJaxb {
         this.phoneNumber = phoneNumber;
     }
 
-    public AtomLinkDtoJaxb getLink() {
-        return link;
+    public AtomLinkDtoJaxb getSelfLink() {
+        return selfLink;
     }
 
-    public void setLink(AtomLinkDtoJaxb link) {
-        this.link = link;
+    public void setSelfLink(AtomLinkDtoJaxb selfLink) {
+        this.selfLink = selfLink;
+    }
+
+    public AtomLinkDtoJaxb getCallsLink() {
+        return callsLink;
+    }
+
+    public void setCallsLink(AtomLinkDtoJaxb callsLink) {
+        this.callsLink = callsLink;
     }
 
     public static CustomerDtoJaxb from(Customer customer, URI baseUri, Class<?> resourceClass,
-                                       String mediaType){
+                                       String mediaType, Class<?> callResourceClass){
         //Construye la URI del Link añadiendole el recurso y el customerId a la ruta
         URI linkUri = UriBuilder.fromUri(baseUri).
                 path(UriBuilder.fromResource(resourceClass).build().toString()).
                 path(customer.getCustomerId().toString()).build();
+        URI callsUri = UriBuilder.fromUri(baseUri).
+                path(UriBuilder.fromResource(callResourceClass).build().toString()).
+                queryParam("customerId", customer.getCustomerId().toString()).build();
 
         return new CustomerDtoJaxb(
                 customer.getCustomerId(),
@@ -109,7 +123,8 @@ public class CustomerDtoJaxb {
                 customer.getDni(),
                 customer.getAddress(),
                 customer.getPhoneNumber(),
-                new AtomLinkDtoJaxb(linkUri, "self", mediaType, "Self Link")
+                new AtomLinkDtoJaxb(linkUri, "self", mediaType, "Self Link"),
+                new AtomLinkDtoJaxb(callsUri, "calls", mediaType, "Calls Link")
         );
     }
 
@@ -123,8 +138,8 @@ public class CustomerDtoJaxb {
     }
 
     public static List<CustomerDtoJaxb> from(Collection<Customer> customerList, URI baseUri,
-                                             Class<?> resourceClass, String mediaType){
+                                             Class<?> resourceClass, String mediaType, Class<?> callResourceClass){
         return customerList.stream().map((c) ->
-                CustomerDtoJaxb.from(c, baseUri, resourceClass, mediaType)).collect(Collectors.toList());
+                CustomerDtoJaxb.from(c, baseUri, resourceClass, mediaType, callResourceClass)).collect(Collectors.toList());
     }
 }
