@@ -117,8 +117,8 @@ public class PhoneCallResource {
             throw new InputValidationException(e.getMessage());
         }
 
-        LocalDateTime startTime = (startTimeStr.equals("null") ? null : LocalDateTime.parse(startPosStr));
-        LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(amountStr));
+        LocalDateTime startTime = (startTimeStr.equals("null") ? null : LocalDateTime.parse(startTimeStr));
+        LocalDateTime endTime = (endTimeStr.equals("null") ? null : LocalDateTime.parse(endTimeStr));
 
         //Valor por defecto, startPos = 0
         int startPos = (startPosStr.equals("null") ? 0 : Integer.parseInt(startPosStr));
@@ -166,7 +166,7 @@ public class PhoneCallResource {
 
             URI nextUri = UriBuilder.fromUri(ui.getBaseUri()).path(UriBuilder.fromResource(this.getClass()).build().toString())
                     .queryParam("customerId", customerIdStr).queryParam("startTime", startTimeStr).queryParam("endTime", endTimeStr)
-                    .queryParam("startPos", nextStartIndex).queryParam("amount", amountStr).build();
+                    .queryParam("startPos", nextStartIndex).queryParam("amount", amount).build();
 
             response.link(nextUri, "next");
         }

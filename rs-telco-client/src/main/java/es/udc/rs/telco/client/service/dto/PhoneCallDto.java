@@ -9,6 +9,7 @@ import jakarta.xml.bind.JAXBElement;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PhoneCallDto {
@@ -118,4 +119,29 @@ public class PhoneCallDto {
        return new ObjectFactory().createPhoneCall(phoneCallDtoJaxb);
     }
 
+    @Override
+    public String toString() {
+        return "PhoneCall{" +
+                "phoneCallId=" + phoneCallId +
+                ", customerId=" + customerId +
+                ", startDate=" + startDate +
+                ", duration=" + duration +
+                ", destinationNumber='" + destinationNumber + '\'' +
+                ", phoneCallType=" + phoneCallType +
+                ", phoneCallStatus=" + phoneCallStatus +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneCallDto that = (PhoneCallDto) o;
+        return Objects.equals(phoneCallId, that.phoneCallId) && customerId.equals(that.customerId) && startDate.equals(that.startDate) && duration.equals(that.duration) && destinationNumber.equals(that.destinationNumber) && phoneCallType == that.phoneCallType && phoneCallStatus == that.phoneCallStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phoneCallId, customerId, startDate, duration, destinationNumber, phoneCallType, phoneCallStatus);
+    }
 }

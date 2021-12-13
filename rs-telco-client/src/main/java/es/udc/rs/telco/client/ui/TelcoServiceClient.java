@@ -13,6 +13,7 @@ import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TelcoServiceClient {
 
@@ -60,13 +61,28 @@ public class TelcoServiceClient {
 
 			//Carlos
 		} else if ("-getCalls".equalsIgnoreCase(args[0])) {
-			validateArgs(args, 2, new int[]{1});
+			//Como el último parámetro es opcional, la lógica de validar argumentos se complica un poco
+			PhoneCallType type = null;
+			if (args.length == 5) {
+				type = phoneCallTypeFromString(args[4]);
+				validateArgs(args, 5, new int[]{1});
+
+			}else if (args.length == 4){
+				validateArgs(args, 4, new int[]{1});
+
+			}else{
+				printUsageAndExit();
+			}
 
 			// -getCalls <customerId> <time_from> <time_to> <phoneCallType>
-
 			try {
-				clientTelcoService.getCalls(Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
-						LocalDateTime.parse(args[3]), phoneCallTypeFromString(args[4]));
+				List<PhoneCallDto> foundCalls = clientTelcoService.getCalls(Long.parseLong(args[1]), LocalDateTime.parse(args[2]),
+						LocalDateTime.parse(args[3]), type);
+
+				System.out.println("Llamadas encontradas:");
+				for (PhoneCallDto call : foundCalls){
+					System.out.println(call.toString());
+				}
 			} catch (InstanceNotFoundException ex) {
 				printErrorMsgAndExit("Error: El elemento " + ex.getInstanceType() + " con ID " + ex.getInstanceId().toString() + " no existe");
 			} catch (InputValidationException ex) {
@@ -140,7 +156,7 @@ public class TelcoServiceClient {
 	}
 
 	public static void printErrorMsgAndExit(String err){
-		System.err.println("Error: " + err);
+		System.err.println(err);
 		System.exit(-1);
 	}
 
@@ -151,8 +167,7 @@ public class TelcoServiceClient {
 						"    [-removeCustomer]    TelcoServiceClient -removeCustomer <customerId>\n" +
 						"    [-getCalls]    TelcoServiceClient -getCalls <customerId> <startTime> <endTime> [callType]\n" +
 						"    [-changeCallStatus]    TelcoServiceClient -changeCallStatus <customerId> <month> <year> <newStatus>\n" +
-						"    [-addCall]    TelcoServiceClient -addCall <customerId> <startDate> <duration> <destNumber> <type>\n" +
-						"    ...\n");
+						"    [-addCall]    TelcoServiceClient -addCall <customerId> <startDate> <duration> <destNumber> <type>\n");
 	}
 
 	// FUNCIONES DE UTILIDAD PARA TRADUCIR LOS ENUMERADOS A STRINGS Y VICEVERSA

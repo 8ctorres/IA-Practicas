@@ -7,6 +7,7 @@ import jakarta.xml.bind.JAXBElement;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CustomerDto {
@@ -91,5 +92,30 @@ public class CustomerDto {
         JAXBElement<CustomerDtoJaxb> jaxbElement = new ObjectFactory().createCustomer(customerJaxb);
         return jaxbElement;
 
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", name='" + name + '\'' +
+                ", dni='" + dni + '\'' +
+                ", address='" + address + '\'' +
+                ", creationDate=" + creationDate +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerDto that = (CustomerDto) o;
+        return Objects.equals(customerId, that.customerId) && name.equals(that.name) && dni.equals(that.dni) && address.equals(that.address) && Objects.equals(creationDate, that.creationDate) && phoneNumber.equals(that.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerId, name, dni, address, creationDate, phoneNumber);
     }
 }

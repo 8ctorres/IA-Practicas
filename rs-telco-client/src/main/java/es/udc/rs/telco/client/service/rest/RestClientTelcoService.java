@@ -14,6 +14,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 
 import es.udc.rs.telco.client.service.ClientTelcoService;
@@ -21,6 +22,7 @@ import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RestClientTelcoService implements ClientTelcoService {
@@ -58,9 +60,8 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	@Override
 	public Long addCustomer(CustomerDto newCustomer) throws InputValidationException {
 
-		try {
-			 Response response = getEndpointWebTarget().path("clientes").request().accept(this.getMediaType())
-				.post(Entity.entity(newCustomer.toDtoJaxb(), this.getMediaType()));
+		try (Response response = getEndpointWebTarget().path("clientes").request().accept(this.getMediaType())
+				.post(Entity.entity(newCustomer.toDtoJaxb(), this.getMediaType()))){
 
 			validateResponse(Response.Status.CREATED, response);
 
@@ -77,9 +78,8 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	//Pablo
 	@Override
 	public Long addCall(PhoneCallDto newCall) throws InputValidationException, InstanceNotFoundException {
-		try {
-			Response response = getEndpointWebTarget().path("llamadas").request().accept(this.getMediaType())
-					.post(Entity.entity(newCall.toDtoJaxb(), this.getMediaType()));
+		try (Response response = getEndpointWebTarget().path("llamadas").request().accept(this.getMediaType())
+					.post(Entity.entity(newCall.toDtoJaxb(), this.getMediaType()))){
 
 			validateResponse(Response.Status.CREATED, response);
 
@@ -96,8 +96,8 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	@Override
 	public void removeCustomer(Long idCust) throws InputValidationException, InstanceNotFoundException, CustomerHasCallsClientException {
 
-		try {
-			Response response = getEndpointWebTarget().path("clientes/{id}").resolveTemplate("id", idCust).request().accept(this.getMediaType()).delete();
+		try (Response response = getEndpointWebTarget().path("clientes/{id}").resolveTemplate("id", idCust)
+					.request().accept(this.getMediaType()).delete()){
 			validateResponse(Response.Status.NO_CONTENT, response);
 		} catch (InputValidationException|InstanceNotFoundException|CustomerHasCallsClientException e) {
 			throw e;
@@ -109,19 +109,44 @@ public abstract class RestClientTelcoService implements ClientTelcoService {
 	//Carlos
 	@Override
 	public List<PhoneCallDto> getCalls(Long customerId, LocalDateTime startTime, LocalDateTime endTime, PhoneCallType type) throws InputValidationException, InstanceNotFoundException {
-		//En previsión de que vamos a implementar la parte opcional de Hipermedia, no voy a añadir los paŕametros de paginacion
-		try (Response response = getEndpointWebTarget().path("llamadas").
-				queryParam("customerId", customerId).queryParam("startTime", startTime).
-				queryParam("endTime", endTime).queryParam("type", type).
-				request().accept(this.getMediaType()).get()){
+		Response response = null;
+		try {
+			if (type != null) {
+				response = getEndpointWebTarget().path("llamadas").
+						queryParam("customerId", customerId).queryParam("startTime", startTime).
+						queryParam("endTime", endTime).queryParam("type", type).
+						request().accept(this.getMediaType()).get();
+			}else{
+				response = getEndpointWebTarget().path("llamadas").
+						queryParam("customerId", customerId).queryParam("startTime", startTime).
+						queryParam("endTime", endTime).
+						request().accept(this.getMediaType()).get();
+			}
+
+			List<PhoneCallDto> fullCallList = new ArrayList<>(); Link next;
 
 			validateResponse(Response.Status.OK, response);
-			return PhoneCallDto.from(response.readEntity(new GenericType<List<PhoneCallDtoJaxb>>(){}));
+			fullCallList.addAll(PhoneCallDto.from(response.readEntity(new GenericType<List<PhoneCallDtoJaxb>>(){})));
+			next = response.getLink("next");
+
+			while (next != null){
+				try (Response nextResponse = getClient().invocation(next).accept(this.getMediaType()).get()) {
+					validateResponse(Response.Status.OK, nextResponse);
+					fullCallList.addAll(PhoneCallDto.from(nextResponse.readEntity(new GenericType<List<PhoneCallDtoJaxb>>() {})));
+					next = nextResponse.getLink("next");
+				}
+			}
+
+			return fullCallList;
 
 		} catch (InputValidationException | InstanceNotFoundException a){
 			throw a;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally{
+			if (response != null){
+				response.close();
+			}
 		}
 	}
 
