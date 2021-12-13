@@ -87,7 +87,7 @@
 - Encapsulamos las excepciones InputValidation e InstanceNotFound en los códigos de error 400 y 404 respectivamente debido a que la semantica es exactamente la misma. Las excepciones específicas de la aplicación (MonthNotClosed, CustomerHasCalls y UnexpectedCallStatus) las sacamos todas con el código 409 Conflict, cuya especificación dice que "indicates a request conflict with current state of the target resource", que creemos encaja muy bien con lo que es una excepción propia de la aplicación. Además, las respuestas 409 se consideran no cacheables, que es el comportamiento que buscábamos ya que todos estos errores pueden desaparecer si repetimos la misma petición un tiempo después. Estas 3 excepciones las encapsulamos en un tipo de excepción genérico, ApplicationException para serializarlas todas de la misma manera. 
 
 ### Problemas conocidos en el diseño / implementación de la práctica
-- Para que el cliente reconozca los cambios en el fichero de configuración _ConfigurationParameters.properties_ hay que volver a instalar el proyecto maven (mvn install). El único cambio que se hace es en el fichero de propiedades, no se toca al código, pero no reacciona al cambio hasta que se hace el mvn install.
+- N/A
 
 ### Resumen de contribución de cada miembro del grupo (consistente con commits en repositorio GIT)
 - Pablo Roade:
