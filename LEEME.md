@@ -69,21 +69,38 @@
 ---------------------------------------------------------------------
 
 ### Partes opcionales incluidas y miembros del grupo que han participado
-- .
+- Swagger: Carlos Torres e Ismael Verde
+- Hipermedia: Carlos Torres e Ismael Verde
 
 ### Pruebas WS REST
-- Nombre del fichero SoapUI/colección Postman con las peticiones a probar:
-- Comandos maven necesarios para ejecutar las pruebas
+- Nombre del fichero Postman con las peticiones a probar:
+    _Practica-IA-it2.postman_collection.json_
+- Comandos maven necesarios para ejecutar las pruebas:
+    Fichero de script _defensa.sh_
 
 ### Pruebas WS-BPEL
 - URL a los documentos WSDL que es necesario utilizar:
 - Nombre del fichero SoapUI con las peticiones:
 
 ### Justificaciones de diseño
-- .
+- La paginación en el servicio llama al modelo pidiéndole amount+1 elementos para poder comprobar si hay más o no, antes de generar el Link a "next"
+- Encapsulamos las excepciones InputValidation e InstanceNotFound en los códigos de error 400 y 404 respectivamente debido a que la semantica es exactamente la misma. Las excepciones específicas de la aplicación (MonthNotClosed, CustomerHasCalls y UnexpectedCallStatus) las sacamos todas con el código 409 Conflict, cuya especificación dice que "indicates a request conflict with current state of the target resource", que creemos encaja muy bien con lo que es una excepción propia de la aplicación. Además, las respuestas 409 se consideran no cacheables, que es el comportamiento que buscábamos ya que todos estos errores pueden desaparecer si repetimos la misma petición un tiempo después. Estas 3 excepciones las encapsulamos en un tipo de excepción genérico, ApplicationException para serializarlas todas de la misma manera. 
 
 ### Problemas conocidos en el diseño / implementación de la práctica
-- .
+- Para que el cliente reconozca los cambios en el fichero de configuración _ConfigurationParameters.properties_ hay que volver a instalar el proyecto maven (mvn install). El único cambio que se hace es en el fichero de propiedades, no se toca al código, pero no reacciona al cambio hasta que se hace el mvn install.
 
 ### Resumen de contribución de cada miembro del grupo (consistente con commits en repositorio GIT)
-- .
+- Pablo Roade:
+  - Operaciones addCall (en todas las capas), findCustomerbyName y findCustomerByDNI (en Modelo y Servicio, ya que no están en Cliente).
+  - DTO CustomerDtoJaxb.
+  - Excepciones del Cliente y Acceso a servicio.
+
+- Carlos Torres:
+  - Operaciones de buscar llamadas (ambas) y cambiar el estado de las llamadas.
+  - DTO PhoneCallDtoJaxB y adaptador XML para LocalDateTime
+  - Parte de Hipermedia y parte de Swagger
+
+- Ismael Verde:
+  - Operaciones addCustomer, updateCustomer, findCustomerbyID y removeCustomer
+  - Excepciones de Servicio y Modelo 
+  - Parte de Hipermedia y parte de Swagger

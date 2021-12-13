@@ -1,0 +1,1640 @@
+{
+	"info": {
+		"_postman_id": "4a611f05-062b-413a-be7a-affdae5e35ea",
+		"name": "IA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Flujo BPEL",
+			"item": [
+				{
+					"name": "TelcoService",
+					"item": [
+						{
+							"name": "Caso de prueba 1 (Cliente 2, Sept 2021)",
+							"item": [
+								{
+									"name": "Procesar llamadas cliente 2",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"TelcoFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills Sent",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills Paid",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>2</customerId>\n            <month>9</month>\n            <year>2021</year>\n            <billPaid>true</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Caso de prueba 2 (Cliente 2, Agosto 2021)",
+							"item": [
+								{
+									"name": "Procesar llamadas cliente 2",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"TelcoFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills Sent",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills NOT Paid",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>2</customerId>\n            <month>8</month>\n            <year>2021</year>\n            <billPaid>false</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Caso de prueba 3 (Cliente 1, Sept 2021)",
+							"item": [
+								{
+									"name": "Procesar llamadas cliente 1",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:TelcoFlowOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:TelcoFlowOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/TelcoFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"TelcoFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills Sent",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifySentOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n        </ca1:BillingNotifySentOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Notify Bills Paid",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ca1=\"CA1\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <ca1:BillingNotifyBilledOperation>\n            <customerId>1</customerId>\n            <month>9</month>\n            <year>2021</year>\n            <billPaid>true</billPaid>\n        </ca1:BillingNotifyBilledOperation>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8123/CA1/CA1/BillingFlowInterfacePort",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8123",
+											"path": [
+												"CA1",
+												"CA1",
+												"BillingFlowInterfacePort"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "RewardService",
+					"item": [
+						{
+							"name": "Casos de prueba 1,2 (Cliente 2)",
+							"item": [
+								{
+									"name": "Get Pending Points",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:getPendingPoints>\n            <!--Optional:-->\n            <customerId>2</customerId>\n        </rew:getPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7070",
+											"path": [
+												"rs-telco-wscontrib",
+												"services",
+												"RewardService"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Points",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {
+											"content-type": true
+										}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:getPoints>\n            <!--Optional:-->\n            <customerId>2</customerId>\n        </rew:getPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "7070",
+											"path": [
+												"rs-telco-wscontrib",
+												"services",
+												"RewardService"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Add Pending Points",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:addPendingPoints>\n            <!--Optional:-->\n            <customerId>?</customerId>\n            <points>?</points>\n        </rew:addPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-wscontrib",
+										"services",
+										"RewardService"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Pending Points",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:confirmPendingPoints>\n            <!--Optional:-->\n            <customerId>?</customerId>\n            <points>?</points>\n        </rew:confirmPendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-wscontrib",
+										"services",
+										"RewardService"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Pending Points",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:rew=\"http://rs.udc.es/reward\">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <rew:removePendingPoints>\n            <!--Optional:-->\n            <customertId>?</customertId>\n            <points>?</points>\n        </rew:removePendingPoints>\n    </soapenv:Body>\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-wscontrib/services/RewardService",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-wscontrib",
+										"services",
+										"RewardService"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Servicio JAX-RS",
+			"item": [
+				{
+					"name": "Clientes",
+					"item": [
+						{
+							"name": "Añadir Cliente Primero",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<customer xmlns=\"http://rs.udc.es/telco/xml\">\n    <name>Cliente Primero</name>\n    <dni>12345678J</dni>\n    <address>Elviña, s/n</address>\n    <phoneNumber>981111111</phoneNumber>\n</customer>"
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Añadir Cliente Primero JSON",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Cliente Primero\",\n    \"dni\": \"12345678J\",\n    \"address\": \"Elviña s/n\",\n    \"phoneNumber\": \"981111111\",\n    \"link\": null,\n    \"customerId\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Añadir Cliente Segundo",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<customer xmlns=\"http://rs.udc.es/telco/xml\">\n    <name>Cliente Primero</name>\n    <dni>12345678J</dni>\n    <address>Elviña, s/n</address>\n    <phoneNumber>981111111</phoneNumber>\n</customer>"
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Llamadas",
+					"item": [
+						{
+							"name": "Buscar todas las del cliente1",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "year",
+											"value": "2021",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar todas las del cliente1 tipo LOCAL",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "year",
+											"value": "2021",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Defensa XML",
+					"item": [
+						{
+							"name": "Actualizar cliente Id=2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<customer xmlns=\"http://rs.udc.es/telco/xml\">\n    <name>Cliente Segundo Modificado</name>\n    <dni>87654321H</dni>\n    <address>Maria Pita, 1</address>\n</customer>"
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Cliente por Id No Existente",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/458",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"458"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Cliente por Id=2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente inexistente por DNI",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/33333333A",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"33333333A"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente 2 por DNI",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/87654321H",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"87654321H"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente por Nombre 1",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes?name=client&startPos=0&amount=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "client"
+										},
+										{
+											"key": "startPos",
+											"value": "0"
+										},
+										{
+											"key": "amount",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente por Nombre 2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes?name=SEGUNDO",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "SEGUNDO"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar para facturar Mes No Cerrado",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1&month=1&year=2022",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "1"
+										},
+										{
+											"key": "year",
+											"value": "2022"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar para facturar",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1&month=10&year=2021",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "10"
+										},
+										{
+											"key": "year",
+											"value": "2021"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Defensa JSON",
+					"item": [
+						{
+							"name": "Actualizar cliente Id=2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Cliente Segundo Modificado\",\n    \"dni\": \"87654321H\",\n    \"address\": \"Maria Pita, 1\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Cliente por Id=2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Cliente por Id No Existente",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/458",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"458"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente inexistente por DNI",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/33333333A",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"33333333A"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente 2 por DNI",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes/87654321H",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes",
+										"87654321H"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente por Nombre 1",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes?name=cliente&amount=15",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "cliente"
+										},
+										{
+											"key": "amount",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar cliente por Nombre 2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/clientes?name=SEGUNDO",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"clientes"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "SEGUNDO"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar para facturar Mes No Cerrado",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1&month=1&year=2022",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "1"
+										},
+										{
+											"key": "year",
+											"value": "2022"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar para facturar",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								},
+								"strictSSL": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:7070/rs-telco-service/llamadas?customerId=1&month=10&year=2021",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7070",
+									"path": [
+										"rs-telco-service",
+										"llamadas"
+									],
+									"query": [
+										{
+											"key": "customerId",
+											"value": "1"
+										},
+										{
+											"key": "month",
+											"value": "10"
+										},
+										{
+											"key": "year",
+											"value": "2021"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "OpenAPI",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7070/rs-telco-service/openapi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7070",
+							"path": [
+								"rs-telco-service",
+								"openapi"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

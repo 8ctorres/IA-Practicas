@@ -241,7 +241,7 @@ public class MockTelcoService implements TelcoService {
 		for (PhoneCall call: calls) {
 			if (!(call.getPhoneCallStatus().equals(expectedStatus))){
 				// Si encontramos alguna que no está en el estado correcto, sacamos un error
-				throw new UnexpectedCallStatusException("La llamada" + call.getPhoneCallId().toString() + " non está en el estado esperado");
+				throw new UnexpectedCallStatusException("La llamada" + call.getPhoneCallId().toString() + " no está en el estado esperado");
 			}
 		}
 
